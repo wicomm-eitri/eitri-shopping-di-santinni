@@ -1,5 +1,5 @@
 import { useTranslation } from 'eitri-i18n'
-import { ProductCardFullImage, ProductCardDefault } from 'eitri-shopping-di-santinni-shared'
+import { ProductCardDefault, ProductCardFullImage } from 'eitri-shopping-di-santinni-shared'
 import { App } from 'eitri-shopping-vtex-shared'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { addToWishlist, productOnWishlist, removeItemFromWishlist } from '../../services/CustomerService'
@@ -55,6 +55,20 @@ export default function ProductCard(props) {
 
 	const getItemName = () => {
 		return product.productName
+	}
+
+	const getItemBrand = () => {
+		return product?.brand
+	}
+
+	const getItemPix = () => {
+		const pixPrice = sellerDefault?.commertialOffer?.Installments?.find(
+			installment => installment.PaymentSystemName === 'Pix'
+		)?.Value
+
+		if (!pixPrice || pixPrice >= sellerDefault?.commertialOffer?.Price) return null
+
+		return formatPrice(pixPrice)
 	}
 
 	const getItemImage = () => {
@@ -199,7 +213,9 @@ export default function ProductCard(props) {
 			} else {
 				onAddToWishlist()
 			}
-		} catch (e) {}
+		} catch (e) {
+			console.error('Error on wishlist operation [onPressOnWishlist]:', e)
+		}
 	}
 
 	const getActionLabel = () => {
@@ -242,6 +258,8 @@ export default function ProductCard(props) {
 		image: getItemImage(),
 		video: productVideo,
 		badge: getBadge(),
+		brand: getItemBrand(),
+		pixPrice: getItemPix(),
 		listPrice: getListPrice(),
 		showListItem: App?.configs?.appConfigs?.productCard?.showListPrice ?? true,
 		price: formatPrice(sellerDefault?.commertialOffer.Price),

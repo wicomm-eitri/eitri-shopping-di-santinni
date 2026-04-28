@@ -1,4 +1,3 @@
-import { useState, useMemo } from 'react'
 import { RemoteConfig } from 'eitri-shopping-vtex-shared'
 import { sortSku } from '../../utils/skuSort'
 
@@ -56,12 +55,12 @@ function ColorSwatch({ color, selected, status, onClick }) {
 		<View
 			onClick={onClick}
 			className={`
-        relative w-10 h-10 rounded-full cursor-pointer transition-all duration-200
-        flex items-center justify-center
-        ${selected ? 'ring-2 ring-offset-2 ring-gray-900 scale-110' : ''}
-        ${unavailable && !inexistent ? 'opacity-50' : ''}
-        ${inexistent ? 'opacity-20 cursor-not-allowed' : ''}
-      `}
+				relative w-8 h-8 rounded-full cursor-pointer transition-all duration-200
+				flex items-center justify-center
+				${selected ? 'ring-2 ring-offset-2 ring-gray-900 scale-110' : ''}
+				${unavailable && !inexistent ? 'opacity-50' : ''}
+				${inexistent ? 'opacity-20 cursor-not-allowed' : ''}
+			`}
 			style={{ backgroundColor: hex || '#aaa' }}>
 			{unavailable && !inexistent && (
 				<View className='absolute inset-0 flex items-center justify-center rounded-full overflow-hidden'>
@@ -80,17 +79,18 @@ function OptionChip({ value, selected, status, onClick }) {
 		<View
 			onClick={!inexistent ? onClick : undefined}
 			className={`
-        relative px-3 py-2 rounded-lg border text-sm font-medium transition-all duration-200 select-none
-        ${inexistent ? 'opacity-20 cursor-not-allowed border-gray-200 text-gray-400' : 'cursor-pointer'}
-        ${
-			selected
-				? 'bg-primary text-primary-content border-primary'
-				: unavailable && !inexistent
-					? 'bg-white text-gray-400 border-gray-200'
-					: 'bg-white text-gray-800 border-gray-300 active:bg-gray-50'
-		}
-      `}>
+				relative px-3 py-2 rounded-lg border text-sm font-medium transition-all duration-200 select-none
+				${inexistent ? 'opacity-20 cursor-not-allowed border-gray-200 text-gray-400' : 'cursor-pointer'}
+				${
+					selected
+						? 'bg-primary text-primary-content border-primary'
+						: unavailable && !inexistent
+							? 'bg-white text-gray-400 border-gray-200'
+							: 'bg-white text-gray-800 border-gray-300 active:bg-gray-50'
+				}
+			`}>
 			<Text>{value}</Text>
+
 			{unavailable && !inexistent && (
 				<View className='absolute inset-0 flex items-center justify-center rounded-lg overflow-hidden pointer-events-none'>
 					<View className='absolute w-full h-[1.5px] bg-gray-300 rotate-12' />
@@ -150,9 +150,7 @@ export default function SkuSelector(props) {
 	const handleSelect = (key, value) => {
 		const isSame = selections[key] === value
 
-		if (isSame) {
-			return
-		}
+		if (isSame) return
 
 		const next = { ...selections, [key]: value }
 		const newSku = findSelectedSku(skus, attributeKeys, next)
@@ -160,9 +158,7 @@ export default function SkuSelector(props) {
 		onSkuChange?.(newSku)
 	}
 
-	if (attributeKeys.length === 0) {
-		return null
-	}
+	if (attributeKeys.length === 0) return null
 
 	return (
 		<View className='flex flex-col gap-4 bg-white rounded shadow-sm border border-gray-300 p-4 w-full'>
@@ -175,7 +171,8 @@ export default function SkuSelector(props) {
 				return (
 					<View key={key}>
 						<View className='flex items-center gap-2 mb-3'>
-							<Text className='text-lg font-semibold text-gray-700'>{key}</Text>
+							<Text className='text-lg font-semibold text-gray-700 capitalize'>{key}</Text>
+
 							{selections[key] && (
 								<Text className='text-sm text-gray-400'>
 									— <Text className='text-gray-600'>{selections[key]}</Text>
@@ -184,7 +181,7 @@ export default function SkuSelector(props) {
 						</View>
 
 						{isCor ? (
-							<View className='flex flex-row flex-wrap gap-3'>
+							<View className='flex flex-wrap gap-3'>
 								{values.map(value => (
 									<ColorSwatch
 										key={value}
@@ -196,7 +193,7 @@ export default function SkuSelector(props) {
 								))}
 							</View>
 						) : (
-							<View className='flex flex-row flex-wrap gap-2'>
+							<View className='flex flex-wrap gap-2'>
 								{sortSku(values).map(value => (
 									<OptionChip
 										key={value}

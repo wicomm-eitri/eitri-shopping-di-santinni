@@ -14,7 +14,7 @@ import SkuSelector from '../components/SkuSelector/SkuSelector'
 import { useLocalShoppingCart } from '../providers/LocalCart'
 import { startConfigure } from '../services/AppService'
 import { saveCartIdOnStorage } from '../services/cartService'
-import { getProductById, getProductBySlug } from '../services/productService'
+import { getProductById, getProductBySlug, markLastViewedProduct } from '../services/productService'
 import { crashLog, sendScreenView, sendViewItem } from '../services/trackingService'
 
 export default function Home() {

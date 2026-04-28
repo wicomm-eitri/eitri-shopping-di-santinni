@@ -28,9 +28,7 @@ export const markLastViewedProduct = async product => {
 	if (productHistory) {
 		const prevContentIndex = productHistory.findIndex(content => content.productId === product.productId)
 
-		if (prevContentIndex === 0) {
-			return
-		}
+		if (prevContentIndex === 0) return
 
 		if (prevContentIndex !== -1) {
 			productHistory.splice(prevContentIndex, 1)

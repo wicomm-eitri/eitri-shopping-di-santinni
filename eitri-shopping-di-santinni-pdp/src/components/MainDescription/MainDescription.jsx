@@ -11,7 +11,7 @@ export default function MainDescription(props) {
 
 	const discoverInstallments = item => {
 		try {
-			const mainSeller = item.sellers.find(seller => seller.sellerDefault)
+			const mainSeller = item?.sellers?.find(seller => seller.sellerDefault)
 
 			if (mainSeller) {
 				const betterInstallment = mainSeller.commertialOffer.Installments.reduce((acc, installment) => {

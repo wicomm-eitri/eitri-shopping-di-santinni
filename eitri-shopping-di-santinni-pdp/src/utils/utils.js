@@ -125,7 +125,7 @@ export const formatProductFromVtex = product => {
 			})
 		}
 	} catch (error) {
-		// console.log('error', product)
+		console.error('Error [formatProductFromVtex]:', error)
 		throw error
 	}
 }
@@ -229,4 +229,24 @@ export const parseJwt = token => {
 
 export const upperCaseWord = string => {
 	return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+export const waitForElement = selector => {
+	return new Promise(resolve => {
+		if (document.querySelector(selector)) {
+			return resolve(document.querySelector(selector))
+		}
+
+		const observer = new MutationObserver(mutations => {
+			if (document.querySelector(selector)) {
+				observer.disconnect()
+				resolve(document.querySelector(selector))
+			}
+		})
+
+		observer.observe(document.body, {
+			childList: true,
+			subtree: true
+		})
+	})
 }
