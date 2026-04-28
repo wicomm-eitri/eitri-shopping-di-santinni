@@ -1,3 +1,31 @@
+bottom-tab-view-simulation:
+    eitri-apps:
+        - slug: 'home'
+          title: 'Início'
+          initialization-params:
+              type: 'string'
+              value: 'tabIndex=0'
+        - slug: 'account'
+          title: 'Favoritos'
+          initialization-params:
+              type: 'string'
+              value: 'tabIndex=1&route=Wishlist'
+        - slug: 'home'
+          title: 'Categorias'
+          initialization-params:
+              type: 'string'
+              value: 'tabIndex=2&route=Categories'
+        - slug: 'cart'
+          title: 'Sacola'
+          initialization-params:
+              type: 'string'
+              value: 'tabIndex=3'
+        - slug: 'account'
+          title: 'Account'
+          initialization-params:
+              type: 'string'
+              value: 'tabIndex=4'
+
 eitri-apps:
 - path: ./eitri-shopping-di-santinni-account
   workspace: eitri-shopping-di-santinni-account
