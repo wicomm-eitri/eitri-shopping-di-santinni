@@ -1,3 +1,4 @@
+import Eitri from 'eitri-bifrost'
 import {
 	HeaderCart,
 	HeaderContentWrapper,
@@ -7,7 +8,6 @@ import {
 } from 'eitri-shopping-di-santinni-shared'
 import { Vtex } from 'eitri-shopping-vtex-shared'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
-import Eitri from 'eitri-bifrost'
 import { addToWishlist, productOnWishlist, removeItemFromWishlist } from '../../services/customerService'
 
 export default function Header(props) {
@@ -26,6 +26,7 @@ export default function Header(props) {
 
 	const shareLink = () => {
 		const url = `${Vtex?.configs?.domain}/${product?.linkText}/p?utm_source=eitri-shop-source`
+
 		Eitri.share.link({
 			url: url
 		})
@@ -36,6 +37,7 @@ export default function Header(props) {
 			try {
 				setItemOnWishlist(true)
 				const result = await addToWishlist(product?.productId, product?.productName, product?.items[0]?.itemId)
+
 				setItemWishlistId(result?.data?.addToList)
 			} catch (e) {
 				console.error('handleSaveFavorite: Error', e)
@@ -56,10 +58,12 @@ export default function Header(props) {
 	const checkIfIsFavorite = async productId => {
 		setLoadingWishlist(true)
 		const { inList, listId } = await productOnWishlist(productId)
+
 		if (inList) {
 			setItemWishlistId(listId)
 			setItemOnWishlist(true)
 		}
+
 		setLoadingWishlist(false)
 	}
 

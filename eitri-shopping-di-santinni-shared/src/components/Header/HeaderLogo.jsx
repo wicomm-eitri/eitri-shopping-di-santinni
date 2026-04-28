@@ -15,6 +15,7 @@ export default function HeaderLogo(props) {
 				setUrlLogo(src)
 			} else {
 				const headerLogo = await getRemoteAppConfigProperty('headerLogo')
+
 				setUrlLogo(headerLogo)
 			}
 		} catch (error) {

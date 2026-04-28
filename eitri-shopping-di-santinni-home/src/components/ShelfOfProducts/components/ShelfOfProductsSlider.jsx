@@ -1,5 +1,5 @@
-import ProductCard from '../../ProductCard/ProductCard'
 import { View } from 'eitri-luminus'
+import ProductCard from '../../ProductCard/ProductCard'
 
 export default function ShelfOfProductsSlider(props) {
 	const { isLoading, products } = props

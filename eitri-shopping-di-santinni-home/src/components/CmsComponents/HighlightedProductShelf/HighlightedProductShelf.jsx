@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
+import Eitri from 'eitri-bifrost'
+import { useTranslation } from 'eitri-i18n'
+import { LuChevronRight } from 'react-icons/lu'
 import { getProductsService } from '../../../services/ProductService'
 import ProductCard from '../../ProductCard/ProductCard'
-import { LuChevronRight } from 'react-icons/lu'
-import { useTranslation } from 'eitri-i18n'
-import Eitri from 'eitri-bifrost'
 
 // Hook customizado para countdown
 const useCountdown = (endDate, enabled) => {
@@ -14,6 +14,7 @@ const useCountdown = (endDate, enabled) => {
 
 		const calculateTime = () => {
 			const diff = new Date(endDate) - new Date()
+
 			if (diff <= 0) return { d: 0, h: 0, m: 0, s: 0 }
 
 			return {
@@ -84,6 +85,7 @@ export default function HighlightedProductShelf({ data }) {
 		if (!data) return
 
 		setIsLoading(true)
+
 		try {
 			const params = {
 				facets: data.facets || [],
@@ -93,6 +95,7 @@ export default function HighlightedProductShelf({ data }) {
 			}
 
 			const result = await getProductsService(params)
+
 			if (result?.products) {
 				setProducts(result.products)
 			}
@@ -135,19 +138,19 @@ export default function HighlightedProductShelf({ data }) {
 				</View>
 			</View>
 
-				{data.showTimer && (
-					<CountdownTimer
-						time={time}
-						textColor={data.textColor}
-						t={t}
-					/>
-				)}
+			{data.showTimer && (
+				<CountdownTimer
+					time={time}
+					textColor={data.textColor}
+					t={t}
+				/>
+			)}
 
 			<View className='flex overflow-x-auto'>
 				<View className='flex gap-4 px-4'>
-						{isLoading ? (
-							<Text>{t('highlightedProductShelf.loading', 'Carregando...')}</Text>
-						) : (
+					{isLoading ? (
+						<Text>{t('highlightedProductShelf.loading', 'Carregando...')}</Text>
+					) : (
 						products.map(product => (
 							<ProductCard
 								key={product.productId}

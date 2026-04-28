@@ -10,6 +10,7 @@ export default function RelatedProducts(props) {
 
 	useEffect(() => {
 		if (!product) return
+
 		loadRelatedProducts(product?.productId)
 	}, [product])
 
@@ -20,7 +21,9 @@ export default function RelatedProducts(props) {
 			const availableRelatedProducts = relatedProducts.filter(rp => {
 				return rp.items.some(i => i.sellers.some(s => s.commertialOffer.AvailableQuantity > 0))
 			})
+
 			setRelatedProducts(availableRelatedProducts)
+
 			return relatedProducts
 		} catch (e) {
 			console.log('loadRelatedProducts: Error', e)
@@ -34,7 +37,9 @@ export default function RelatedProducts(props) {
 	return (
 		<View className='mt-4'>
 			<View className='px-4'>
-				<Text className='text-lg font-semibold'>{t('productBasicTemplate.txtWhoSaw', 'Quem viu esta, viu também:')}</Text>
+				<Text className='text-lg font-semibold'>
+					{t('productBasicTemplate.txtWhoSaw', 'Quem viu esta, viu também:')}
+				</Text>
 			</View>
 
 			{isLoading ? (

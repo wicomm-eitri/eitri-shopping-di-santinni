@@ -1,10 +1,11 @@
-import { Vtex } from 'eitri-shopping-vtex-shared'
 import Eitri from 'eitri-bifrost'
+import { Vtex } from 'eitri-shopping-vtex-shared'
 
 export const requestLogin = () => {
 	return new Promise(async (resolve, reject) => {
 		if (await isLoggedIn()) {
 			resolve()
+
 			return
 		}
 
@@ -27,6 +28,7 @@ export const isLoggedIn = async () => {
 		return await Vtex.customer.isLoggedIn()
 	} catch (e) {
 		console.error('Erro ao buscar dados do cliente', e)
+
 		return false
 	}
 }
@@ -35,10 +37,13 @@ export const productOnWishlist = async productId => {
 	if (!(await isLoggedIn())) {
 		return { inList: false }
 	}
+
 	const result = await Vtex.wishlist.checkItem(productId)
 	const inList = result?.data?.checkList?.inList
+
 	if (inList) {
 		const listId = result?.data?.checkList?.listIds?.[0]
+
 		return { inList, listId }
 	} else {
 		return { inList }
@@ -51,5 +56,6 @@ export const removeItemFromWishlist = async id => {
 
 export const addToWishlist = async (productId, title, sku) => {
 	await requestLogin()
+
 	return await Vtex.wishlist.addItem(productId, title, sku)
 }

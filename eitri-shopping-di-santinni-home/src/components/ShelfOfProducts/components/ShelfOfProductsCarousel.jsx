@@ -1,6 +1,6 @@
 import { View } from 'eitri-luminus'
-import ProductCard from '../../ProductCard/ProductCard'
 import { CustomCarousel } from 'eitri-shopping-di-santinni-shared'
+import ProductCard from '../../ProductCard/ProductCard'
 
 export default function ShelfOfProductsCarousel(props) {
 	const { isLoading, products } = props
@@ -8,6 +8,7 @@ export default function ShelfOfProductsCarousel(props) {
 	const products_per_page = 2
 
 	const productsPage = []
+
 	if (Array.isArray(products)) {
 		for (let i = 0; i < products.length; i += products_per_page) {
 			productsPage.push(products.slice(i, i + products_per_page))

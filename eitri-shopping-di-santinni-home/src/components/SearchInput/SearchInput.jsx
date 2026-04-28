@@ -1,7 +1,7 @@
+import { useTranslation } from 'eitri-i18n'
 import { Text, View } from 'eitri-luminus'
 import { Vtex } from 'eitri-shopping-vtex-shared'
 import { autocompleteSuggestions } from '../../services/ProductService'
-import { useTranslation } from 'eitri-i18n'
 
 let timeoutId
 let skipSuggestion = false
@@ -32,13 +32,18 @@ export default function SearchInput(props) {
 		try {
 			if (!value) {
 				setSearchSuggestion([])
+
 				return
 			}
+
 			const result = await autocompleteSuggestions(value)
+
 			if (skipSuggestion) {
 				setSearchSuggestion([])
+
 				return
 			}
+
 			setSearchSuggestion(result?.searches)
 		} catch (error) {
 			console.log('Entrada de pesquisa', 'Erro ao buscar sugestão', error)
@@ -53,16 +58,21 @@ export default function SearchInput(props) {
 		}
 
 		const debouncedFetchSuggestions = debounce(fetchSuggestions, 400)
+
 		debouncedFetchSuggestions(value)
 	}
 
 	const handleSearch = suggestion => {
 		console.log('suggestion===>', suggestion)
+
 		if (timeoutId) {
 			clearTimeout(timeoutId)
 		}
+
 		setSearchSuggestion([])
+
 		if (typeof onSubmit === 'function') onSubmit(suggestion)
+
 		skipSuggestion = true
 	}
 
@@ -71,6 +81,7 @@ export default function SearchInput(props) {
 			if (timeoutId) {
 				clearTimeout(timeoutId)
 			}
+
 			setSearchSuggestion([])
 			skipSuggestion = true
 		}, 200)
@@ -78,6 +89,7 @@ export default function SearchInput(props) {
 
 	const handleInputChange = e => {
 		const value = e.target.value
+
 		skipSuggestion = false
 		handleAutocomplete(value)
 	}

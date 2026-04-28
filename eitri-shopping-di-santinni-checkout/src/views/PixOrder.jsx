@@ -1,10 +1,7 @@
-import Eitri from 'eitri-bifrost'
 import { useEffect, useState } from 'react'
-import { useLocalShoppingCart } from '../providers/LocalCart'
+import Eitri from 'eitri-bifrost'
+import { useTranslation } from 'eitri-i18n'
 import { Image, Page, Text, View } from 'eitri-luminus'
-import { formatAmountInCents } from '../utils/utils'
-import { clearCart, getPixStatus } from '../services/cartService'
-import { trackScreenView } from '../services/Tracking'
 import {
 	HeaderContentWrapper,
 	HeaderReturn,
@@ -14,7 +11,10 @@ import {
 	BottomInset
 } from 'eitri-shopping-di-santinni-shared'
 import { navigate } from '@/services/navigationService'
-import { useTranslation } from 'eitri-i18n'
+import { useLocalShoppingCart } from '../providers/LocalCart'
+import { trackScreenView } from '../services/Tracking'
+import { clearCart, getPixStatus } from '../services/cartService'
+import { formatAmountInCents } from '../utils/utils'
 
 export default function PixOrder(props) {
 	const { t } = useTranslation()
@@ -98,14 +98,18 @@ export default function PixOrder(props) {
 	const formatTime = seconds => {
 		let minutes = Math.floor(seconds / 60)
 		let remainingSeconds = seconds % 60
+
 		return `${minutes < 10 ? '0' : ''}${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`
 	}
 
 	async function checkPixStatus(transactionId, paymentId) {
 		try {
 			if (!isMounted) return
+
 			const result = await getPixStatus(transactionId, paymentId)
+
 			if (!result) return
+
 			if (result.status === 'waiting') {
 				await new Promise(resolve => setTimeout(resolve, 10000))
 				await checkPixStatus(transactionId, paymentId)

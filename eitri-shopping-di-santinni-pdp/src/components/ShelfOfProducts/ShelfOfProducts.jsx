@@ -1,9 +1,9 @@
-import { Loading } from 'eitri-shopping-di-santinni-shared'
+import Eitri from 'eitri-bifrost'
+import { useTranslation } from 'eitri-i18n'
 import { Text, View, Skeleton } from 'eitri-luminus'
 import ProductCard from '../ProductCard/ProductCard'
 import ShelfOfProductsCarousel from './components/ShelfOfProductsCarousel'
-import Eitri from 'eitri-bifrost'
-import { useTranslation } from 'eitri-i18n'
+
 export default function ShelfOfProducts(props) {
 	const { products, title, gap, paddingHorizontal, isLoading, mode, searchParams, ...rest } = props
 	const { t } = useTranslation()
@@ -16,16 +16,21 @@ export default function ShelfOfProducts(props) {
 			}
 		})
 	}
+
 	return (
 		<View>
 			{title && (
 				<View className={`pl-4 flex justify-between items-center px-${paddingHorizontal || '36'}`}>
-					<Text className='text-lg font-bold'>{isLoading ? t('shelfOfProducts.loading', 'Carregando...') : title}</Text>
+					<Text className='text-lg font-bold'>
+						{isLoading ? t('shelfOfProducts.loading', 'Carregando...') : title}
+					</Text>
 					{searchParams && (
 						<View
 							onClick={seeMore}
 							className='flex items-center min-w-fit'>
-							<Text className='font-bold text-primary-content'>{t('shelfOfProducts.seeMore', 'Ver mais')}</Text>
+							<Text className='font-bold text-primary-content'>
+								{t('shelfOfProducts.seeMore', 'Ver mais')}
+							</Text>
 							<View>
 								{/* <Icon iconKey="chevron-right" color="primary-900" width={18} height={18} /> */}
 							</View>

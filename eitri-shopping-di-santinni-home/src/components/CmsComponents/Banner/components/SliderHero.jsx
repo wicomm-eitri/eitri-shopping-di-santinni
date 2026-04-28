@@ -17,6 +17,7 @@ export default function SliderHero(props) {
 		try {
 			const [aspectWidth, aspectHeight] = data?.aspectRatio?.split(':')?.map(Number)
 			const screenWidth = window.innerWidth
+
 			proportionalHeight = screenWidth * (aspectHeight / aspectWidth)
 		} catch (e) {}
 	}
