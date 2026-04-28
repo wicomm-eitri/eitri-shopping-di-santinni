@@ -8,7 +8,7 @@ export default function CartItemsContent(props) {
 
 	useEffect(() => {
 		if (cart) {
-			setCartItems([...cart?.items])
+			setCartItems([...(cart?.items || [])])
 		}
 	}, [cart])
 
