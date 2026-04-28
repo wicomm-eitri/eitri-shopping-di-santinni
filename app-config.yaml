@@ -27,35 +27,35 @@ bottom-tab-view-simulation:
               value: 'tabIndex=4'
 
 eitri-apps:
-- path: ./eitri-shopping-di-santinni-account
-  workspace: eitri-shopping-di-santinni-account
-  alias: account
-  focus: false
-  shared: false
-- path: ./eitri-shopping-di-santinni-cart
-  workspace: eitri-shopping-di-santinni-cart
-  alias: cart
-  focus: false
-  shared: false
-- path: ./eitri-shopping-di-santinni-checkout
-  workspace: eitri-shopping-di-santinni-checkout
-  alias: checkout
-  focus: false
-  shared: false
-- path: ./eitri-shopping-di-santinni-home
-  workspace: eitri-shopping-di-santinni-home
-  alias: home
-  focus: true
-  shared: false
-- path: ./eitri-shopping-di-santinni-pdp
-  workspace: eitri-shopping-di-santinni-pdp
-  alias: pdp
-  focus: false
-  shared: false
-- path: ./eitri-shopping-di-santinni-shared
-  workspace: eitri-shopping-di-santinni-shared
-  alias: shared
-  focus: false
-  shared: true
+    - path: ./eitri-shopping-di-santinni-account
+      workspace: eitri-shopping-di-santinni-account
+      alias: account
+      focus: false
+      shared: false
+    - path: ./eitri-shopping-di-santinni-cart
+      workspace: eitri-shopping-di-santinni-cart
+      alias: cart
+      focus: false
+      shared: false
+    - path: ./eitri-shopping-di-santinni-checkout
+      workspace: eitri-shopping-di-santinni-checkout
+      alias: checkout
+      focus: false
+      shared: false
+    - path: ./eitri-shopping-di-santinni-home
+      workspace: eitri-shopping-di-santinni-home
+      alias: home
+      focus: true
+      shared: false
+    - path: ./eitri-shopping-di-santinni-pdp
+      workspace: eitri-shopping-di-santinni-pdp
+      alias: pdp
+      focus: false
+      shared: false
+    - path: ./eitri-shopping-di-santinni-shared
+      workspace: eitri-shopping-di-santinni-shared
+      alias: shared
+      focus: false
+      shared: true
 application-id: f0301a60-5a72-487b-8855-a4fbd21d1f39
 check-js: false

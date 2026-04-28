@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useTranslation } from 'eitri-i18n'
 import { ProductCardDefault, ProductCardFullImage } from 'eitri-shopping-di-santinni-shared'
 import { App, EventBus } from 'eitri-shopping-vtex-shared'
@@ -218,6 +219,7 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 				}
 			}
 		})
+
 		EventBus.subscribe({
 			channel: 'removeFromWishlist',
 			broadcast: true,
@@ -228,7 +230,7 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 				}
 			}
 		})
-	}, [])
+	}, [wishlist?.wishListId, product?.productId])
 
 	// Gerencia item no carrinho
 	const itemQuantity = itemInCart?.quantity || 1

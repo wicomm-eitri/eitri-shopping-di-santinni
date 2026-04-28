@@ -1,6 +1,6 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { CustomButton, HeaderText, Loading, HeaderContentWrapper, BottomInset } from 'eitri-shopping-di-santinni-shared'
+import { BottomInset, CustomButton, HeaderContentWrapper, HeaderText, Loading } from 'eitri-shopping-di-santinni-shared'
 import InfoCard from '../components/InfoCard/InfoCard'
 import LoginCard from '../components/LoginCard/LoginCard'
 import PoweredBy from '../components/PoweredBy/PoweredBy'
@@ -25,6 +25,7 @@ export default function Home(props) {
 	useEffect(() => {
 		init()
 		sendScreenView('Perfil', 'Home')
+
 		Eitri.navigation.setOnResumeListener(() => {
 			init()
 		})
@@ -53,9 +54,7 @@ export default function Home(props) {
 
 		const isLogged = await isLoggedIn()
 
-		if (isLogged) {
-			await loadMe()
-		}
+		if (isLogged) await loadMe()
 
 		setIsLogged(isLogged)
 		setIsLoading(false)

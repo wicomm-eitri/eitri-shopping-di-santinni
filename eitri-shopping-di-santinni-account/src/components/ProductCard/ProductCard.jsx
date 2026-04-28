@@ -11,7 +11,7 @@ export default function ProductCard(props) {
 	 * */
 
 	const { t } = useTranslation()
-	const { product, className } = props
+	const { product, className, onRemoveFromWishListExternal } = props
 
 	const [loadingCartOp, setLoadingCartOp] = useState(false)
 	const [loadingWishlistOp, setLoadingWishlistOp] = useState(true)
@@ -170,7 +170,9 @@ export default function ProductCard(props) {
 	}
 
 	const onPressOnWishlist = () => {
-		onRemoveFromWishlist()
+		onRemoveFromWishListExternal && typeof onRemoveFromWishListExternal === 'function'
+			? onRemoveFromWishListExternal()
+			: onRemoveFromWishlist()
 	}
 
 	const onPressCartButton = () => {
