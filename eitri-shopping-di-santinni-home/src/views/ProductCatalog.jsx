@@ -1,0 +1,56 @@
+import { HeaderContentWrapper, HeaderReturn, HeaderText, HeaderSearchIcon } from 'eitri-shopping-di-santinni-shared'
+
+import Eitri from 'eitri-bifrost'
+import { useTranslation } from 'eitri-i18n'
+import ProductCatalogContent from '../components/ProductCatalogContent/ProductCatalogContent'
+
+export default function ProductCatalog(props) {
+	const { location } = props
+	const { t } = useTranslation()
+
+	const title = location.state.title
+	const openInBottomBar = !!location.state.openInBottomBar
+
+	const [appliedFacets, setAppliedFacets] = useState(null)
+
+	useEffect(() => {
+		const params = location.state.params
+		setAppliedFacets(params)
+
+		if (!openInBottomBar) {
+			Eitri.eventBus.subscribe({
+				channel: 'onUserTappedActiveTab',
+				callback: _ => {
+					Eitri.navigation.back()
+				}
+			})
+		}
+	}, [])
+
+	const goToSearch = () => {
+		Eitri.navigation.navigate({ path: 'Search' })
+	}
+
+	return (
+		<Page title={title || t('productCatalog.title', 'Catálogo')}>
+			<>
+				<HeaderContentWrapper className={`justify-between`}>
+					<View className={`flex items-center gap-4`}>
+						{!openInBottomBar && <HeaderReturn />}
+
+							<HeaderText text={title || t('productCatalog.title', 'Catálogo')} />
+					</View>
+
+					<HeaderSearchIcon onClick={goToSearch} />
+				</HeaderContentWrapper>
+
+				{appliedFacets && (
+					<ProductCatalogContent
+						banner={location?.state?.banner}
+						params={appliedFacets}
+					/>
+				)}
+			</>
+		</Page>
+	)
+}
