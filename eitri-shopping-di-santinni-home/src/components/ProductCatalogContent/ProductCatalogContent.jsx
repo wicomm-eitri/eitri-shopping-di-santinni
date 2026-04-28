@@ -1,7 +1,4 @@
-import { useEffect } from 'react'
-import { useState } from 'react'
 import { useTranslation } from 'eitri-i18n'
-import { View } from 'eitri-luminus'
 import SearchResults from '../../components/PageSearchComponents/SearchResults'
 import { getProductsService } from '../../services/ProductService'
 import { getDefaultSortParam } from '../../services/helpers/resolveSortParam'
@@ -85,7 +82,7 @@ export default function ProductCatalogContent(props) {
 			const loadedProducts = page === 1 ? result.products.length : products.length + result.products.length
 
 			setPageHasEnded(loadedProducts > result.recordsFiltered)
-			setProducts(prev => (page === 1 ? result.products : [...prev, ...result.products]))
+			setProducts(prev => (page === 1 ? result.products : [...prev, ...(result.products || [])]))
 			setTotalProducts(result?.recordsFiltered)
 			setCurrentPage(page)
 			setProductLoading(false)

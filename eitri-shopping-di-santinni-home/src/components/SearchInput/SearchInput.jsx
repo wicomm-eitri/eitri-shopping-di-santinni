@@ -1,5 +1,4 @@
 import { useTranslation } from 'eitri-i18n'
-import { Text, View } from 'eitri-luminus'
 import { Vtex } from 'eitri-shopping-vtex-shared'
 import { autocompleteSuggestions } from '../../services/ProductService'
 
@@ -16,9 +15,7 @@ export default function SearchInput(props) {
 	const legacySearch = Vtex?.configs?.searchOptions?.legacySearch
 
 	useEffect(() => {
-		if (incomingValue) {
-			setSearchTerm(incomingValue)
-		}
+		if (incomingValue) setSearchTerm(incomingValue || '')
 	}, [incomingValue])
 
 	const debounce = (func, delay) => {
@@ -128,7 +125,7 @@ export default function SearchInput(props) {
 				</View>
 				<View>
 					<TextInput
-						autoFocus={true}
+						autoFocus
 						type={'text'}
 						value={searchTerm}
 						onChange={handleInputChange}

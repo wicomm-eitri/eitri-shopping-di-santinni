@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useTranslation } from 'eitri-i18n'
-import { ProductCardFullImage, ProductCardDefault } from 'eitri-shopping-di-santinni-shared'
+import { ProductCardDefault, ProductCardFullImage } from 'eitri-shopping-di-santinni-shared'
 import { App, EventBus } from 'eitri-shopping-vtex-shared'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { addToWishlist, productOnWishlist, removeItemFromWishlist } from '../../services/CustomerService'
@@ -138,15 +137,13 @@ const formatInstallments = (seller, t) => {
 		return ''
 	}
 
-	return `${t('productCard.installmentsPrefix', 'em até')} ${
-		maxInstallments.NumberOfInstallments
-	}x ${formatPrice(maxInstallments.Value)}`
+	return `${t('productCard.installmentsPrefix', 'Em até')} ${maxInstallments.NumberOfInstallments}x ${formatPrice(maxInstallments.Value)}`
 }
 
 /**
  * Calcula o badge de desconto
  */
-const calculateBadge = (seller, t) => {
+const calculateBadge = seller => {
 	if (!seller?.commertialOffer) return ''
 
 	const { Price, ListPrice } = seller.commertialOffer
@@ -155,7 +152,7 @@ const calculateBadge = (seller, t) => {
 
 	const discount = ((ListPrice - Price) / ListPrice) * 100
 
-	return `${discount.toFixed(0)}% ${t('productCard.discountSuffix', 'OFF')}`
+	return `-${discount.toFixed(0)}%`
 }
 
 /**
@@ -172,8 +169,7 @@ const getFormattedListPrice = seller => {
 }
 
 // ========== Componente Principal ==========
-
-export default function ProductCard({ product, className }) {
+export default function ProductCard({ product, className, actionButtonCustomColor }) {
 	const { t } = useTranslation()
 	const { addItem, removeItem, updateItemQuantity, cart } = useLocalShoppingCart()
 
@@ -204,7 +200,7 @@ export default function ProductCard({ product, className }) {
 			name: product.productName,
 			image: item.images?.[0]?.imageUrl || '',
 			video: getProductVideo(product),
-			badge: calculateBadge(sellerDefault, t),
+			badge: calculateBadge(sellerDefault),
 			listPrice: getFormattedListPrice(sellerDefault),
 			price: formatPrice(sellerDefault.commertialOffer.Price),
 			installments: formatInstallments(sellerDefault, t)
@@ -244,7 +240,23 @@ export default function ProductCard({ product, className }) {
 
 		try {
 			setLoadingCartOp(true)
-			await addItem({ ...item, quantity: itemQuantity })
+
+			if (itemInCart) {
+				handleQuantityChange(itemQuantity + 1)
+			} else if (item) {
+				const cartUpdate = await addItem({ ...item, quantity: itemQuantity })
+
+				// if (cartUpdate?.items?.length >= 0) {
+				// 	const totalQuantity = cartUpdate?.items?.reduce((acc, item) => acc + item.quantity, 0) ?? 0
+				// 	console.log('CART_ADD_HOME [HOME]', totalQuantity)
+
+				// 	try {
+				// 		Eitri.bottomBar.updateTabBadge({ index: 3, content: String(totalQuantity) })
+				// 	} catch (error) {
+				// 		console.error('Erro ao atualizar contador da Bottom Bar [handleAddToCart]: ', error)
+				// 	}
+				// }
+			}
 		} catch (error) {
 			console.error('Error adding to cart:', error)
 		} finally {
@@ -257,7 +269,21 @@ export default function ProductCard({ product, className }) {
 
 		try {
 			setLoadingCartOp(true)
-			await removeItem(itemInCart.index)
+			const cartUpdate = await removeItem(itemInCart.index)
+
+			// if (cartUpdate?.items?.length >= 0) {
+			// 	const totalQuantity = cartUpdate?.items?.reduce((acc, item) => acc + item.quantity, 0) ?? 0
+			// 	console.log('CART_REMOVE_HOME [HOME]', totalQuantity)
+
+			// 	try {
+			// 		Eitri.bottomBar.updateTabBadge({
+			// 			index: 3,
+			// 			content: totalQuantity > 0 ? String(totalQuantity) : null
+			// 		})
+			// 	} catch (error) {
+			// 		console.error('Erro ao atualizar contador da Bottom Bar: [handleRemoveFromCart]', error)
+			// 	}
+			// }
 		} catch (error) {
 			console.error('Error removing from cart:', error)
 		} finally {
@@ -344,6 +370,7 @@ export default function ProductCard({ product, className }) {
 		onPressCartButton: handleCartButtonPress,
 		onPressOnWishlist: handleWishlistPress,
 		onChangeQuantity: handleQuantityChange,
+		actionButtonCustomColor,
 		t,
 		className
 	}

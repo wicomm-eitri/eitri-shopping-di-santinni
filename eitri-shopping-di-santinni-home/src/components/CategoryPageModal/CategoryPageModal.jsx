@@ -19,8 +19,6 @@ export default function CategoryPageModal(props) {
 	} = props
 	const { t } = useTranslation()
 
-	return null
-
 	return (
 		<Modal
 			show={show}

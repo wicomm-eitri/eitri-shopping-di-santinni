@@ -1,4 +1,5 @@
 import Banner from '../components/CmsComponents/Banner/Banner'
+import BannersRichText from '../components/CmsComponents/BannersRichText/BannersRichText'
 import BlogPostShelf from '../components/CmsComponents/Blog/BlogPostShelf'
 import CategoryListSwipe from '../components/CmsComponents/CategoryListSwipe/CategoryListSwipe'
 import CategoryTree from '../components/CmsComponents/CategoryTree/CategoryTree'
@@ -17,7 +18,8 @@ const componentMap = {
 	CategoryListSwipe: CategoryListSwipe,
 	ProductInfiniteScroll: ProductInfiniteScroll,
 	WordPressCardList: BlogPostShelf,
-	HighlightedProductShelf: HighlightedProductShelf
+	HighlightedProductShelf: HighlightedProductShelf,
+	BannersRichText: BannersRichText
 }
 
 const shouldReloadOnResume = componentName => {

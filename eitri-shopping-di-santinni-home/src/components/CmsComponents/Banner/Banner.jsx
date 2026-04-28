@@ -1,4 +1,3 @@
-import { View } from 'eitri-luminus'
 import { processActions } from '../../../services/ResolveCmsActions'
 import BannerList from './components/BannerList'
 import FitOnScreen from './components/FitOnScreen'

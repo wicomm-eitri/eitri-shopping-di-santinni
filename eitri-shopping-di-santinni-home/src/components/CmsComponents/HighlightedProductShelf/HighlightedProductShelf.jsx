@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
 import { LuChevronRight } from 'react-icons/lu'
@@ -71,11 +70,12 @@ const CountdownTimer = ({ time, textColor, t }) => {
 
 // Componente principal
 export default function HighlightedProductShelf({ data }) {
+	const { t } = useTranslation()
+
 	const [products, setProducts] = useState([])
 	const [isLoading, setIsLoading] = useState(false)
-	const time = useCountdown(data?.endDate, data?.showTimer)
 
-	const { t } = useTranslation()
+	const time = useCountdown(data?.endDate, data?.showTimer)
 
 	useEffect(() => {
 		fetchProducts()
@@ -96,11 +96,9 @@ export default function HighlightedProductShelf({ data }) {
 
 			const result = await getProductsService(params)
 
-			if (result?.products) {
-				setProducts(result.products)
-			}
+			if (result?.products) setProducts(result.products)
 		} catch (error) {
-			console.error('Error fetching products:', error)
+			console.error('Error fetching products [HighlightedProductShelf]:', error)
 		} finally {
 			setIsLoading(false)
 		}
@@ -130,10 +128,12 @@ export default function HighlightedProductShelf({ data }) {
 				className='flex justify-between items-center px-4 mb-4'
 				style={{ color: data.textColor }}>
 				<Text className='font-bold'>{data.title}</Text>
+
 				<View
 					className='flex items-center gap-1'
 					onClick={onSeeMore}>
 					<Text className='text-sm'>{t('highlightedProductShelf.seeMore', 'Veja mais')}</Text>
+
 					<LuChevronRight />
 				</View>
 			</View>
@@ -149,13 +149,18 @@ export default function HighlightedProductShelf({ data }) {
 			<View className='flex overflow-x-auto'>
 				<View className='flex gap-4 px-4'>
 					{isLoading ? (
-						<Text>{t('highlightedProductShelf.loading', 'Carregando...')}</Text>
+						<View className='flex overflow-x-auto gap-2'>
+							<View className='min-w-[50vw] h-[370px] bg-gray-200 rounded animate-pulse' />
+							<View className='min-w-[50vw] h-[370px] bg-gray-200 rounded animate-pulse' />
+							<View className='min-w-[50vw] h-[370px] bg-gray-200 rounded animate-pulse' />
+						</View>
 					) : (
 						products.map(product => (
 							<ProductCard
 								key={product.productId}
 								product={product}
 								className='min-w-[50vw]'
+								actionButtonCustomColor={data?.actionButtonColor}
 							/>
 						))
 					)}

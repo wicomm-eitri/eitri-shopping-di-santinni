@@ -1,6 +1,5 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { View } from 'eitri-luminus'
 import { HeaderContentWrapper, HeaderReturn, HeaderWishList } from 'eitri-shopping-di-santinni-shared'
 import ProductCatalogContent from '../components/ProductCatalogContent/ProductCatalogContent'
 import SearchInput from '../components/SearchInput/SearchInput'

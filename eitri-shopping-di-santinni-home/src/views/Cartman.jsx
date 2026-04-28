@@ -55,8 +55,8 @@ export default function Cartman() {
 				bottomInset
 				topInset>
 				<Text>{`Id do carrinho: ${cart?.orderFormId}`}</Text>
-				{cart?.items?.map(item => (
-					<Text>{`Item no carrinho: ${item?.name}`}</Text>
+				{cart?.items?.map((item, index) => (
+					<Text key={item?.id || index}>{`Item no carrinho: ${item?.name}`}</Text>
 				))}
 				<Button
 					className='btn-primary w-full'

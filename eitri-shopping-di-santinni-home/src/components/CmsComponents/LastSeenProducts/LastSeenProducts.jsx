@@ -4,12 +4,14 @@ import ShelfOfProducts from '../../ShelfOfProducts/ShelfOfProducts'
 
 export default function LastSeenProducts(props) {
 	const { data } = props
+
 	const [products, setProducts] = useState([])
 	const [isLoading, setIsLoading] = useState([])
 
 	useEffect(() => {
 		loadLastSeenProducts()
 	}, [])
+
 	const loadLastSeenProducts = async () => {
 		try {
 			setIsLoading(true)
@@ -36,12 +38,15 @@ export default function LastSeenProducts(props) {
 
 	if (!products || products.length === 0) return null
 
+	const paramsObject = Object.fromEntries((data?.params || []).map(item => [item.key, item.value]))
+
 	return (
 		<ShelfOfProducts
 			mode={data?.mode || 'carousel'}
 			title={data?.title}
 			products={products}
 			isLoading={isLoading}
+			params={paramsObject}
 		/>
 	)
 }

@@ -27,12 +27,14 @@ export default function SearchHistory(props) {
 				fontSize='small'>
 				{t('searchHistory.title', 'Buscas recentes')}
 			</Text>
+
 			<View
 				marginTop='large'
 				direction='column'
 				gap={8}>
-				{history.map(term => (
+				{history.map((term, index) => (
 					<View
+						key={term ? `${term}-${index}` : index}
 						display='flex'
 						justifyContent='between'
 						alignItems='center'
@@ -46,8 +48,10 @@ export default function SearchHistory(props) {
 								src={iconClock}
 								width={20}
 							/>
+
 							<Text fontSize='extra-small'>{term}</Text>
 						</View>
+
 						<Image
 							src={iconLinkGrey}
 							width={12}

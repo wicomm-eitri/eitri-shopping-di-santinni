@@ -11,14 +11,14 @@ import { getCmsContent } from '../services/CmsService'
 export default function Home() {
 	const { t } = useTranslation()
 	const { startCart } = useLocalShoppingCart()
+
 	const [cmsContent, setCmsContent] = useState(null)
 
 	useEffect(() => {
 		startHome()
 		requestNotificationPermission()
-		Eitri.navigation.setOnResumeListener(() => {
-			startCart()
-		})
+
+		Eitri.navigation.addOnResumeListener(() => startCart())
 	}, [])
 
 	const requestNotificationPermission = async () => {
@@ -79,11 +79,15 @@ export default function Home() {
 	return (
 		<Page
 			title={t('home.title', 'Home')}
-			topInset>
-			<MainHeader />
+			topInset
+			statusBarTextColor='black'>
+			{cmsContent && <MainHeader />}
+
 			<View>
 				<HomeSkeleton show={!cmsContent} />
+
 				<CmsContentRender cmsContent={cmsContent} />
+
 				<BottomInset />
 			</View>
 		</Page>

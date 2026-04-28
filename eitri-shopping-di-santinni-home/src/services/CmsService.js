@@ -16,7 +16,7 @@ export const getCmsContent = async (contentType, pageName) => {
 						savePageInCache(faststore, contentType, pageName, page)
 					}
 				})
-				.catch(e => {})
+				.catch(e => console.error('Error loading VTEX CMS page in background:', e))
 
 			return cachedPage
 		}

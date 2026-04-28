@@ -20,3 +20,14 @@ export const goToCartman = () => {
 		cartmantCountdown--
 	}
 }
+
+export const getSpacingValue = value => {
+	if (!value) return undefined
+
+	// se já for algo tipo "80px", "1rem", "10%"
+	if (typeof value === 'string' && /\d/.test(value)) {
+		return value
+	}
+
+	return undefined
+}
