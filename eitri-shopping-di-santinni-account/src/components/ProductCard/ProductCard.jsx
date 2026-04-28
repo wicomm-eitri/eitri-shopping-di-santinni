@@ -1,5 +1,5 @@
 import { useTranslation } from 'eitri-i18n'
-import { ProductCardFullImage, ProductCardDefault } from 'eitri-shopping-di-santinni-shared'
+import { ProductCardDefault, ProductCardFullImage } from 'eitri-shopping-di-santinni-shared'
 import { App } from 'eitri-shopping-vtex-shared'
 import { removeFromWishlist } from '../../services/CustomerService'
 import { openProduct } from '../../services/NavigationService'

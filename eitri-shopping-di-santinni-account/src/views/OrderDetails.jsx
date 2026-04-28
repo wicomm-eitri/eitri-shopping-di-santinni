@@ -1,6 +1,6 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { HeaderContentWrapper, HeaderReturn, HeaderText, Loading, BottomInset } from 'eitri-shopping-di-santinni-shared'
+import { BottomInset, HeaderContentWrapper, HeaderReturn, HeaderText, Loading } from 'eitri-shopping-di-santinni-shared'
 import { Vtex } from 'eitri-shopping-vtex-shared'
 import ImageCard from '../components/Image/ImageCard'
 import OrderStatusBadge from '../components/OrderStatusBadge/OrderStatusBadge'
@@ -27,7 +27,7 @@ export default function OrderDetails(props) {
 	const { t } = useTranslation()
 
 	useEffect(() => {
-		const { order, orderId } = props?.history?.location?.state
+		const { order, orderId } = props?.history?.location?.state || {}
 
 		if (order) {
 			setOrder(order)
@@ -102,6 +102,8 @@ export default function OrderDetails(props) {
 	}
 
 	const handleShippingEstimate = shippingEstimate => {
+		if (!shippingEstimate) return ''
+
 		return shippingEstimate.replace(/[a-zA-Z]/g, '')
 	}
 
@@ -209,8 +211,8 @@ export default function OrderDetails(props) {
 										<Text className='font-bold text-gray-900'>
 											{formatPriceInCents(
 												order?.totals
-													.map(item => item.value)
-													.reduce((acc, curr) => acc + curr, 0)
+													?.map(item => item.value)
+													?.reduce((acc, curr) => acc + curr, 0)
 											)}
 										</Text>
 									</View>
