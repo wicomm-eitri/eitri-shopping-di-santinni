@@ -1,6 +1,12 @@
-import { useTranslation } from 'eitri-i18n'
-import { BottomInset, cartShippingResolver, HeaderContentWrapper, HeaderReturn, HeaderText } from 'eitri-shopping-di-santinni-shared'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'eitri-i18n'
+import {
+	BottomInset,
+	cartShippingResolver,
+	HeaderContentWrapper,
+	HeaderReturn,
+	HeaderText
+} from 'eitri-shopping-di-santinni-shared'
 import CardSelector from '../components/CardSelector/CardSelector'
 import LoadingComponent from '../components/Shared/Loading/LoadingComponent'
 import { useLocalShoppingCart } from '../providers/LocalCart'

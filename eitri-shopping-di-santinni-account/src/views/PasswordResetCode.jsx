@@ -1,5 +1,11 @@
 import { useTranslation } from 'eitri-i18n'
-import { CustomButton, CustomInput, HeaderContentWrapper, HeaderReturn, HeaderText } from 'eitri-shopping-di-santinni-shared'
+import {
+	CustomButton,
+	CustomInput,
+	HeaderContentWrapper,
+	HeaderReturn,
+	HeaderText
+} from 'eitri-shopping-di-santinni-shared'
 import { navigate, PAGES } from '../services/NavigationService'
 import { sendScreenView } from '../services/TrackingService'
 import { addonUserTappedActiveTabListener } from '../utils/backToTopListener'

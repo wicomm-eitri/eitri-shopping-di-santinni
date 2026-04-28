@@ -1,8 +1,14 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { BottomInset, CustomButton, HeaderContentWrapper, HeaderReturn, HeaderText } from 'eitri-shopping-di-santinni-shared'
-import iconCart from '../assets/images/cart-01.svg'
+import {
+	BottomInset,
+	CustomButton,
+	HeaderContentWrapper,
+	HeaderReturn,
+	HeaderText
+} from 'eitri-shopping-di-santinni-shared'
 import { useLocalShoppingCart } from '../providers/LocalCart'
+import iconCart from '../assets/images/cart-01.svg'
 
 export default function EmptyCart(props) {
 	const openWithBottomBar = props?.location?.state?.openWithBottomBar

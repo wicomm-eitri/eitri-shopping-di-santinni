@@ -41,7 +41,7 @@ export default class VtexCaller {
 			...options,
 			headers: {
 				'Content-Type': 'application/json',
-				Accept: 'application/vnd.vtex.ds.v10+json',
+				'Accept': 'application/vnd.vtex.ds.v10+json',
 				...options.headers
 			}
 		})
