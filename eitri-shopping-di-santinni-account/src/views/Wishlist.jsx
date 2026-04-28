@@ -1,41 +1,60 @@
-import { getWishlist, removeFromWishlist } from '../services/CustomerService'
-import WishlistItem from '../components/WishlistItem/WishlistItem'
-import { HeaderContentWrapper, HeaderReturn, HeaderText, Loading, BottomInset } from 'eitri-shopping-di-santinni-shared'
+import Eitri from 'eitri-bifrost'
+import { useTranslation } from 'eitri-i18n'
+import { BottomInset, HeaderContentWrapper, HeaderReturn, HeaderText, Loading } from 'eitri-shopping-di-santinni-shared'
 import NoItem from '../components/NoItem/NoItem'
+import WishlistItem from '../components/WishlistItem/WishlistItem'
+import { getWishlist, removeFromWishlist } from '../services/CustomerService'
 import { sendScreenView } from '../services/TrackingService'
 import { addonUserTappedActiveTabListener } from '../utils/backToTopListener'
-import { useTranslation } from 'eitri-i18n'
 
 export default function Wishlist(props) {
-	const [wishlistItems, setWishlistItems] = useState([])
-	const [isLoading, setIsLoading] = useState(true)
 	const { t } = useTranslation()
 
+	const [wishlistItems, setWishlistItems] = useState([])
+	const [isLoading, setIsLoading] = useState(true)
+
+	const [hasBackButton, setHasBackButton] = useState(false)
+
 	useEffect(() => {
+		startPage()
 		start()
+
 		addonUserTappedActiveTabListener()
 		sendScreenView('Lista de desejos', 'Wishlist')
+
+		Eitri.navigation.addOnResumeListener(() => start())
 	}, [])
 
 	const start = async () => {
 		try {
 			setIsLoading(true)
 			const result = await getWishlist()
+
 			setWishlistItems(result)
-			setIsLoading(false)
 		} catch (e) {
+			console.error('ERROR AO CARREGAR WISHLIST', err)
 			setWishlistItems([])
+		} finally {
 			setIsLoading(false)
+		}
+	}
+
+	const startPage = async () => {
+		const startParams = await Eitri.getInitializationInfos()
+
+		if (!startParams?.tabIndex || startParams?.tabIndex === 4 || startParams?.tabIndex === '4') {
+			setHasBackButton(true)
 		}
 	}
 
 	const onRemoveFromWishList = async id => {
 		setIsLoading(true)
+
 		try {
 			await removeFromWishlist(id)
 			setWishlistItems(prevItems => prevItems.filter(item => item.id !== id))
 		} catch (error) {
-			console.error(error)
+			console.error('Erro ao remover item da wishlist', error)
 		} finally {
 			setIsLoading(false)
 		}
@@ -44,7 +63,8 @@ export default function Wishlist(props) {
 	return (
 		<Page title={t('wishlist.pageTitle', 'Wishlist')}>
 			<HeaderContentWrapper>
-				<HeaderReturn />
+				{hasBackButton && <HeaderReturn />}
+
 				<HeaderText text={t('wishlist.myFavorites', 'Meus favoritos')} />
 			</HeaderContentWrapper>
 
@@ -58,19 +78,18 @@ export default function Wishlist(props) {
 					<WishlistItem
 						key={item.id}
 						productId={item.productId}
-						onRemoveFromWishlist={() => onRemoveFromWishList(item.id)}
+						onRemoveFromWishList={() => onRemoveFromWishList(item.id)}
 					/>
 				))}
 			</View>
+
 			{wishlistItems.length === 0 && !isLoading && (
 				<NoItem
 					title={t('wishlist.noItems', 'Você não possui nenhum item salvo')}
-					subtitle={t(
-						'wishlist.noItemsSubtitle',
-						'Quando você salvar um produto, ele será listado aqui.'
-					)}
+					subtitle={t('wishlist.noItemsSubtitle', 'Quando você salvar um produto, ele será listado aqui.')}
 				/>
 			)}
+
 			<BottomInset />
 		</Page>
 	)

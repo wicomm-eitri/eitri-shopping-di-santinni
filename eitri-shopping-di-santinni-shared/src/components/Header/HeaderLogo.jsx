@@ -1,5 +1,5 @@
-import { Image, View } from 'eitri-luminus'
 import { getRemoteAppConfigProperty } from '../../utils/getRemoteConfigStyleProperty'
+
 export default function HeaderLogo(props) {
 	const { src } = props
 
@@ -15,6 +15,7 @@ export default function HeaderLogo(props) {
 				setUrlLogo(src)
 			} else {
 				const headerLogo = await getRemoteAppConfigProperty('headerLogo')
+
 				setUrlLogo(headerLogo)
 			}
 		} catch (error) {

@@ -1,15 +1,14 @@
 import Eitri from 'eitri-bifrost'
-import { goHome, openAccount } from '../services/navigationService'
 import { useTranslation } from 'eitri-i18n'
-import { trackScreenView } from '../services/Tracking'
-import { Page, Text, View } from 'eitri-luminus'
 import {
+	BottomInset,
+	CustomButton,
 	HeaderContentWrapper,
 	HeaderReturn,
-	HeaderText,
-	CustomButton,
-	BottomInset
+	HeaderText
 } from 'eitri-shopping-di-santinni-shared'
+import { trackScreenView } from '../services/Tracking'
+import { goHome, openAccount } from '../services/navigationService'
 
 export default function OrderCompleted(props) {
 	const orderId = props.location?.state?.orderId

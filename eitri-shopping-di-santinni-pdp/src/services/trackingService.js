@@ -1,5 +1,4 @@
-import Eitri from 'eitri-bifrost'
-import { Tracking, TrackingService } from 'eitri-shopping-di-santinni-shared'
+import { TrackingService } from 'eitri-shopping-di-santinni-shared'
 
 export const sendScreenView = async (friendlyScreenName, screenFilename) => {
 	try {

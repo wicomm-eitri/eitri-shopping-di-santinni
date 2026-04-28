@@ -1,11 +1,10 @@
-import { View } from 'eitri-luminus'
-import SliderHero from './components/SliderHero'
+import { processActions } from '../../../services/ResolveCmsActions'
 import BannerList from './components/BannerList'
 import FitOnScreen from './components/FitOnScreen'
 import GridList from './components/GridList'
 import RoundedBannerList from './components/RoundedBannerList'
 import SingleBanner from './components/SingleBanner'
-import { processActions } from '../../../services/ResolveCmsActions'
+import SliderHero from './components/SliderHero'
 
 export default function Banner(props) {
 	const { data } = props
@@ -19,6 +18,7 @@ export default function Banner(props) {
 			/>
 		)
 	}
+
 	if (mode === 'BannerList') {
 		return (
 			<BannerList
@@ -27,6 +27,7 @@ export default function Banner(props) {
 			/>
 		)
 	}
+
 	if (mode === 'RoundedBannerList') {
 		return (
 			<RoundedBannerList
@@ -35,6 +36,7 @@ export default function Banner(props) {
 			/>
 		)
 	}
+
 	if (mode === 'GridList') {
 		return (
 			<GridList
@@ -43,6 +45,7 @@ export default function Banner(props) {
 			/>
 		)
 	}
+
 	if (mode === 'SingleBanner') {
 		return (
 			<SingleBanner
@@ -51,6 +54,7 @@ export default function Banner(props) {
 			/>
 		)
 	}
+
 	if (mode === 'FitOnScreen') {
 		return (
 			<View>
@@ -61,6 +65,7 @@ export default function Banner(props) {
 			</View>
 		)
 	}
+
 	return (
 		<SliderHero
 			data={data}

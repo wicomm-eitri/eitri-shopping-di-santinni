@@ -1,11 +1,11 @@
-import { HeaderContentWrapper, HeaderReturn, HeaderText, HeaderSearchIcon } from 'eitri-shopping-di-santinni-shared'
-
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
+import MainHeader from '../components/Header/MainHeader'
 import ProductCatalogContent from '../components/ProductCatalogContent/ProductCatalogContent'
 
 export default function ProductCatalog(props) {
 	const { location } = props
+
 	const { t } = useTranslation()
 
 	const title = location.state.title
@@ -15,6 +15,7 @@ export default function ProductCatalog(props) {
 
 	useEffect(() => {
 		const params = location.state.params
+
 		setAppliedFacets(params)
 
 		if (!openInBottomBar) {
@@ -27,22 +28,18 @@ export default function ProductCatalog(props) {
 		}
 	}, [])
 
-	const goToSearch = () => {
-		Eitri.navigation.navigate({ path: 'Search' })
-	}
+	const goToSearch = () => Eitri.navigation.navigate({ path: 'Search' })
 
 	return (
 		<Page title={title || t('productCatalog.title', 'Catálogo')}>
 			<>
-				<HeaderContentWrapper className={`justify-between`}>
-					<View className={`flex items-center gap-4`}>
-						{!openInBottomBar && <HeaderReturn />}
+				<MainHeader isPLP />
 
-							<HeaderText text={title || t('productCatalog.title', 'Catálogo')} />
-					</View>
-
-					<HeaderSearchIcon onClick={goToSearch} />
-				</HeaderContentWrapper>
+				<View className='flex justify-center items-center px-4 mt-[110px]'>
+					<Text className='text-xl font-semibold text-center w-full'>
+						{title || t('productCatalog.title', 'Catálogo')}
+					</Text>
+				</View>
 
 				{appliedFacets && (
 					<ProductCatalogContent

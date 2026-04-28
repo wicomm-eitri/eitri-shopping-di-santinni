@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { useLocalShoppingCart } from '../../providers/LocalCart'
-import { openCart, openProduct } from '../../services/NavigationService'
-import { addToWishlist, productOnWishlist, removeItemFromWishlist } from '../../services/CustomerService'
-import { formatPrice } from '../../utils/utils'
-import { App, EventBus } from 'eitri-shopping-vtex-shared'
-import { ProductCardFullImage, ProductCardDefault } from 'eitri-shopping-di-santinni-shared'
+import { useEffect } from 'react'
 import { useTranslation } from 'eitri-i18n'
+import { ProductCardDefault, ProductCardFullImage } from 'eitri-shopping-di-santinni-shared'
+import { App, EventBus } from 'eitri-shopping-vtex-shared'
+import { useLocalShoppingCart } from '../../providers/LocalCart'
+import { addToWishlist, productOnWishlist, removeItemFromWishlist } from '../../services/CustomerService'
+import { openCart, openProduct } from '../../services/NavigationService'
+import { formatPrice } from '../../utils/utils'
 
 // ========== Hooks Customizados ==========
 
@@ -17,6 +17,7 @@ const useCartItem = (cart, itemId) => {
 		if (!cart?.items || !itemId) return null
 
 		const index = cart.items.findIndex(cartItem => cartItem.id === itemId)
+
 		if (index === -1) return null
 
 		return { ...cart.items[index], index }
@@ -34,13 +35,16 @@ const useWishlist = productId => {
 	useEffect(() => {
 		if (!productId) {
 			setLoading(false)
+
 			return
 		}
 
 		const checkWishlist = async () => {
 			try {
 				const { inList, listId } = await productOnWishlist(productId)
+
 				setIsOnWishlist(inList)
+
 				if (inList) setWishListId(listId)
 			} catch (error) {
 				console.error('Error checking wishlist:', error)
@@ -60,6 +64,7 @@ const useWishlist = productId => {
 				setLoading(true)
 				setIsOnWishlist(true)
 				const response = await addToWishlist(productId, itemName, itemId)
+
 				setWishListId(response?.data?.addToList)
 			} catch (error) {
 				console.error('Error adding to wishlist:', error)
@@ -109,9 +114,11 @@ const useWishlist = productId => {
  */
 const getProductVideo = product => {
 	const videoTag = App?.configs?.appConfigs?.productCard?.productVideoTag
+
 	if (!videoTag) return ''
 
 	const property = product?.properties?.find(prop => prop.name === videoTag)
+
 	return property?.values?.[0] || ''
 }
 
@@ -131,15 +138,13 @@ const formatInstallments = (seller, t) => {
 		return ''
 	}
 
-	return `${t('productCard.installmentsPrefix', 'em até')} ${
-		maxInstallments.NumberOfInstallments
-	}x ${formatPrice(maxInstallments.Value)}`
+	return `${t('productCard.installmentsPrefix', 'Em até')} ${maxInstallments.NumberOfInstallments}x ${formatPrice(maxInstallments.Value)}`
 }
 
 /**
  * Calcula o badge de desconto
  */
-const calculateBadge = (seller, t) => {
+const calculateBadge = seller => {
 	if (!seller?.commertialOffer) return ''
 
 	const { Price, ListPrice } = seller.commertialOffer
@@ -147,7 +152,8 @@ const calculateBadge = (seller, t) => {
 	if (Price === ListPrice || !ListPrice) return ''
 
 	const discount = ((ListPrice - Price) / ListPrice) * 100
-	return `${discount.toFixed(0)}% ${t('productCard.discountSuffix', 'OFF')}`
+
+	return `-${discount.toFixed(0)}%`
 }
 
 /**
@@ -164,8 +170,7 @@ const getFormattedListPrice = seller => {
 }
 
 // ========== Componente Principal ==========
-
-export default function ProductCard({ product, className }) {
+export default function ProductCard({ product, className, actionButtonCustomColor }) {
 	const { t } = useTranslation()
 	const { addItem, removeItem, updateItemQuantity, cart } = useLocalShoppingCart()
 
@@ -176,6 +181,7 @@ export default function ProductCard({ product, className }) {
 
 	const sellerDefault = useMemo(() => {
 		if (!item?.sellers?.length) return null
+
 		return item.sellers.find(seller => seller.sellerDefault) || item.sellers[0]
 	}, [item])
 
@@ -195,7 +201,7 @@ export default function ProductCard({ product, className }) {
 			name: product.productName,
 			image: item.images?.[0]?.imageUrl || '',
 			video: getProductVideo(product),
-			badge: calculateBadge(sellerDefault, t),
+			badge: calculateBadge(sellerDefault),
 			listPrice: getFormattedListPrice(sellerDefault),
 			price: formatPrice(sellerDefault.commertialOffer.Price),
 			installments: formatInstallments(sellerDefault, t)
@@ -213,6 +219,7 @@ export default function ProductCard({ product, className }) {
 				}
 			}
 		})
+
 		EventBus.subscribe({
 			channel: 'removeFromWishlist',
 			broadcast: true,
@@ -223,7 +230,7 @@ export default function ProductCard({ product, className }) {
 				}
 			}
 		})
-	}, [])
+	}, [wishlist?.wishListId, product?.productId])
 
 	// Gerencia item no carrinho
 	const itemQuantity = itemInCart?.quantity || 1
@@ -235,7 +242,23 @@ export default function ProductCard({ product, className }) {
 
 		try {
 			setLoadingCartOp(true)
-			await addItem({ ...item, quantity: itemQuantity })
+
+			if (itemInCart) {
+				handleQuantityChange(itemQuantity + 1)
+			} else if (item) {
+				const cartUpdate = await addItem({ ...item, quantity: itemQuantity })
+
+				// if (cartUpdate?.items?.length >= 0) {
+				// 	const totalQuantity = cartUpdate?.items?.reduce((acc, item) => acc + item.quantity, 0) ?? 0
+				// 	console.log('CART_ADD_HOME [HOME]', totalQuantity)
+
+				// 	try {
+				// 		Eitri.bottomBar.updateTabBadge({ index: 3, content: String(totalQuantity) })
+				// 	} catch (error) {
+				// 		console.error('Erro ao atualizar contador da Bottom Bar [handleAddToCart]: ', error)
+				// 	}
+				// }
+			}
 		} catch (error) {
 			console.error('Error adding to cart:', error)
 		} finally {
@@ -248,7 +271,21 @@ export default function ProductCard({ product, className }) {
 
 		try {
 			setLoadingCartOp(true)
-			await removeItem(itemInCart.index)
+			const cartUpdate = await removeItem(itemInCart.index)
+
+			// if (cartUpdate?.items?.length >= 0) {
+			// 	const totalQuantity = cartUpdate?.items?.reduce((acc, item) => acc + item.quantity, 0) ?? 0
+			// 	console.log('CART_REMOVE_HOME [HOME]', totalQuantity)
+
+			// 	try {
+			// 		Eitri.bottomBar.updateTabBadge({
+			// 			index: 3,
+			// 			content: totalQuantity > 0 ? String(totalQuantity) : null
+			// 		})
+			// 	} catch (error) {
+			// 		console.error('Erro ao atualizar contador da Bottom Bar: [handleRemoveFromCart]', error)
+			// 	}
+			// }
 		} catch (error) {
 			console.error('Error removing from cart:', error)
 		} finally {
@@ -293,12 +330,15 @@ export default function ProductCard({ product, className }) {
 
 		if (itemInCart) {
 			openCart()
+
 			return
 		}
 
 		const buyGoesToPDP = App?.configs?.appConfigs?.productCard?.buyGoesToPDP
+
 		if (buyGoesToPDP) {
 			openProduct(product)
+
 			return
 		}
 
@@ -332,6 +372,7 @@ export default function ProductCard({ product, className }) {
 		onPressCartButton: handleCartButtonPress,
 		onPressOnWishlist: handleWishlistPress,
 		onChangeQuantity: handleQuantityChange,
+		actionButtonCustomColor,
 		t,
 		className
 	}
