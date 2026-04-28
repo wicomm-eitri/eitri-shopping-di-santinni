@@ -3,7 +3,16 @@ import { getRemoteAppConfigProperty } from '../../utils/getRemoteConfigStyleProp
 import HeaderOffset from './HeaderOffset'
 
 export default function HeaderContentWrapper(props) {
-	const { children, scrollEffect, scrollEffectMaxTranslate, height, className, containerClassName, ...rest } = props
+	const {
+		children,
+		scrollEffect,
+		scrollEffectMaxTranslate,
+		height,
+		isHome,
+		className = '',
+		containerClassName = '',
+		...rest
+	} = props
 
 	const [safeAreaTop, setSafeAreaTop] = useState(0)
 	const [translate, setTranslate] = useState('')
@@ -75,13 +84,20 @@ export default function HeaderContentWrapper(props) {
 					let currentScrollTop = window.document.documentElement.scrollTop
 					const distance = currentScrollTop - lastScrollTop
 
-					if (Math.abs(distance) > 0.8) {
-						if (distance > 0 && currentScrollTop > safeAreaTopRef.current) {
-							setTranslate(scrollEffectMaxTranslate ?? '-100%')
-						} else if (currentScrollTop < lastScrollTop) {
-							setTranslate('0')
-						}
+					if (currentScrollTop > lastScrollTop) {
+						setTranslate(`translate-y-[${scrollEffectMaxTranslate || '-100%'}]`)
+					} else if (currentScrollTop < lastScrollTop) {
+						setTranslate('')
 					}
+
+					// ANIMAÇÃO DEFAULT DA EITRI
+					// if (Math.abs(distance) > 0.8) {
+					// 	if (distance > 0 && currentScrollTop > safeAreaTopRef.current) {
+					// 		setTranslate(scrollEffectMaxTranslate ?? '-100%')
+					// 	} else if (currentScrollTop < lastScrollTop) {
+					// 		setTranslate('0')
+					// 	}
+					// }
 
 					lastScrollTop = Math.max(currentScrollTop, 0)
 
@@ -97,11 +113,9 @@ export default function HeaderContentWrapper(props) {
 		<>
 			<View
 				id='header-container'
-				style={{
-					transform: `translateY(${translate})`
-				}}
-				className={`fixed top-0 left-0 right-0 z-[9900] transition-all duration-500 ease-in-out shadow-md w-full backdrop-blur-sm bg-primary ${containerClassName || ''}`}>
-				<View topInset={'auto'} />
+				style={{ transform: `translateY(${translate})` }}
+				className={`fixed top-0 left-0 right-0 z-[9900] transition-all duration-500 ease-in-out shadow-md w-full backdrop-blur-sm bg-header-background ${containerClassName}`}>
+				{!isHome && <View topInset='auto' />}
 
 				<View id='header'>
 					<View
@@ -113,15 +127,19 @@ export default function HeaderContentWrapper(props) {
 				</View>
 			</View>
 
-			<View
-				topInset={'auto'}
-				className={`fixed top-0 left-0 right-0 z-[2000] w-full`}
-			/>
+			{!isHome && (
+				<>
+					<View
+						topInset='auto'
+						className='fixed top-0 left-0 right-0 z-[2000] w-full'
+					/>
 
-			<HeaderOffset
-				height={_height}
-				topInset={'auto'}
-			/>
+					<HeaderOffset
+						height={_height}
+						topInset='auto'
+					/>
+				</>
+			)}
 		</>
 	)
 }

@@ -23,7 +23,9 @@ export default function HeaderLogo(props) {
 		}
 	}
 
-	if (!urlLogo) return null
+	if (!urlLogo) {
+		return null
+	}
 
 	return (
 		<View className='max-h-[40px] max-w-[150px] flex items-center'>
