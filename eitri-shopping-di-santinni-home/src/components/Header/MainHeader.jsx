@@ -1,6 +1,6 @@
+import Eitri from 'eitri-bifrost'
 import { HeaderCart, HeaderContentWrapper, HeaderLogo, HeaderSearchIcon } from 'eitri-shopping-di-santinni-shared'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
-import Eitri from 'eitri-bifrost'
 import { goToCartman } from '../../utils/utils'
 
 export default function MainHeader() {
@@ -20,8 +20,9 @@ export default function MainHeader() {
 				<HeaderLogo />
 			</View>
 
-			<View className='flex justify-between gap-[12px]'>
+			<View className='flex items-center justify-between gap-[12px]'>
 				<HeaderSearchIcon onClick={navigateToSearch} />
+
 				<HeaderCart cart={cart} />
 			</View>
 		</HeaderContentWrapper>

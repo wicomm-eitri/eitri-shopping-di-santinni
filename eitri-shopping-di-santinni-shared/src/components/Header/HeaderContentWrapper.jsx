@@ -1,6 +1,6 @@
+import { DIMENSIONS } from '../../utils/constants'
 import { getRemoteAppConfigProperty } from '../../utils/getRemoteConfigStyleProperty'
 import HeaderOffset from './HeaderOffset'
-import { DIMENSIONS } from '../../utils/constants'
 
 export default function HeaderContentWrapper(props) {
 	const { children, scrollEffect, scrollEffectMaxTranslate, height, className, containerClassName, ...rest } = props
@@ -65,14 +65,13 @@ export default function HeaderContentWrapper(props) {
 				window.requestAnimationFrame(() => {
 					let currentScrollTop = window.document.documentElement.scrollTop
 					const distance = currentScrollTop - lastScrollTop
-					if (Math.abs(distance) > .8) {
+					if (Math.abs(distance) > 0.8) {
 						if (distance > 0 && currentScrollTop > safeAreaTopRef.current) {
 							setTranslate(scrollEffectMaxTranslate ?? '-100%')
 						} else if (currentScrollTop < lastScrollTop) {
 							setTranslate('0')
 						}
 					}
-
 
 					lastScrollTop = Math.max(currentScrollTop, 0)
 
@@ -91,8 +90,9 @@ export default function HeaderContentWrapper(props) {
 				style={{
 					transform: `translateY(${translate})`
 				}}
-				className={`fixed top-0 left-0 right-0 z-[9900] transition-all duration-500 ease-in-out shadow-md w-full backdrop-blur-sm bg-header-background ${containerClassName || ''}`}>
+				className={`fixed top-0 left-0 right-0 z-[9900] transition-all duration-500 ease-in-out shadow-md w-full backdrop-blur-sm bg-primary ${containerClassName || ''}`}>
 				<View topInset={'auto'} />
+
 				<View id='header'>
 					<View
 						id='header-content'
@@ -102,10 +102,12 @@ export default function HeaderContentWrapper(props) {
 					</View>
 				</View>
 			</View>
+
 			<View
 				topInset={'auto'}
 				className={`fixed top-0 left-0 right-0 z-[2000] w-full`}
 			/>
+
 			<HeaderOffset
 				height={_height}
 				topInset={'auto'}
