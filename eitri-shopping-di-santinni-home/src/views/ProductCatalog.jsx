@@ -1,7 +1,6 @@
-import { HeaderContentWrapper, HeaderReturn, HeaderText, HeaderSearchIcon } from 'eitri-shopping-di-santinni-shared'
-
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
+import { HeaderContentWrapper, HeaderReturn, HeaderText, HeaderSearchIcon } from 'eitri-shopping-di-santinni-shared'
 import ProductCatalogContent from '../components/ProductCatalogContent/ProductCatalogContent'
 
 export default function ProductCatalog(props) {
@@ -15,6 +14,7 @@ export default function ProductCatalog(props) {
 
 	useEffect(() => {
 		const params = location.state.params
+
 		setAppliedFacets(params)
 
 		if (!openInBottomBar) {
@@ -38,7 +38,7 @@ export default function ProductCatalog(props) {
 					<View className={`flex items-center gap-4`}>
 						{!openInBottomBar && <HeaderReturn />}
 
-							<HeaderText text={title || t('productCatalog.title', 'Catálogo')} />
+						<HeaderText text={title || t('productCatalog.title', 'Catálogo')} />
 					</View>
 
 					<HeaderSearchIcon onClick={goToSearch} />

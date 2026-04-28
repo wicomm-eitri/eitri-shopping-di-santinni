@@ -16,12 +16,15 @@ function getOptionStatus(skus, attributeKeys, key, selections) {
 	return values.reduce((acc, value) => {
 		const matching = skus.filter(s => {
 			if (s.attributes[key] !== value) return false
+
 			return otherKeys.every(k => !selections[k] || s.attributes[k] === selections[k])
 		})
+
 		acc[value] = {
 			exists: matching.length > 0,
 			availableExists: matching.some(s => s.available)
 		}
+
 		return acc
 	}, {})
 }
@@ -29,6 +32,7 @@ function getOptionStatus(skus, attributeKeys, key, selections) {
 // Find selected SKU
 function findSelectedSku(skus, attributeKeys, selections) {
 	if (Object.keys(selections).length < attributeKeys.length) return null
+
 	return skus.find(s => attributeKeys.every(k => s.attributes[k] === selections[k])) || null
 }
 
@@ -104,14 +108,18 @@ export default function SkuSelector(props) {
 	useEffect(() => {
 		if (!currentSku?.variations?.length) {
 			setSelections({})
+
 			return
 		}
+
 		const currentSelection = currentSku?.variations?.reduce((acc, variation) => {
 			if (variation.name && variation.values?.[0]) {
 				acc[variation.name] = variation.values[0]
 			}
+
 			return acc
 		}, {})
+
 		setSelections(currentSelection)
 	}, [currentSku])
 
@@ -120,12 +128,15 @@ export default function SkuSelector(props) {
 
 		const res = product?.items?.map(item => {
 			const sellerDefault = item?.sellers?.find(s => s.sellerDefault) ?? item.sellers[0]
+
 			return {
 				itemId: item.itemId,
 				available: sellerDefault.commertialOffer.AvailableQuantity > 0,
 				attributes: item?.variations?.reduce((acc, item) => {
 					if (hiddenVariations?.includes(item.name)) return acc
+
 					acc[item.name] = item.values?.[0] ?? null
+
 					return acc
 				}, {})
 			}
@@ -138,18 +149,21 @@ export default function SkuSelector(props) {
 
 	const handleSelect = (key, value) => {
 		const isSame = selections[key] === value
+
 		if (isSame) {
 			return
 		}
 
 		const next = { ...selections, [key]: value }
 		const newSku = findSelectedSku(skus, attributeKeys, next)
+
 		onSkuChange?.(newSku)
 	}
 
 	if (attributeKeys.length === 0) {
 		return null
 	}
+
 	return (
 		<View className='flex flex-col gap-4 bg-white rounded shadow-sm border border-gray-300 p-4 w-full'>
 			{attributeKeys.map(key => {

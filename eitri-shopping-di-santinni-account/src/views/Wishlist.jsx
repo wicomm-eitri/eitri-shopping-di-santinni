@@ -1,10 +1,10 @@
-import { getWishlist, removeFromWishlist } from '../services/CustomerService'
-import WishlistItem from '../components/WishlistItem/WishlistItem'
+import { useTranslation } from 'eitri-i18n'
 import { HeaderContentWrapper, HeaderReturn, HeaderText, Loading, BottomInset } from 'eitri-shopping-di-santinni-shared'
 import NoItem from '../components/NoItem/NoItem'
+import WishlistItem from '../components/WishlistItem/WishlistItem'
+import { getWishlist, removeFromWishlist } from '../services/CustomerService'
 import { sendScreenView } from '../services/TrackingService'
 import { addonUserTappedActiveTabListener } from '../utils/backToTopListener'
-import { useTranslation } from 'eitri-i18n'
 
 export default function Wishlist(props) {
 	const [wishlistItems, setWishlistItems] = useState([])
@@ -21,6 +21,7 @@ export default function Wishlist(props) {
 		try {
 			setIsLoading(true)
 			const result = await getWishlist()
+
 			setWishlistItems(result)
 			setIsLoading(false)
 		} catch (e) {
@@ -31,6 +32,7 @@ export default function Wishlist(props) {
 
 	const onRemoveFromWishList = async id => {
 		setIsLoading(true)
+
 		try {
 			await removeFromWishlist(id)
 			setWishlistItems(prevItems => prevItems.filter(item => item.id !== id))
@@ -65,10 +67,7 @@ export default function Wishlist(props) {
 			{wishlistItems.length === 0 && !isLoading && (
 				<NoItem
 					title={t('wishlist.noItems', 'Você não possui nenhum item salvo')}
-					subtitle={t(
-						'wishlist.noItemsSubtitle',
-						'Quando você salvar um produto, ele será listado aqui.'
-					)}
+					subtitle={t('wishlist.noItemsSubtitle', 'Quando você salvar um produto, ele será listado aqui.')}
 				/>
 			)}
 			<BottomInset />

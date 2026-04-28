@@ -1,4 +1,5 @@
 import { Text, View } from 'eitri-luminus'
+
 export default function BannerList(props) {
 	const { data, onClick } = props
 	const imagesList = data.images

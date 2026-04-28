@@ -1,13 +1,16 @@
 import { Text, View } from 'eitri-luminus'
+
 export default function CollapsableView(props) {
 	const { children, title, willStartCollapsed } = props
 	const [collapsed, setCollapsed] = useState(willStartCollapsed)
+
 	useEffect(() => {
 		setCollapsed(!!willStartCollapsed)
 	}, [])
 	const toggleCollapsedState = () => {
 		setCollapsed(!collapsed)
 	}
+
 	return (
 		<View
 			borderTopWidth={'hairline'}

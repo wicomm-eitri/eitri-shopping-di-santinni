@@ -1,8 +1,8 @@
+import Eitri from 'eitri-bifrost'
+import { useTranslation } from 'eitri-i18n'
 import { Skeleton, Text, View } from 'eitri-luminus'
 import ShelfOfProductsCarousel from './components/ShelfOfProductsCarousel'
 import ShelfOfProductsSlider from './components/ShelfOfProductsSlider'
-import Eitri from 'eitri-bifrost'
-import { useTranslation } from 'eitri-i18n'
 
 export default function ShelfOfProducts(props) {
 	const { products, title, isLoading, mode, searchParams, ...rest } = props

@@ -1,13 +1,13 @@
-import { useLocalShoppingCart } from '../providers/LocalCart'
+import { useState } from 'react'
 import { useTranslation } from 'eitri-i18n'
 import { Page, Text, View } from 'eitri-luminus'
-import { navigate } from '../services/navigationService'
-import { useState } from 'react'
 import { productGroupShippingResolver } from 'eitri-shopping-di-santinni-shared'
-import FixedBottom from '../components/FixedBottom/FixedBottom'
-import LoadingComponent from '../components/Shared/Loading/LoadingComponent'
 import { HeaderContentWrapper, HeaderReturn, CustomButton } from 'eitri-shopping-di-santinni-shared'
 import { FaChevronRight } from 'react-icons/fa'
+import FixedBottom from '../components/FixedBottom/FixedBottom'
+import LoadingComponent from '../components/Shared/Loading/LoadingComponent'
+import { useLocalShoppingCart } from '../providers/LocalCart'
+import { navigate } from '../services/navigationService'
 
 function AddressSelectorCard({ sla, t }) {
 	const formatAddress = address => {

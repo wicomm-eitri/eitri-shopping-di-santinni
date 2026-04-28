@@ -1,5 +1,6 @@
-import { Spacing, Divisor } from 'eitri-shopping-di-santinni-shared'
 import { useTranslation } from 'eitri-i18n'
+import { Divisor } from 'eitri-shopping-di-santinni-shared'
+
 export default function Supplier(props) {
 	const { supplier } = props
 	const [collapsed, setCollapsed] = useState(true)
@@ -7,6 +8,7 @@ export default function Supplier(props) {
 	const toggleCollapsedState = () => {
 		setCollapsed(!collapsed)
 	}
+
 	return (
 		<View>
 			<View onClick={() => toggleCollapsedState()}>

@@ -1,4 +1,5 @@
 import { Text, View } from 'eitri-luminus'
+
 export default function SingleBanner(props) {
 	const { data, onClick } = props
 
@@ -10,6 +11,7 @@ export default function SingleBanner(props) {
 		try {
 			const [aspectWidth, aspectHeight] = data?.aspectRatio?.split(':')?.map(Number)
 			const screenWidth = window.innerWidth
+
 			proportionalHeight = screenWidth * (aspectHeight / aspectWidth)
 		} catch (e) {}
 	}

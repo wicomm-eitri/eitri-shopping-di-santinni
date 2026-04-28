@@ -1,5 +1,5 @@
-import { getProductsService } from '../../../services/ProductService'
 import { Text, View } from 'eitri-luminus'
+import { getProductsService } from '../../../services/ProductService'
 import ShelfOfProducts from '../../ShelfOfProducts/ShelfOfProducts'
 
 export default function ProductTiles(props) {
@@ -25,6 +25,7 @@ export default function ProductTiles(props) {
 		try {
 			if (cachedProducts[shelf.title]) {
 				setCurrentProducts(cachedProducts[shelf.title])
+
 				return
 			}
 

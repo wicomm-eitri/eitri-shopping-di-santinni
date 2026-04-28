@@ -22,11 +22,15 @@ export default function HeaderContentWrapper(props) {
 
 	useEffect(() => {
 		const headerElement = document.getElementById('header')
+
 		if (!headerElement) return
+
 		const observer = new ResizeObserver(([entry]) => {
 			setHeaderHeight(entry.contentRect.height)
 		})
+
 		observer.observe(headerElement)
+
 		return () => observer.disconnect()
 	}, [])
 
@@ -35,12 +39,15 @@ export default function HeaderContentWrapper(props) {
 
 		if (!scrollEffect) {
 			const headerScrollEffect = await getRemoteAppConfigProperty('headerScrollEffect')
+
 			if (!headerScrollEffect) {
 				return
 			}
 		}
+
 		loadSafeAreas()
 		window.addEventListener('scroll', scrollHandler.current)
+
 		return () => {
 			window.removeEventListener('scroll', scrollHandler.current)
 		}
@@ -48,10 +55,12 @@ export default function HeaderContentWrapper(props) {
 
 	const loadSafeAreas = async () => {
 		const { EITRI } = window
+
 		if (EITRI) {
 			const { superAppData } = await EITRI.miniAppConfigs
 			const { safeAreaInsets } = superAppData
 			const { top } = safeAreaInsets
+
 			setSafeAreaTop(top)
 		}
 	}
@@ -65,6 +74,7 @@ export default function HeaderContentWrapper(props) {
 				window.requestAnimationFrame(() => {
 					let currentScrollTop = window.document.documentElement.scrollTop
 					const distance = currentScrollTop - lastScrollTop
+
 					if (Math.abs(distance) > 0.8) {
 						if (distance > 0 && currentScrollTop > safeAreaTopRef.current) {
 							setTranslate(scrollEffectMaxTranslate ?? '-100%')

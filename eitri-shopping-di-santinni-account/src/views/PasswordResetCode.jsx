@@ -1,3 +1,4 @@
+import { useTranslation } from 'eitri-i18n'
 import {
 	HeaderContentWrapper,
 	HeaderReturn,
@@ -6,7 +7,6 @@ import {
 	CustomInput
 } from 'eitri-shopping-di-santinni-shared'
 import { navigate, PAGES } from '../services/NavigationService'
-import { useTranslation } from 'eitri-i18n'
 import { sendScreenView } from '../services/TrackingService'
 import { addonUserTappedActiveTabListener } from '../utils/backToTopListener'
 
@@ -28,6 +28,7 @@ export default function PasswordResetCode(props) {
 		if (recoveryCode.length !== RECOVERY_CODE_LENGTH) {
 			return
 		}
+
 		navigate(PAGES.PASSWORD_RESET_NEW_PASS, { email: email, recoveryCode })
 	}
 
@@ -44,7 +45,9 @@ export default function PasswordResetCode(props) {
 
 			<View className='p-4 flex flex-col w-full'>
 				<View className='flex flex-col gap-2'>
-					<Text className='w-full font-bold text-xl'>{t('passwordResetCode.forgotPass', 'Esqueceu a senha?')}</Text>
+					<Text className='w-full font-bold text-xl'>
+						{t('passwordResetCode.forgotPass', 'Esqueceu a senha?')}
+					</Text>
 					<Text className='text text-gray-600'>
 						{t('passwordResetCode.messageEmail', 'Digite o código de 6 dígitos enviado para o email')}
 						<Text className='font-bold text-gray-700 ml-1'>{email}</Text>

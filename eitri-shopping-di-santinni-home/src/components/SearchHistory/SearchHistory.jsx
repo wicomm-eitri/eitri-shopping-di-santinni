@@ -1,7 +1,7 @@
-import { getSearchHistory } from '../../services/CatalogService'
+import { useTranslation } from 'eitri-i18n'
 import iconClock from '../../assets/icons/clock.svg'
 import iconLinkGrey from '../../assets/icons/link_grey.svg'
-import { useTranslation } from 'eitri-i18n'
+import { getSearchHistory } from '../../services/CatalogService'
 
 export default function SearchHistory(props) {
 	const { onSubmit, ...rest } = props

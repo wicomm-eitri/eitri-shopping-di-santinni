@@ -1,22 +1,28 @@
 import { Spacing } from 'eitri-shopping-di-santinni-shared'
 import ProductCard from '../ProductCard/ProductCard'
+
 export default function ProductCarousel(props) {
 	const [currentSlide, setCurrentSlide] = useState(0)
 	const { products } = props
 	let pairedItems = []
+
 	if (!Array.isArray(products)) {
 		return null
 	}
+
 	const beforeChange = (currentSlide, nextSlide) => {
 		setCurrentSlide(nextSlide)
 	}
 	const pairItems = items => {
 		pairedItems = []
+
 		for (let i = 0; i < items.length; i += 2) {
 			pairedItems.push(items.slice(i, i + 2))
 		}
+
 		return pairedItems
 	}
+
 	return (
 		<View>
 			<Carousel beforeChange={beforeChange}>

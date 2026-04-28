@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { useLocalShoppingCart } from '../../providers/LocalCart'
-import { openCart, openProduct } from '../../services/NavigationService'
-import { addToWishlist, productOnWishlist, removeItemFromWishlist } from '../../services/CustomerService'
-import { formatPrice } from '../../utils/utils'
-import { App, EventBus } from 'eitri-shopping-vtex-shared'
-import { ProductCardFullImage, ProductCardDefault } from 'eitri-shopping-di-santinni-shared'
 import { useTranslation } from 'eitri-i18n'
+import { ProductCardFullImage, ProductCardDefault } from 'eitri-shopping-di-santinni-shared'
+import { App, EventBus } from 'eitri-shopping-vtex-shared'
+import { useLocalShoppingCart } from '../../providers/LocalCart'
+import { addToWishlist, productOnWishlist, removeItemFromWishlist } from '../../services/CustomerService'
+import { openCart, openProduct } from '../../services/NavigationService'
+import { formatPrice } from '../../utils/utils'
 
 // ========== Hooks Customizados ==========
 
@@ -17,6 +17,7 @@ const useCartItem = (cart, itemId) => {
 		if (!cart?.items || !itemId) return null
 
 		const index = cart.items.findIndex(cartItem => cartItem.id === itemId)
+
 		if (index === -1) return null
 
 		return { ...cart.items[index], index }
@@ -34,13 +35,16 @@ const useWishlist = productId => {
 	useEffect(() => {
 		if (!productId) {
 			setLoading(false)
+
 			return
 		}
 
 		const checkWishlist = async () => {
 			try {
 				const { inList, listId } = await productOnWishlist(productId)
+
 				setIsOnWishlist(inList)
+
 				if (inList) setWishListId(listId)
 			} catch (error) {
 				console.error('Error checking wishlist:', error)
@@ -60,6 +64,7 @@ const useWishlist = productId => {
 				setLoading(true)
 				setIsOnWishlist(true)
 				const response = await addToWishlist(productId, itemName, itemId)
+
 				setWishListId(response?.data?.addToList)
 			} catch (error) {
 				console.error('Error adding to wishlist:', error)
@@ -109,9 +114,11 @@ const useWishlist = productId => {
  */
 const getProductVideo = product => {
 	const videoTag = App?.configs?.appConfigs?.productCard?.productVideoTag
+
 	if (!videoTag) return ''
 
 	const property = product?.properties?.find(prop => prop.name === videoTag)
+
 	return property?.values?.[0] || ''
 }
 
@@ -147,6 +154,7 @@ const calculateBadge = (seller, t) => {
 	if (Price === ListPrice || !ListPrice) return ''
 
 	const discount = ((ListPrice - Price) / ListPrice) * 100
+
 	return `${discount.toFixed(0)}% ${t('productCard.discountSuffix', 'OFF')}`
 }
 
@@ -176,6 +184,7 @@ export default function ProductCard({ product, className }) {
 
 	const sellerDefault = useMemo(() => {
 		if (!item?.sellers?.length) return null
+
 		return item.sellers.find(seller => seller.sellerDefault) || item.sellers[0]
 	}, [item])
 
@@ -293,12 +302,15 @@ export default function ProductCard({ product, className }) {
 
 		if (itemInCart) {
 			openCart()
+
 			return
 		}
 
 		const buyGoesToPDP = App?.configs?.appConfigs?.productCard?.buyGoesToPDP
+
 		if (buyGoesToPDP) {
 			openProduct(product)
+
 			return
 		}
 

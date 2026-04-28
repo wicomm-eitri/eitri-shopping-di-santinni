@@ -1,7 +1,7 @@
-import { HeaderReturn, HeaderContentWrapper, HeaderText } from 'eitri-shopping-di-santinni-shared'
 import Eitri from 'eitri-bifrost'
-import CategoryTitle from './CategoryTitle'
 import { useTranslation } from 'eitri-i18n'
+import { HeaderReturn, HeaderContentWrapper, HeaderText } from 'eitri-shopping-di-santinni-shared'
+import CategoryTitle from './CategoryTitle'
 
 export default function CategoryPageItem(props) {
 	const { item, goToItem } = props
@@ -13,6 +13,7 @@ export default function CategoryPageItem(props) {
 		if (showSubItems) {
 			Eitri.navigation.addBackHandler(() => {
 				setShowSubItems(false)
+
 				return false
 			})
 		} else {

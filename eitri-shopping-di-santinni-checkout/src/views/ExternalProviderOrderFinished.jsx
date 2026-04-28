@@ -1,9 +1,9 @@
-import Eitri from 'eitri-bifrost'
-import { HeaderContentWrapper, CustomButton } from 'eitri-shopping-di-santinni-shared'
-import { openAccount } from '../services/navigationService'
-import { trackScreenView } from '../services/Tracking'
 import { useEffect } from 'react'
+import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
+import { HeaderContentWrapper, CustomButton } from 'eitri-shopping-di-santinni-shared'
+import { trackScreenView } from '../services/Tracking'
+import { openAccount } from '../services/navigationService'
 
 export default function ExternalProviderOrderFinished(props) {
 	const { t } = useTranslation()

@@ -1,5 +1,6 @@
 import { getProductsService } from '../../../services/ProductService'
 import ShelfOfProducts from '../../ShelfOfProducts/ShelfOfProducts'
+
 export default function ProductShelf(props) {
 	const { data } = props
 
@@ -22,10 +23,12 @@ export default function ProductShelf(props) {
 		}
 
 		const result = await getProductsService(params)
+
 		if (result) {
 			setCurrentProducts(result.products)
 			setSearchParams({ facets: data?.facets, ...params })
 		}
+
 		setIsLoadingProducts(false)
 	}
 

@@ -1,13 +1,12 @@
-import { useLocalShoppingCart } from '../providers/LocalCart'
-import { useTranslation } from 'eitri-i18n'
-import { Page, Radio, Text, View } from 'eitri-luminus'
-import { navigate } from '../services/navigationService'
 import { useState } from 'react'
-import { FaChevronRight } from 'react-icons/fa'
-import LoadingComponent from '../components/Shared/Loading/LoadingComponent'
+import Eitri from 'eitri-bifrost'
+import { useTranslation } from 'eitri-i18n'
+import { Page, Text, View } from 'eitri-luminus'
 import { HeaderContentWrapper, HeaderReturn, BottomInset } from 'eitri-shopping-di-santinni-shared'
 import CardSelector from '../components/CardSelector/CardSelector'
-import Eitri from 'eitri-bifrost'
+import LoadingComponent from '../components/Shared/Loading/LoadingComponent'
+import { useLocalShoppingCart } from '../providers/LocalCart'
+import { navigate } from '../services/navigationService'
 
 export default function FreightGroupSelectorOptions(props) {
 	const group = props?.location?.state?.group

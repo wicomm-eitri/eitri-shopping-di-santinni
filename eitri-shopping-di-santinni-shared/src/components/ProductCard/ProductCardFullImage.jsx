@@ -1,6 +1,6 @@
-import WishlistIcon from './components/WishlistIcon'
-import Loading from '../Loading/LoadingComponent'
 import { Text, View, Image } from 'eitri-luminus'
+import Loading from '../Loading/LoadingComponent'
+import WishlistIcon from './components/WishlistIcon'
 
 export default function ProductCardFullImage(props) {
 	const {
