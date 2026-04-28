@@ -82,9 +82,12 @@ export default function MultipleFreightSelector(props) {
 
 				<View className={'flex flex-col gap-4'}>
 					{shippingOptions?.map((group, index) => (
-						<View className='bg-white rounded shadow-sm border border-gray-300 p-4 w-full flex flex-col'>
+						<View
+							key={group?.id || `shippingOption-${index}`}
+							className='bg-white rounded shadow-sm border border-gray-300 p-4 w-full flex flex-col'>
 							<View className='flex flex-row items-center justify-between mb-3 border-b'>
 								<Text className='font-bold'>{`${t('multipleFreightSelector.package', 'Pacote')} ${index + 1}`}</Text>
+
 								<View className='flex flex-row gap-4 mb-3'>
 									{group?.items?.slice(0, 4)?.map(product => (
 										<View

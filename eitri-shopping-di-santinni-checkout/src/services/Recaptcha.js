@@ -65,4 +65,5 @@ const Recaptcha = forwardRef((props, ref) => {
 	)
 })
 
+Recaptcha.displayName = 'Recaptcha'
 export default Recaptcha

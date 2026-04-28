@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { HeaderContentWrapper, CustomButton } from 'eitri-shopping-di-santinni-shared'
+import { CustomButton, HeaderContentWrapper } from 'eitri-shopping-di-santinni-shared'
 import { trackScreenView } from '../services/Tracking'
 import { openAccount } from '../services/navigationService'
 
@@ -28,6 +28,7 @@ export default function ExternalProviderOrderFinished(props) {
 						<Text className='text-2xl w-full font-bold text-center text-gray-800 mb-2'>
 							{t('externalProviderOrderFinished.title', 'Solicitação enviada!')}
 						</Text>
+
 						<Text className='text-base text-center text-gray-600 leading-relaxed'>
 							{t(
 								'externalProviderOrderFinished.description',
@@ -43,6 +44,7 @@ export default function ExternalProviderOrderFinished(props) {
 							onPress={openAccount}
 							block
 						/>
+
 						<CustomButton
 							outlined
 							label={t('externalProviderOrderFinished.tryAgain', 'Tentar novamente')}

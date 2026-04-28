@@ -15,25 +15,27 @@ export const getCustomerData = async () => {
 }
 
 export const requestLogin = () => {
-	return new Promise(async (resolve, reject) => {
-		if (await isLoggedIn()) {
-			resolve()
-
-			return
-		}
-
-		Eitri.nativeNavigation.open({
-			slug: 'account',
-			initParams: { action: 'RequestLogin', closeAppAfterLogin: true }
-		})
-
-		Eitri.navigation.setOnResumeListener(async () => {
+	return new Promise((resolve, reject) => {
+		;(async () => {
 			if (await isLoggedIn()) {
 				resolve()
-			} else {
-				reject('User not logged in')
+
+				return
 			}
-		})
+
+			Eitri.nativeNavigation.open({
+				slug: 'account',
+				initParams: { action: 'RequestLogin', closeAppAfterLogin: true }
+			})
+
+			Eitri.navigation.setOnResumeListener(async () => {
+				if (await isLoggedIn()) {
+					resolve()
+				} else {
+					reject('User not logged in')
+				}
+			})
+		})()
 	})
 }
 

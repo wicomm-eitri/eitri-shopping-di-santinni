@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { Image, Page, Text, View } from 'eitri-luminus'
 import {
 	HeaderContentWrapper,
 	HeaderReturn,
@@ -34,8 +33,6 @@ export default function PixOrder(props) {
 		const result = props.location?.state?.paymentResult
 
 		if (result) {
-			// console.log('result', result?.paymentAuthorizationAppCollection?.[0].appPayload)
-
 			const appPayload = parseResponse(result?.paymentAuthorizationAppCollection?.[0].appPayload)
 
 			setPixPayload(appPayload)
@@ -117,7 +114,9 @@ export default function PixOrder(props) {
 				clearCart()
 				navigate('OrderCompleted', { orderId: result?.orderId })
 			}
-		} catch (error) {}
+		} catch (error) {
+			console.error('Erro ao verificar status do PIX [checkPixStatus]:', error)
+		}
 	}
 
 	// Call the function to start fetching data

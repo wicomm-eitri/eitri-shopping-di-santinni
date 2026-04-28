@@ -1,13 +1,6 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { Page, Text, View } from 'eitri-luminus'
-import {
-	HeaderContentWrapper,
-	HeaderReturn,
-	HeaderText,
-	CustomButton,
-	BottomInset
-} from 'eitri-shopping-di-santinni-shared'
+import { BottomInset, CustomButton, HeaderContentWrapper, HeaderReturn, HeaderText } from 'eitri-shopping-di-santinni-shared'
 import { trackScreenView } from '../services/Tracking'
 import { goHome, openAccount } from '../services/navigationService'
 

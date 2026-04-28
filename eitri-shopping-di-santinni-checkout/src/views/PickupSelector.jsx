@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'eitri-i18n'
-import { Page, Text, View } from 'eitri-luminus'
-import { cartShippingResolver } from 'eitri-shopping-di-santinni-shared'
-import { HeaderContentWrapper, HeaderReturn, HeaderText, BottomInset } from 'eitri-shopping-di-santinni-shared'
+import { BottomInset, cartShippingResolver, HeaderContentWrapper, HeaderReturn, HeaderText } from 'eitri-shopping-di-santinni-shared'
+import { useEffect, useState } from 'react'
 import CardSelector from '../components/CardSelector/CardSelector'
 import LoadingComponent from '../components/Shared/Loading/LoadingComponent'
 import { useLocalShoppingCart } from '../providers/LocalCart'
@@ -26,9 +24,7 @@ export default function PickupSelector(props) {
 		}
 	}, [])
 
-	const handleAddNewAddress = () => {
-		navigate('AddressForm', {}, true)
-	}
+	const handleAddNewAddress = () => navigate('AddressForm', {}, true)
 
 	const onSelectFreightOption = async freightOption => {
 		try {
@@ -76,16 +72,20 @@ export default function PickupSelector(props) {
 					</Text>
 				</View>
 
-				{pickUpOptions?.slice(0, seeMore ? Infinity : 3).map(option => (
+				{pickUpOptions?.slice(0, seeMore ? Infinity : 3).map((option, index) => (
 					<CardSelector
+						key={option?.id || `${option.label}-${index}`}
 						mainTitle={option.label}
 						mainClickHandler={() => onSelectFreightOption(option)}
 						secondaryActionTitle={option.shippingEstimate}>
 						<Text className='text text-base-content/70'>{`${option.address.street}, ${option.address.number} ${option.address.complement}`}</Text>
+
 						<Text className='text text-base-content/70'>{`${option.address.neighborhood} - ${option.address.city} - ${option.address.state}`}</Text>
+
 						<Text className='text text-base-content/70'>
 							{`${t('common.zipCode', 'CEP')}: ${option.address.postalCode}`}
 						</Text>
+
 						<Text
 							className={`text text-base-content/70 font-bold ${option.price === 'Grátis' ? 'text-green-600' : ''}`}>
 							{option.price}

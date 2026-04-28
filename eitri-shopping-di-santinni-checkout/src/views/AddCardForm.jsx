@@ -28,7 +28,7 @@ export default function AddCardForm(props) {
 	const [validDueDate, setValidDueDate] = useState(false)
 
 	useEffect(() => {
-		const paymentSystemGroups = getPaymentSystem(cart)
+		const paymentSystemGroups = getPaymentSystem(cart) || []
 		const cardSystemGroup = paymentSystemGroups.find(ps => ps.groupName === 'creditCardPaymentGroup')
 
 		setSystemGroups(cardSystemGroup)
