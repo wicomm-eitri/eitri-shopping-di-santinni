@@ -1,0 +1,237 @@
+name: Push and publish Eitri Application
+
+on:
+    pull_request:
+        types:
+            - closed
+        branches:
+            - develop
+            - main
+
+env:
+    EITRI_CLI_CLIENT_ID: ${{ secrets.EITRI_CLI_CLIENT_ID }}
+    EITRI_CLI_CLIENT_SECRET: ${{ secrets.EITRI_CLI_CLIENT_SECRET }}
+
+    DEV_ENVID: ${{ vars.APP_DEV_ENV_ID }}
+    PROD_ENVID: ${{ vars.APP_PROD_ENV_ID }}
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check if PR was merged
+              run: |
+                  if [ "${{ github.event.pull_request.merged }}" != "true" ]; then
+                    echo "❌ PR foi fechado sem merge. Encerrando pipeline."
+                    exit 0
+                  fi
+                  echo "☑️ PR foi mergeado. Continuando pipeline..."
+
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+
+            - name: Install Eitri CLI
+              run: npm install -g eitri-cli
+
+            - name: Detect changed Eitri-apps by version
+              id: detect
+              run: |
+                  set -euo pipefail
+                  trap 'echo "❌ Falha na detecção de eitri-apps alterados!"' ERR
+
+                  echo " "
+                  echo "Base branch: ${{ github.base_ref }}"
+                  echo "Head branch: ${{ github.head_ref }}"
+
+                  BASE_SHA=${{ github.event.pull_request.base.sha }}
+                  HEAD_SHA=${{ github.event.pull_request.head.sha }}
+
+                  echo " "
+                  echo "🔗 Base SHA: $BASE_SHA"
+                  echo "🔗 Head SHA: $HEAD_SHA"
+
+                  SHARED_MODULES=""
+                  NON_SHARED_MODULES=""
+
+                  for config_file in $(find . -name 'eitri-app.conf.js'); do
+                    module_dir=$(dirname "$config_file")
+                    
+                    echo " "
+                    echo "🔍🔍 Analisando módulo: $module_dir"
+
+                    NEW_VERSION=$(git show $HEAD_SHA:"$config_file" | grep "version" | head -1 | sed -E 's/.*version[^:]*:\s*["'\'']([^"'\'']+)["'\''].*/\1/' || echo "undefined")
+                    OLD_VERSION=$(git show $BASE_SHA:"$config_file" | grep "version" | head -1 | sed -E 's/.*version[^:]*:\s*["'\'']([^"'\'']+)["'\''].*/\1/' || echo "undefined")
+
+                    if [ "$NEW_VERSION" != "$OLD_VERSION" ]; then
+                      echo "🔸 Versão modificada: $OLD_VERSION -> $NEW_VERSION"
+
+                      SHARED_VERSION=$(git show $HEAD_SHA:"$config_file" | grep "sharedVersion" | head -1 | sed -E 's/.*sharedVersion[^:]*:\s*["'\'']([^"'\'']+)["'\''].*/\1/' || echo "")
+
+                      if [ "$SHARED_VERSION" = "v2" ]; then
+                        SHARED_MODULES="$SHARED_MODULES $module_dir"
+                        echo "🔸 Eitri-app shared identificado."
+                      else
+                        NON_SHARED_MODULES="$NON_SHARED_MODULES $module_dir"
+                      fi
+                    else
+                      echo "⏭️ Versão não modificada, ignorando."
+                    fi
+                  done
+
+                  echo "shared_modules=$SHARED_MODULES" >> $GITHUB_OUTPUT
+                  echo "non_shared_modules=$NON_SHARED_MODULES" >> $GITHUB_OUTPUT
+
+                  echo " "
+                  echo "✅✅✅ Eitri-apps shared a publicar: $SHARED_MODULES"
+                  echo "✅✅✅ Demais eitri-apps a publicar: $NON_SHARED_MODULES"
+
+            - name: Publish Eitri-apps
+              if: steps.detect.outputs.shared_modules != '' || steps.detect.outputs.non_shared_modules != ''
+              run: |
+                  set -euo pipefail
+                  trap 'echo "❌ Falha ao publicar eitri-app!"' ERR
+
+                  HEAD_SHA=${{ github.event.pull_request.head.sha }}
+
+                  PUBLISHED_MODULES=""
+
+                  publish_module () {
+                    module=$1
+                    shared_flag=$2
+
+                    echo " "
+                    echo "⚙️ Publicando módulo: $module"
+
+                    config_file="$module/eitri-app.conf.js"
+
+                    VERSION_MESSAGE=$(git show $HEAD_SHA:"$config_file" | grep "versionMessage" | head -1 | sed -E 's/.*versionMessage[^:]*:\s*["'\'']([^"'\'']+)["'\''].*/\1/' || echo "")
+
+                    if [[ -z "$VERSION_MESSAGE" ]]; then
+                      VERSION_MESSAGE="${{ github.event.pull_request.title }}"
+                      echo "📌 versionMessage não encontrada. Usando título do PR"
+                    else
+                      echo "📌 versionMessage encontrada: $VERSION_MESSAGE"
+                    fi
+
+
+                    # ---------- Detecta ENV ----------
+                    ENV_IDS=""
+
+                    if [[ "${{ github.base_ref }}" == "develop" ]]; then
+                      ENV_IDS="${{ env.DEV_ENVID }}"
+
+                    elif [[ "${{ github.base_ref }}" == "main" && "${{ github.head_ref }}" == "develop" ]]; then
+                      ENV_IDS="${{ env.PROD_ENVID }}"
+
+                    elif [[ "${{ github.base_ref }}" == "main" && "${{ github.head_ref }}" != "develop" ]]; then
+                      ENV_IDS="${{ env.DEV_ENVID }} ${{ env.PROD_ENVID }}"
+                    fi
+
+                    # ---------- Valida ENV ----------
+                    if [[ -z "$ENV_IDS" ]]; then
+                       echo "::warning::Nenhuma ENV_ID cadastrada para este fluxo ⚠️"
+                    fi
+
+                    pushd "$module" > /dev/null
+
+
+                    # ---------- push-version ----------
+                    VERSION_CREATED="true"
+
+                    if [[ "${{ github.base_ref }}" == "develop" ]]; then
+                      echo " "
+                      echo "🔗 Criando versão"
+
+                      if [[ "$shared_flag" == "true" ]]; then
+                        echo "🔗 Executando 'eitri push-version --shared --message \"$VERSION_MESSAGE\"'"
+                        
+                        eitri push-version --shared --message "$VERSION_MESSAGE" || { echo " ::warning::Houve um erro, provavelmente a versão já existe! ⚠️"; VERSION_CREATED="false"; }
+                      else
+                        echo "🔗 Executando 'eitri push-version --message \"$VERSION_MESSAGE\"'"
+
+                        eitri push-version --message "$VERSION_MESSAGE" || { echo " ::warning::Houve um erro, provavelmente a versão já existe! ⚠️"; VERSION_CREATED="false"; }
+                      fi
+
+                    elif [[ "${{ github.base_ref }}" == "main" && "${{ github.head_ref }}" != "develop" ]]; then
+                      echo " "
+                      echo "🔗 Criando versão"
+                      echo "::warning::Atenção, você está subindo alterações direto na main ⚠️"
+
+                      if [[ "$shared_flag" == "true" ]]; then
+                        echo "🔗 Executando 'eitri push-version --shared --message \"$VERSION_MESSAGE\"'"
+
+                        eitri push-version --shared --message "$VERSION_MESSAGE" || { echo " ::warning::Houve um erro, provavelmente a versão já existe! ⚠️"; VERSION_CREATED="false"; }
+                      else
+                        echo "🔗 Executando 'eitri push-version --message \"$VERSION_MESSAGE\"'"
+
+                        eitri push-version --message "$VERSION_MESSAGE" || { echo " ::warning::Houve um erro, provavelmente a versão já existe! ⚠️"; VERSION_CREATED="false"; }
+                      fi
+                    else
+                      echo "⏭️ Ignorando push-version (já gerado via develop)"
+                    fi
+
+
+                    # ---------- publish ----------
+                    if [[ "$VERSION_CREATED" == "true" ]]; then
+                      for ENV_ID in $ENV_IDS; do
+                        echo "🚀 Publicando módulo $module com 'eitri publish -e $ENV_ID'"
+                        eitri publish -e $ENV_ID
+                      done
+
+                      PUBLISHED_MODULES="${PUBLISHED_MODULES}${module}\n"
+                    else
+                      echo "⏭️ Pulando publish!"
+                    fi
+
+                    popd > /dev/null
+
+                    echo " "
+                    echo "✅ Finalizado: $module"
+                    echo " "
+                    echo " "
+                  }
+
+
+                  if [[ -n "${{ steps.detect.outputs.shared_modules }}" ]]; then
+                    echo "================================"
+                    echo "================================"
+                    echo "🚀 Publicando módulos SHARED"
+                    echo "================================"
+                    echo "================================"
+
+                    for module in ${{ steps.detect.outputs.shared_modules }}; do
+                      publish_module "$module" "true"
+                    done
+                  fi
+
+
+                  if [[ -n "${{ steps.detect.outputs.non_shared_modules }}" ]]; then
+                    echo "================================"
+                    echo "================================"
+                    echo "🚀 Publicando módulos NON SHARED"
+                    echo "================================"
+                    echo "================================"
+
+                    for module in ${{ steps.detect.outputs.non_shared_modules }}; do
+                      publish_module "$module" "false"
+                    done
+                  fi
+
+                  echo "================================"
+                  echo "📦 RESUMO DO PIPELINE"
+                  echo "================================"
+
+                  if [[ -n "$PUBLISHED_MODULES" ]]; then
+                    echo "✅ Módulos publicados:"
+                    echo -e "$PUBLISHED_MODULES"
+                  else
+                    echo "⚠️ Nenhum módulo foi publicado"
+                  fi
