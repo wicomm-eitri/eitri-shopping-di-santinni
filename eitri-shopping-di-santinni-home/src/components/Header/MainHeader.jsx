@@ -1,16 +1,18 @@
+import React, { useEffect, useState } from 'react'
 import Eitri from 'eitri-bifrost'
+import { View } from 'eitri-luminus'
 import {
 	HeaderCart,
 	HeaderContentWrapper,
-	HeaderLogo,
 	HeaderReturn,
 	HeaderSearchIcon
 } from 'eitri-shopping-di-santinni-shared'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { goToCartman } from '../../utils/utils'
+import HeaderLogo from '../../assets/Image/logoHeader.png'
 
 export default function MainHeader(props) {
-	const { isPLP = false, title } = props
+	const { isPLP = false } = props
 
 	const { cart } = useLocalShoppingCart()
 
@@ -18,11 +20,7 @@ export default function MainHeader(props) {
 
 	useEffect(() => {
 		const handleScroll = () => {
-			if (window.scrollY > 0) {
-				setIsScrolled(true)
-			} else {
-				setIsScrolled(false)
-			}
+			setIsScrolled(window.scrollY > 0)
 		}
 
 		window.addEventListener('scroll', handleScroll)
@@ -40,19 +38,21 @@ export default function MainHeader(props) {
 		<HeaderContentWrapper
 			isHome
 			scrollEffect
-			className={`${isScrolled || isPLP ? 'relative bg-base-100' : 'bg-transparent absolute'} transition-all duration-500 ease-in-out justify-center`}>
-			<View className='flex justify-between items-center pt-8 w-screen'>
-				<View
-					className='flex items-center gap-3'
-					onClick={goToCartman}>
+			className={`${isScrolled || isPLP ? 'relative bg-base-100' : 'bg-transparent absolute'} transition-all duration-500 ease-in-out`}>
+			<View className='relative flex items-center justify-between pt-8 px-4 w-screen'>
+				<View className='flex items-center gap-3'>
 					{isPLP && <HeaderReturn />}
 
-					<HeaderLogo />
+					<HeaderSearchIcon onClick={goToSearch} />
 				</View>
 
-				<View className='flex justify-between gap-[12px]'>
-					<HeaderSearchIcon onClick={goToSearch} />
+				<View
+					className='absolute left-[50%] translate-x-[-50%] flex items-center justify-center'
+					onClick={goToCartman}>
+					<Image src={HeaderLogo} alt='Logo' />
+				</View>
 
+				<View className='flex items-center justify-end'>
 					<HeaderCart cart={cart} />
 				</View>
 			</View>
