@@ -39,8 +39,8 @@ export default function MainHeader(props) {
 			isHome
 			scrollEffect
 			className={`${isScrolled || isPLP ? 'relative bg-base-100' : 'bg-transparent absolute'} transition-all duration-500 ease-in-out`}>
-			<View className='relative flex flex-row items-center justify-between pt-8 px-4 w-screen'>
-				<View className='flex flex-row items-center gap-3'>
+			<View className='relative flex items-center justify-between pt-8 px-4 w-screen'>
+				<View className='flex items-center gap-3'>
 					{isPLP && <HeaderReturn />}
 
 					<HeaderSearchIcon onClick={goToSearch} />
@@ -52,7 +52,7 @@ export default function MainHeader(props) {
 					<Image src={HeaderLogo} alt='Logo' />
 				</View>
 
-				<View className='flex flex-row items-center justify-end'>
+				<View className='flex items-center justify-end'>
 					<HeaderCart cart={cart} />
 				</View>
 			</View>
