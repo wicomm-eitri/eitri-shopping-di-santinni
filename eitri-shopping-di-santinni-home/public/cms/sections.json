@@ -7,155 +7,213 @@
 			"type": "object",
 			"description": "Componentes de banners multifunção",
 			"properties": {
-				"mainTitle": {
-					"title": "Título Principal(opcional)",
-					"type": "string"
-				},
-				"images": {
-					"type": "array",
-					"items": {
-						"title": "Mídia",
-						"type": "object",
-						"properties": {
-							"imageUrl": {
-								"title": "Imagem",
-								"type": "string",
-								"widget": {
-									"ui:widget": "media-gallery"
+				"isHideBanner": {
+					"title": "Ocultar Banner ?",
+					"type": "boolean",
+					"default": false
+				}
+			},
+			"dependencies": {
+				"isHideBanner": {
+					"oneOf": [
+						{
+							"properties": {
+								"isHideBanner": {
+									"const": true
+								},
+								"mainTitle": {
+									"title": "Título Principal(opcional)",
+									"type": "string"
 								}
-							},
-							"videoUrl": {
-								"title": "Vídeo",
-								"type": "string",
-								"widget": {
-									"ui:widget": "media-gallery"
-								}
-							},
-							"action": {
-								"title": "Destino da ação",
-								"type": "object",
-								"properties": {
-									"type": {
-										"title": "Tipo de ação",
-										"enumNames": [
-											"Nenhum",
-											"Abrir Link Externo",
-											"Abrir Produto (id ou slug)",
-											"Abrir Coleção (Id da coleção)",
-											"Abrir Categoria (cate1/cat2/cat3...)",
-											"Abrir Busca (termo de busca)",
-											"Abrir Landing Page (nome da landing page)",
-											"Abrir Path do Site",
-											"Abrir Marca"
-										],
-										"enum": [
-											"none",
-											"link",
-											"product",
-											"collection",
-											"category",
-											"search",
-											"page",
-											"path",
-											"brand"
-										],
-										"default": "none"
-									},
-									"value": {
-										"title": "Valor",
-										"type": "string"
-									},
-									"sort": {
-										"title": "Sort",
-										"description": "Items order",
-										"default": "score:desc",
-										"enum": [
-											"discount:desc",
-											"name:asc",
-											"name:desc",
-											"orders:desc",
-											"price:asc",
-											"price:desc",
-											"release:desc",
-											"score:desc"
-										],
-										"enumNames": [
-											"Desconto: do maior para o menor",
-											"Nome: A-Z",
-											"Nome: Z-A",
-											"Pedidos: do maior para o menor",
-											"Preço: do menor para o maior",
-											"Preço: do maior para o menor",
-											"Lançamento: do mais novo para o mais antigo",
-											"Relevância: do maior para o menor"
-										]
-									},
-									"title": {
-										"title": "Título (opcional)",
-										"type": "string"
+							}
+						},
+						{
+							"properties": {
+								"isHideBanner": {
+									"const": false
+								},
+								"mainTitle": {
+									"title": "Título Principal(opcional)",
+									"type": "string"
+								},
+								"images": {
+									"type": "array",
+									"items": {
+										"title": "Mídia",
+										"type": "object",
+										"properties": {
+											"imageUrl": {
+												"title": "Imagem",
+												"type": "string",
+												"widget": {
+													"ui:widget": "media-gallery"
+												}
+											},
+											"videoUrl": {
+												"title": "Vídeo",
+												"type": "string",
+												"widget": {
+													"ui:widget": "media-gallery"
+												}
+											},
+											"action": {
+												"title": "Destino da ação",
+												"type": "object",
+												"properties": {
+													"type": {
+														"title": "Tipo de ação",
+														"enumNames": [
+															"Nenhum",
+															"Abrir Link Externo",
+															"Abrir Produto (id ou slug)",
+															"Abrir Coleção (Id da coleção)",
+															"Abrir Categoria (cate1/cat2/cat3...)",
+															"Abrir Busca (termo de busca)",
+															"Abrir Landing Page (nome da landing page)",
+															"Abrir Path do Site",
+															"Abrir Marca"
+														],
+														"enum": [
+															"none",
+															"link",
+															"product",
+															"collection",
+															"category",
+															"search",
+															"page",
+															"path",
+															"brand"
+														],
+														"default": "none"
+													},
+													"title": {
+														"title": "Título no header da tela de destino",
+														"type": "string"
+													},
+													"value": {
+														"title": "Valor",
+														"type": "string"
+													},
+													"sort": {
+														"title": "Sort",
+														"description": "Items order",
+														"default": "score:desc",
+														"enum": [
+															"discount:desc",
+															"name:asc",
+															"name:desc",
+															"orders:desc",
+															"price:asc",
+															"price:desc",
+															"release:desc",
+															"score:desc"
+														],
+														"enumNames": [
+															"Desconto: do maior para o menor",
+															"Nome: A-Z",
+															"Nome: Z-A",
+															"Pedidos: do maior para o menor",
+															"Preço: do menor para o maior",
+															"Preço: do maior para o menor",
+															"Lançamento: do mais novo para o mais antigo",
+															"Relevância: do maior para o menor"
+														]
+													}
+												}
+											},
+											"subLabel": {
+												"title": "Título abaixo da imagem (opcional)",
+												"type": "string"
+											},
+											"title": {
+												"title": "Título (opcional)",
+												"type": "string"
+											},
+											"mktTag": {
+												"title": "Tag de Marketing (nome do evento de clique)",
+												"type": "string"
+											},
+											"remoteConfigKey": {
+												"title": "Chave de hiperpersonalização Eitri",
+												"type": "string",
+												"description": "Chave para hiperpersonalização Eitri"
+											}
+										}
+									}
+								},
+								"autoPlay": {
+									"title": "Rolar automaticamente",
+									"type": "boolean",
+									"default": true
+								},
+								"aspectRatio": {
+									"title": "Aspect Ratio da image (4:3)",
+									"type": "string",
+									"default": ""
+								},
+								"mode": {
+									"title": "Modo de exibição",
+									"enumNames": [
+										"Slider Hero (Carrossel)",
+										"Banner Único",
+										"Lista de banners",
+										"Lista de banners arredondados",
+										"Lista em Grade",
+										"Caber na tela"
+									],
+									"enum": [
+										"SliderHero",
+										"SingleBanner",
+										"BannerList",
+										"RoundedBannerList",
+										"GridList",
+										"FitOnScreen"
+									],
+									"default": "SliderHero"
+								},
+								"size": {
+									"title": "Dimensões (opcional)",
+									"type": "object",
+									"properties": {
+										"maxWidth": {
+											"type": "string",
+											"title": "Largura máxima"
+										},
+										"maxHeight": {
+											"type": "string",
+											"title": "Altura máxima"
+										}
+									}
+								},
+								"remoteConfigKey": {
+									"title": "Chave de hiperpersonalização Eitri",
+									"type": "string",
+									"description": "Chave para hiperpersonalização Eitri"
+								},
+								"params": {
+									"title": "Parâmetros",
+									"type": "array",
+									"items": {
+										"title": "Parâmetro",
+										"type": "object",
+										"required": ["key", "value"],
+										"properties": {
+											"key": {
+												"title": "Key",
+												"type": "string",
+												"default": ""
+											},
+											"value": {
+												"title": "Value",
+												"type": "string",
+												"default": ""
+											}
+										}
 									}
 								}
-							},
-							"mktTag": {
-								"title": "Tag de Marketing (nome do evento de clique)",
-								"type": "string"
-							},
-							"remoteConfigKey": {
-								"title": "Chave de hiperpersonalização Eitri",
-								"type": "string",
-								"description": "Chave para hiperpersonalização Eitri"
 							}
 						}
-					}
-				},
-				"autoPlay": {
-					"title": "Rolar automaticamente",
-					"type": "boolean",
-					"default": true
-				},
-				"aspectRatio": {
-					"title": "Aspect Ratio da image (4:3)",
-					"type": "string",
-					"default": ""
-				},
-				"mode": {
-					"title": "Modo de exibição",
-					"enumNames": [
-						"Slider Hero (Carrossel)",
-						"Banner Único",
-						"Lista de banners",
-						"Lista de banners arredondados",
-						"Lista em Grade",
-						"Caber na tela"
-					],
-					"enum": [
-						"SliderHero",
-						"SingleBanner",
-						"BannerList",
-						"RoundedBannerList",
-						"GridList",
-						"FitOnScreen"
-					],
-					"default": "SliderHero"
-				},
-				"size": {
-					"title": "Dimensões (opcional)",
-					"type": "object",
-					"properties": {
-						"maxWidth": {
-							"type": "string",
-							"title": "Largura máxima"
-						},
-						"maxHeight": {
-							"type": "string",
-							"title": "Altura máxima"
-						}
-					}
-				},
-				"remoteConfigKey": {
-					"title": "Chave de hiperpersonalização Eitri",
-					"type": "string",
-					"description": "Chave para hiperpersonalização Eitri"
+					]
 				}
 			}
 		}
@@ -239,6 +297,27 @@
 					"title": "Chave de hiperpersonalização Eitri",
 					"type": "string",
 					"description": "Chave para hiperpersonalização Eitri"
+				},
+				"params": {
+					"title": "Parâmetros",
+					"type": "array",
+					"items": {
+						"title": "Parâmetro",
+						"type": "object",
+						"required": ["key", "value"],
+						"properties": {
+							"key": {
+								"title": "Key",
+								"type": "string",
+								"default": ""
+							},
+							"value": {
+								"title": "Value",
+								"type": "string",
+								"default": ""
+							}
+						}
+					}
 				}
 			}
 		}
@@ -333,15 +412,16 @@
 					"title": "Cor do botão do carrossel"
 				},
 				"startDate": {
-					"title": "Exibição programada: Data de início e fim",
+					"title": "Exibição programada: Data de início",
 					"type": "string",
 					"widget": {
 						"ui:widget": "date-time"
 					}
 				},
 				"endDate": {
-					"title": "Exibição programada: Data de início e fim",
+					"title": "Exibição programada: Data de fim",
 					"type": "string",
+					"description": "Se quiser deixar o cronômetro zerado mantenha esse campo vazio",
 					"widget": {
 						"ui:widget": "date-time"
 					}
@@ -494,6 +574,27 @@
 					"enumNames": ["Carrossel", "Scroll Horizontal"],
 					"enum": ["carousel", "scroll"],
 					"default": "scroll"
+				},
+				"params": {
+					"title": "Parâmetros",
+					"type": "array",
+					"items": {
+						"title": "Parâmetro",
+						"type": "object",
+						"required": ["key", "value"],
+						"properties": {
+							"key": {
+								"title": "Key",
+								"type": "string",
+								"default": ""
+							},
+							"value": {
+								"title": "Value",
+								"type": "string",
+								"default": ""
+							}
+						}
+					}
 				}
 			}
 		}
@@ -845,6 +946,31 @@
 													"title": "Valor",
 													"type": "string"
 												},
+												"sort": {
+													"title": "Sort",
+													"description": "Items order",
+													"default": "score:desc",
+													"enum": [
+														"discount:desc",
+														"name:asc",
+														"name:desc",
+														"orders:desc",
+														"price:asc",
+														"price:desc",
+														"release:desc",
+														"score:desc"
+													],
+													"enumNames": [
+														"Desconto: do maior para o menor",
+														"Nome: A-Z",
+														"Nome: Z-A",
+														"Pedidos: do maior para o menor",
+														"Preço: do menor para o maior",
+														"Preço: do maior para o menor",
+														"Lançamento: do mais novo para o mais antigo",
+														"Relevância: do maior para o menor"
+													]
+												},
 												"title": {
 													"title": "Título no header da tela de destino",
 													"description": "Apenas se diferente do nome da categoria",
@@ -855,6 +981,102 @@
 													"type": "string",
 													"widget": {
 														"ui:widget": "media-gallery"
+													}
+												}
+											}
+										},
+										"subSubcategories": {
+											"title": "Sub-subcategorias",
+											"type": "array",
+											"items": {
+												"title": "Sub-subcategoria",
+												"type": "object",
+												"properties": {
+													"title": {
+														"title": "Título",
+														"type": "string"
+													},
+													"icon": {
+														"title": "Ícone (opcional)",
+														"type": "string",
+														"widget": {
+															"ui:widget": "media-gallery"
+														}
+													},
+													"action": {
+														"title": "Destino da ação",
+														"type": "object",
+														"properties": {
+															"type": {
+																"title": "Tipo de ação",
+																"enumNames": [
+																	"Nenhum",
+																	"Abrir Link",
+																	"Abrir Produto",
+																	"Abrir Coleção",
+																	"Abrir Categoria",
+																	"Abrir Busca",
+																	"Abrir Página",
+																	"Abrir Eitri App",
+																	"Abrir Path",
+																	"Abrir Marca"
+																],
+																"enum": [
+																	"none",
+																	"link",
+																	"product",
+																	"collection",
+																	"category",
+																	"search",
+																	"page",
+																	"openEitriApp",
+																	"path",
+																	"brand"
+																],
+																"default": "none"
+															},
+															"value": {
+																"title": "Valor",
+																"type": "string"
+															},
+															"sort": {
+																"title": "Sort",
+																"description": "Items order",
+																"default": "score:desc",
+																"enum": [
+																	"discount:desc",
+																	"name:asc",
+																	"name:desc",
+																	"orders:desc",
+																	"price:asc",
+																	"price:desc",
+																	"release:desc",
+																	"score:desc"
+																],
+																"enumNames": [
+																	"Desconto: do maior para o menor",
+																	"Nome: A-Z",
+																	"Nome: Z-A",
+																	"Pedidos: do maior para o menor",
+																	"Preço: do menor para o maior",
+																	"Preço: do maior para o menor",
+																	"Lançamento: do mais novo para o mais antigo",
+																	"Relevância: do maior para o menor"
+																]
+															},
+															"title": {
+																"title": "Título no header da tela de destino",
+																"description": "Apenas se diferente do nome da categoria",
+																"type": "string"
+															},
+															"banner": {
+																"title": "Banner de destino (opcional)",
+																"type": "string",
+																"widget": {
+																	"ui:widget": "media-gallery"
+																}
+															}
+														}
 													}
 												}
 											}
@@ -890,6 +1112,73 @@
 					"enumNames": ["Carrossel", "Scroll horizontal"],
 					"enum": ["carousel", "horizontalScroll"],
 					"default": "carousel"
+				},
+				"params": {
+					"title": "Parâmetros",
+					"type": "array",
+					"items": {
+						"title": "Parâmetro",
+						"type": "object",
+						"required": ["key", "value"],
+						"properties": {
+							"key": {
+								"title": "Key",
+								"type": "string",
+								"default": ""
+							},
+							"value": {
+								"title": "Value",
+								"type": "string",
+								"default": ""
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	{
+		"name": "BannersRichText",
+		"requiredScopes": [],
+		"schema": {
+			"title": "Banners de Campo de texto livre",
+			"description": "Banners Campo de texto livre",
+			"type": "object",
+			"properties": {
+				"title": {
+					"title": "Título (opcional)",
+					"type": "string"
+				},
+				"content": {
+					"type": "array",
+					"title": "Banners Campo de texto livre",
+					"items": {
+						"title": "Banner Campo de texto livre",
+						"type": "object",
+						"properties": {
+							"imageUrlLeft": {
+								"title": "Ícone (antes do texto)",
+								"type": "string",
+								"widget": {
+									"ui:widget": "media-gallery"
+								}
+							},
+							"contentText": {
+								"title": "Conteúdo do texto",
+								"type": "string",
+								"widget": {
+									"ui:widget": "draftjs-rich-text"
+								}
+							},
+							"imageUrlRight": {
+								"title": "Ícone (depois do texto)",
+								"type": "string",
+								"widget": {
+									"ui:widget": "media-gallery"
+								}
+							}
+						}
+					}
 				}
 			}
 		}
