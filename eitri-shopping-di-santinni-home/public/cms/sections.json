@@ -617,39 +617,6 @@
 					"description": "Ex: #C8102E",
 					"type": "string"
 				},
-				"highlightImage": {
-					"title": "Imagem de Destaque",
-					"description": "Imagem grande que ficará ao lado ou acima dos produtos",
-					"type": "string",
-					"widget": {
-						"ui:widget": "media-gallery"
-					}
-				},
-				"highlightAction": {
-					"title": "Destino da Ação da Imagem",
-					"type": "object",
-					"properties": {
-						"type": {
-							"title": "Tipo de ação",
-							"enumNames": [
-								"Nenhum",
-								"Abrir Link Externo",
-								"Abrir Produto (id ou slug)",
-								"Abrir Coleção (Id da coleção)",
-								"Abrir Categoria (cat1/cat2...)",
-								"Abrir Busca",
-								"Abrir Landing Page",
-								"Abrir Marca"
-							],
-							"enum": ["none", "link", "product", "collection", "category", "search", "page", "brand"],
-							"default": "none"
-						},
-						"value": {
-							"title": "Valor",
-							"type": "string"
-						}
-					}
-				},
 				"shelves": {
 					"title": "Prateleiras (Abas)",
 					"description": "Adicione uma prateleira para cada marca/aba (Ex: MIZUNO, ADIDAS, etc)",
@@ -661,6 +628,48 @@
 							"title": {
 								"type": "string",
 								"title": "Nome da Aba (Aparecerá no menu)"
+							},
+							"highlightImage": {
+								"title": "Imagem de Destaque",
+								"description": "Imagem grande que ficará ao lado ou acima dos produtos para esta aba",
+								"type": "string",
+								"widget": {
+									"ui:widget": "media-gallery"
+								}
+							},
+							"highlightAction": {
+								"title": "Destino da Ação da Imagem",
+								"type": "object",
+								"properties": {
+									"type": {
+										"title": "Tipo de ação",
+										"enumNames": [
+											"Nenhum",
+											"Abrir Link Externo",
+											"Abrir Produto (id ou slug)",
+											"Abrir Coleção (Id da coleção)",
+											"Abrir Categoria (cat1/cat2...)",
+											"Abrir Busca",
+											"Abrir Landing Page",
+											"Abrir Marca"
+										],
+										"enum": [
+											"none",
+											"link",
+											"product",
+											"collection",
+											"category",
+											"search",
+											"page",
+											"brand"
+										],
+										"default": "none"
+									},
+									"value": {
+										"title": "Valor",
+										"type": "string"
+									}
+								}
 							},
 							"term": {
 								"type": "string",
