@@ -114,13 +114,13 @@ export default function HeaderContentWrapper(props) {
 			<View
 				id='header-container'
 				style={{ transform: `translateY(${translate})` }}
-				className={`fixed top-0 left-0 right-0 z-[9900] transition-all duration-500 ease-in-out shadow-md w-full backdrop-blur-sm bg-header-background ${containerClassName}`}>
+				className={`fixed top-0 left-0 right-0 z-[9900] transition-all duration-500 ease-in-out w-full border-b border-neutral-300 backdrop-blur-sm bg-header-background ${containerClassName}`}>
 				{!isHome && <View topInset='auto' />}
 
 				<View id='header'>
 					<View
 						id='header-content'
-						className={`min-h-[60px] flex items-center w-screen py-[8px] px-4 gap-3 ${className}`}
+						className={`min-h-[60px] flex items-center w-screen p-4 gap-3 ${className}`}
 						{...rest}>
 						{children}
 					</View>
