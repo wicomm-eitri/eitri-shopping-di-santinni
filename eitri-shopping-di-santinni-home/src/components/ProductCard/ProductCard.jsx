@@ -138,7 +138,7 @@ const formatInstallments = (seller, t) => {
 		return ''
 	}
 
-	return `${t('productCard.installmentsPrefix', 'Em até')} ${maxInstallments.NumberOfInstallments}x ${formatPrice(maxInstallments.Value)}`
+	return `${t('productCard.installmentsPrefix', 'Em até')} ${maxInstallments.NumberOfInstallments}x ${formatPrice(maxInstallments.Value)} sem juros`
 }
 
 /**
@@ -367,7 +367,7 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 		loadingWishlistOp: wishlist.loading,
 		loadingCartOp,
 		itemQuantity,
-		actionLabel: itemInCart ? t('productCard.viewCart', 'Ver carrinho') : t('productCard.buy', 'Comprar'),
+		actionLabel: itemInCart ? t('productCard.viewCart', 'Ver carrinho') : t('productCard.buy', 'COMPRAR AGORA'),
 		onPressOnCard: handleCardPress,
 		onPressCartButton: handleCartButtonPress,
 		onPressOnWishlist: handleWishlistPress,

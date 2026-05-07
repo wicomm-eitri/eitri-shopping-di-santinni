@@ -44,7 +44,7 @@ export default function ProductCardWrapper(props) {
 
 		if (!maxInstallments || maxInstallments?.NumberOfInstallments === 1) return ''
 
-		return `em até ${maxInstallments?.NumberOfInstallments}x ${formatPrice(maxInstallments?.Value)}`
+		return `em até ${maxInstallments?.NumberOfInstallments}x ${formatPrice(maxInstallments?.Value)} sem juros`
 	}
 	const getListPrice = () => {
 		if (sellerDefault?.commertialOffer.Price === sellerDefault?.commertialOffer.ListPrice) {
