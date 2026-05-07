@@ -1,12 +1,8 @@
-import { getSpacingValue } from '../../../../utils/utils'
-
 export default function SliderHero(props) {
 	const { data, onClick } = props
 
 	const [currentSlide, setCurrentSlide] = useState(0)
 	const imagesList = data.images
-
-	if (!imagesList.length) return null
 
 	const onChangeSlide = i => setCurrentSlide(i)
 
@@ -14,12 +10,12 @@ export default function SliderHero(props) {
 
 	if (data?.aspectRatio) {
 		try {
-			const [aspectWidth, aspectHeight] = data?.aspectRatio?.split(':')?.map(Number) || []
-			const screenWidth = window.innerWidth
+			const [aspectWidth, aspectHeight] = data.aspectRatio.split(':').map(Number)
 
+			const screenWidth = window.innerWidth
 			proportionalHeight = screenWidth * (aspectHeight / aspectWidth)
 		} catch (e) {
-			console.error('Error calculating aspect ratio [SliderHero]:', e)
+			// ignore malformed aspectRatio from CMS
 		}
 	}
 
@@ -43,21 +39,11 @@ export default function SliderHero(props) {
 	const hasMultipleImages = imagesList?.length > 1
 	const hasSingleImage = imagesList?.length === 1
 
-	const paramsObject = Object.fromEntries((data?.params || []).map(item => [item.key, item.value]))
-
-	const marginTop = getSpacingValue(paramsObject?.marginTop)
-	const marginBottom = getSpacingValue(paramsObject?.marginBottom)
-
 	return (
-		<View
-			className={`relative ${data?.isHideBanner ? 'hidden' : `flex flex-col`}`}
-			style={{
-				...(marginTop && { marginTop }),
-				...(marginBottom && { marginBottom })
-			}}>
+		<View className={`mb-20 relative ${data?.isHideBanner ? 'hidden' : 'flex flex-col'}`}>
 			{data.mainTitle && (
-				<View className='flex items-center justify-center w-full px-4'>
-					<Text className='font-semibold mb-8'>{data.mainTitle}</Text>
+				<View className='px-4 flex items-center justify-center w-full'>
+					<Text className='font-bold mb-8'>{data.mainTitle}</Text>
 				</View>
 			)}
 
@@ -78,7 +64,7 @@ export default function SliderHero(props) {
 						{imagesList.map((_, index) => (
 							<View
 								key={index}
-								className={`${currentSlide === index ? 'bg-primary w-9' : 'bg-neutral-400 w-3'} h-3 rounded-lg transition-[width,background-color] duration-300 ease-in-out`}
+								className={`${currentSlide === index ? 'bg-red-700' : 'bg-white'} w-3 h-3 rounded-full transition-[width,background-color] duration-300 ease-in-out`}
 							/>
 						))}
 					</View>

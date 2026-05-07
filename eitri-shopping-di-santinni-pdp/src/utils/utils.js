@@ -49,7 +49,7 @@ const discoverInstallments = item => {
 				}
 			}, null)
 
-			return `Em até ${betterInstallment.NumberOfInstallments}x de ${formatAmount(betterInstallment.Value)}`
+			return `Em até ${betterInstallment.NumberOfInstallments}x de ${formatAmount(betterInstallment.Value)} sem juros`
 		}
 
 		return ''

@@ -1,3 +1,6 @@
+import React from 'react'
+import { View, Text } from 'eitri-luminus'
+
 export default function BannerList(props) {
 	const { data, onClick } = props
 	const imagesList = data.images
@@ -7,83 +10,82 @@ export default function BannerList(props) {
 		const maxWidth = size?.maxWidth
 		const maxHeight = size?.maxHeight
 
-		let finalWidth = maxWidth || 300
-		let finalHeight = maxHeight || 400
+		// Puxa as dimensões do CMS. Se não existirem, aí sim cai no padrão 300x400
+		let finalWidth = maxWidth ? Number(maxWidth) : 300
+		let finalHeight = maxHeight ? Number(maxHeight) : 400
 
+		// Se tiver aspectRatio configurado, calcula a proporção em cima do tamanho
 		if (aspectRatio) {
 			try {
 				const [aspectW, aspectH] = aspectRatio.split(':').map(Number)
 				const ratio = aspectH / aspectW
 
 				if (!isNaN(ratio)) {
-					// ✅ Se NÃO passou nenhum limite → usa 80% da tela
 					if (!maxWidth && !maxHeight) {
 						const screenWidth = window.innerWidth * 0.8
-
 						finalWidth = screenWidth
 						finalHeight = screenWidth * ratio
-					}
+					} else if (maxWidth && !maxHeight) {
+						finalWidth = Number(maxWidth)
+						finalHeight = Number(maxWidth) * ratio
+					} else if (!maxWidth && maxHeight) {
+						finalHeight = Number(maxHeight)
+						finalWidth = Number(maxHeight) / ratio
+					} else if (maxWidth && maxHeight) {
+						const heightByWidth = Number(maxWidth) * ratio
 
-					// Só maxWidth
-					else if (maxWidth && !maxHeight) {
-						finalWidth = maxWidth
-						finalHeight = maxWidth * ratio
-					}
-
-					// Só maxHeight
-					else if (!maxWidth && maxHeight) {
-						finalHeight = maxHeight
-						finalWidth = maxHeight / ratio
-					}
-
-					// Ambos
-					else if (maxWidth && maxHeight) {
-						const heightByWidth = maxWidth * ratio
-
-						if (heightByWidth > maxHeight) {
-							finalHeight = maxHeight
-							finalWidth = maxHeight / ratio
+						if (heightByWidth > Number(maxHeight)) {
+							finalHeight = Number(maxHeight)
+							finalWidth = Number(maxHeight) / ratio
 						} else {
-							finalWidth = maxWidth
+							finalWidth = Number(maxWidth)
 							finalHeight = heightByWidth
 						}
 					}
 				}
 			} catch (e) {
-				console.error('Error calculating aspect ratio [BannerList]:', e)
+				// ignore malformed aspectRatio from CMS
 			}
 		}
 
 		return {
 			width: `${Math.round(finalWidth)}px`,
 			height: `${Math.round(finalHeight)}px`,
-			aspectRatio: aspectRatio?.replace(':', '/')
+			...(aspectRatio ? { aspectRatio: aspectRatio.replace(':', '/') } : {})
 		}
 	}
 
 	return (
 		<View className={`flex flex-col gap-2 ${data?.isHideBanner ? 'hidden' : 'block'}`}>
 			{data?.mainTitle && (
-				<View className='px-4'>
-					<Text className='font-bold text-lg'>{data.mainTitle}</Text>
+				<View className='px-4 mb-8'>
+					<Text className='font-semibold text-2xl text-[#0C0C0C]'>{data.mainTitle}</Text>
 				</View>
 			)}
 
-			<View className='flex overflow-x-auto gap-2.5 px-4'>
+			<View className='flex overflow-x-auto gap-3 px-4 pb-2'>
 				{imagesList &&
 					imagesList.map(slider => (
 						<View
 							key={slider.imageUrl}
 							className='flex flex-col'>
-							<View // Adicionado key para melhor performance e para seguir as boas práticas do React
+							<View
 								style={{
 									backgroundImage: `url(${slider.imageUrl})`,
 									...getBannerDimensions(),
-									backgroundSize: 'cover'
+									backgroundSize: 'cover',
+									borderRadius: '12px'
 								}}
-								className='rounded'
-								onClick={() => onClick(slider)}
-							/>
+								className='relative'
+								onClick={() => onClick(slider)}>
+								{slider?.subLabel && (
+									<View className='absolute bottom-3 left-3 bg-white rounded-full px-4 py-1.5'>
+										<Text className='font-semibold text-red-700 text-sm uppercase'>
+											{slider.subLabel}
+										</Text>
+									</View>
+								)}
+							</View>
 
 							{slider?.action?.title && (
 								<View

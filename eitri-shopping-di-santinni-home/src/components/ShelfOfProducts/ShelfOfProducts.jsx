@@ -6,7 +6,7 @@ import ShelfOfProductsSlider from './components/ShelfOfProductsSlider'
 
 export default function ShelfOfProducts(props) {
 	const { products, title, isLoading, mode, searchParams, params, ...rest } = props
-
+	console.log('ShelfOfProducts props', props)
 	const { t } = useTranslation()
 
 	const seeMore = () => {
