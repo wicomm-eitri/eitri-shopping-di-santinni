@@ -21,6 +21,40 @@ export default function ProductCardFullImage(props) {
 		className = ''
 	} = props
 
+	const MOCK_DISCOUNT_PERCENT = 20
+
+	const parseCurrencyValue = value => {
+		if (typeof value === 'number') {
+			return value
+		}
+
+		if (!value) {
+			return null
+		}
+
+		const normalizedValue = `${value}`
+			.replace(/[^\d,.-]/g, '')
+			.replace(/\./g, '')
+			.replace(',', '.')
+
+		const parsedValue = Number(normalizedValue)
+
+		return Number.isFinite(parsedValue) ? parsedValue : null
+	}
+
+	const formatMockCurrency = value => {
+		return new Intl.NumberFormat('pt-BR', {
+			style: 'currency',
+			currency: 'BRL'
+		}).format(value)
+	}
+
+	const currentPriceValue = parseCurrencyValue(price)
+	const mockedListPrice =
+		listPrice ||
+		(currentPriceValue ? formatMockCurrency(currentPriceValue * (1 + MOCK_DISCOUNT_PERCENT / 100)) : '')
+	const displayBadge = badge || (price ? `${MOCK_DISCOUNT_PERCENT}% off` : '')
+
 	const _onPressOnWishlist = e => {
 		e.stopPropagation()
 		onPressOnWishlist()
@@ -32,9 +66,9 @@ export default function ProductCardFullImage(props) {
 			className={`relative bg-white rounded ${className}`}>
 			<View className='flex flex-col w-full'>
 				<View className='relative flex flex-col w-full justify-center items-center rounded-t h-[240px] min-h-[240px] max-h-[240px]'>
-					{badge && (
-						<View className='absolute top-2 left-2 rounded-sm flex items-center justify-center h-4 w-[37px] bg-primary'>
-							<Text className='font-semibold text-secondary text-[10px]'>{badge}</Text>
+					{displayBadge && (
+						<View className='absolute top-2 left-2 rounded-full bg-red-700 flex items-center justify-center h-4 px-2'>
+							<Text className='font-semibold text-[#FAFAF8] text-sm'>{displayBadge}</Text>
 						</View>
 					)}
 
@@ -55,29 +89,36 @@ export default function ProductCardFullImage(props) {
 				</View>
 
 				<View className='flex flex-col w-full p-2'>
-					<Text className='line-clamp-1 break-words font-medium text-xs mb-2'>{name}</Text>
+					{/* Nome do Produto */}
+					<Text className='text-black text-base mb-2 line-clamp-2'>{name}</Text>
 
-					<View className='flex items-center gap-1.5'>
-						<Text className='text-secondary text-xs'>{price}</Text>
+					{/* Bloco de Preço e Parcelamento */}
+					<View className='flex flex-col'>
+						<View>
+							{showListItem && mockedListPrice && (
+								<Text className='line-through text-[#888888] text-sm mb-[2px]'>{mockedListPrice}</Text>
+							)}
+						</View>
+						<View className='flex items-end gap-1.5'>
+							<Text className='font-bold text-red-700 text-base'>{price}</Text>
+						</View>
 
-						{showListItem && listPrice && (
-							<Text className='line-through text-neutral-500 text-[10px]'>{listPrice}</Text>
+						{/* Texto de parcelamento logo abaixo do preço */}
+						{installments ? (
+							<Text className='text-[#888888] text-xs font-bold mt-0.5'>{installments}</Text>
+						) : (
+							<View className='h-4 mt-0.5' />
 						)}
 					</View>
-
-					{installments ? (
-						<Text className='text-neutral-500 text-xs'>{installments}</Text>
-					) : (
-						<View className='h-4' />
-					)}
 				</View>
 
+				{/* Botão de Ação */}
 				<View
 					onClick={e => {
 						e.stopPropagation()
 						onPressCartButton()
 					}}
-					className={`mt-2 h-[36px] bg-primary w-full rounded-b flex justify-center items-center border-primary-700 border-[0.5px] bg-primary z-[99]`}
+					className={`mt-2 h-[36px] bg-red-700 w-full rounded-full flex justify-center items-center border-primary-700 px-[9px] bg-primary z-[99]`}
 					style={{
 						...(actionButtonCustomColor && {
 							backgroundColor: actionButtonCustomColor
@@ -89,19 +130,6 @@ export default function ProductCardFullImage(props) {
 						<Text className='text-primary-content font-medium text-xs'>{actionLabel}</Text>
 					)}
 				</View>
-
-				{/* <View
-					onClick={e => {
-						e.stopPropagation()
-						onChangeQuantity(0)
-					}}
-					className={`mt-2 h-[36px] bg-primary w-full rounded-b flex justify-center items-center border-primary-700 border-[0.5px] bg-primary-700 z-[99]`}>
-					{loadingCartOp ? (
-						<Loading width='36px' />
-					) : (
-						<Text className='text-primary-content font-medium text-xs'>Remover</Text>
-					)}
-				</View> */}
 			</View>
 		</View>
 	)
