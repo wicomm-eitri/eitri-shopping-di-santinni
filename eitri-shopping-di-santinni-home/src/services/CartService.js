@@ -4,7 +4,7 @@ export const getCart = async () => {
 	try {
 		return await Vtex.cart.getCurrentOrCreateCart()
 	} catch (error) {
-		console.log('Erro ao buscar carrinho', error)
+		console.error('Erro ao buscar carrinho', error)
 	}
 }
 

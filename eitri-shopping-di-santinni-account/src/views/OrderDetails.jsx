@@ -82,7 +82,7 @@ export default function OrderDetails(props) {
 					<Text className='text-sm text-gray-700'>{payment.paymentSystemName}</Text>
 					{order?.status === 'payment-pending' && (
 						<View
-							className='cursor-pointer'
+							className=''
 							onClick={() => Eitri.openBrowser({ url: payment.url })}>
 							<Text className='text-sm font-bold text-blue-600 hover:underline'>
 								{t('orderDetails.lbSeeBilling', 'Ver boleto')}
@@ -241,14 +241,14 @@ export default function OrderDetails(props) {
 											</Dropdown>
 											<View className='mt-4 flex justify-between'>
 												<View
-													className='cursor-pointer'
+													className=''
 													onClick={() => setCancelConfirmation(false)}>
 													<Text className='text-sm font-bold text-gray-700 hover:underline'>
 														{t('orderDetails.lbBack', 'Voltar')}
 													</Text>
 												</View>
 												<View
-													className={`cursor-pointer ${!cancelReason && 'opacity-50 cursor-not-allowed'}`}
+													className={` ${!cancelReason && 'opacity-50 cursor-not-allowed'}`}
 													onClick={cancelOrder}>
 													<Text
 														className={`text-sm font-bold ${
@@ -263,7 +263,7 @@ export default function OrderDetails(props) {
 										</View>
 									) : (
 										<View
-											className='cursor-pointer'
+											className=''
 											onClick={() => setCancelConfirmation(true)}>
 											<Text className='font-bold text-red-600 hover:underline'>
 												{t('orderDetails.lbCancel', 'Cancelar pedido')}

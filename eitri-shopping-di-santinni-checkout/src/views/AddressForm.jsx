@@ -1,14 +1,12 @@
-import { useState } from 'react'
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { Page, View } from 'eitri-luminus'
 import {
+	BottomInset,
+	CustomButton,
+	CustomInput,
 	HeaderContentWrapper,
 	HeaderReturn,
-	HeaderText,
-	CustomButton,
-	BottomInset,
-	CustomInput
+	HeaderText
 } from 'eitri-shopping-di-santinni-shared'
 import FixedBottom from '../components/FixedBottom/FixedBottom'
 import LoadingComponent from '../components/Shared/Loading/LoadingComponent'
@@ -16,6 +14,7 @@ import { useLocalShoppingCart } from '../providers/LocalCart'
 import { trackScreenView } from '../services/Tracking'
 import { resolvePostalCode } from '../services/freigthService'
 import { navigate, requestLogin } from '../services/navigationService'
+import { verifySocialNumber } from '../utils/verifySocialNumber'
 
 function PostalCodeInput({ value, onChange, isLoading, t, error, touched, onBlur }) {
 	return (
@@ -35,6 +34,7 @@ function PostalCodeInput({ value, onChange, isLoading, t, error, touched, onBlur
 					onBlur={onBlur}
 				/>
 			</View>
+
 			{error && touched && <Text className='text-xs text-red-500 ml-1'>{error}</Text>}
 		</View>
 	)
@@ -45,8 +45,8 @@ function AddressFields({ address, handleAddressChange, t, touched, errors, onBlu
 		<>
 			<View>
 				<CustomInput
-					label={t('addNewShippingAddress.frmStreet', 'Rua / Avenida')}
-					placeholder={''}
+					label={t('addNewShippingAddress.frmStreet')}
+					placeholder={'Rua / Avenida'}
 					value={address?.street || ''}
 					onChange={e => handleAddressChange('street', e)}
 					className={errors.street && touched.street ? 'border-red-500' : ''}
@@ -54,32 +54,33 @@ function AddressFields({ address, handleAddressChange, t, touched, errors, onBlu
 				/>
 				{errors.street && touched.street && <Text className='text-xs text-red-500'>{errors.street}</Text>}
 			</View>
-			<View className='flex gap-4'>
-				<View className='w-1/2'>
-					<CustomInput
-						label={t('addNewShippingAddress.frmNumber', 'Número')}
-						placeholder={''}
-						value={address?.number || ''}
-						onChange={e => handleAddressChange('number', e)}
-						className={errors.number && touched.number ? 'border-red-500' : ''}
-						onBlur={() => onBlur('number')}
-					/>
-					{errors.number && touched.number && <Text className='text-xs text-red-500'>{errors.number}</Text>}
-				</View>
-				<View className='w-1/2'>
-					<CustomInput
-						label={t('addNewShippingAddress.frmComplement', 'Complemento')}
-						placeholder={''}
-						value={address?.complement || ''}
-						onChange={e => handleAddressChange('complement', e)}
-						onBlur={() => onBlur('complement')}
-					/>
-				</View>
-			</View>
+
 			<View>
 				<CustomInput
-					label={t('addNewShippingAddress.frmNeighborhood', 'Rua / Avenida')}
-					placeholder={''}
+					label={t('addNewShippingAddress.frmNumber')}
+					placeholder={'Ex: 123'}
+					value={address?.number || ''}
+					onChange={e => handleAddressChange('number', e)}
+					className={errors.number && touched.number ? 'border-red-500' : ''}
+					onBlur={() => onBlur('number')}
+				/>
+				{errors.number && touched.number && <Text className='text-xs text-red-500'>{errors.number}</Text>}
+			</View>
+
+			<View>
+				<CustomInput
+					label={t('addNewShippingAddress.frmComplement')}
+					placeholder={'Complemento'}
+					value={address?.complement || ''}
+					onChange={e => handleAddressChange('complement', e)}
+					onBlur={() => onBlur('complement')}
+				/>
+			</View>
+
+			<View>
+				<CustomInput
+					label={t('addNewShippingAddress.frmNeighborhood')}
+					placeholder={'Seu bairro'}
 					value={address.neighborhood || ''}
 					onChange={e => handleAddressChange('neighborhood', e)}
 					className={errors.neighborhood && touched.neighborhood ? 'border-red-500' : ''}
@@ -89,42 +90,59 @@ function AddressFields({ address, handleAddressChange, t, touched, errors, onBlu
 					<Text className='text-xs text-red-500'>{errors.neighborhood}</Text>
 				)}
 			</View>
-			<View className='flex gap-4'>
-				<View className='w-1/2'>
-					<CustomInput
-						label={t('addNewShippingAddress.frmCity', 'Cidade')}
-						placeholder={''}
-						value={address.city || ''}
-						onChange={e => handleAddressChange('city', e)}
-						className={errors.city && touched.city ? 'border-red-500' : ''}
-						onBlur={() => onBlur('city')}
-					/>
-					{errors.city && touched.city && <Text className='text-xs text-red-500'>{errors.city}</Text>}
-				</View>
-				<View className='w-1/2'>
-					<CustomInput
-						label={t('addNewShippingAddress.frmState', 'Estado')}
-						placeholder={''}
-						value={address?.state || ''}
-						onChange={e => handleAddressChange('state', e)}
-						className={errors.state && touched.state ? 'border-red-500' : ''}
-						onBlur={() => onBlur('state')}
-					/>
-					{errors.state && touched.state && <Text className='text-xs text-red-500'>{errors.state}</Text>}
-				</View>
-			</View>
+
 			<View>
 				<CustomInput
-					placeholder={t('addNewShippingAddress.frmReceiveName', 'Quem irá receber o pedido?')}
-					label={t('addNewShippingAddress.frmReceiveName', 'Quem irá receber o pedido?')}
-					value={address?.receiverName || ''}
-					onChange={text => handleAddressChange('receiverName', text)}
-					className={errors.receiverName && touched.receiverName ? 'border-red-500' : ''}
-					onBlur={() => onBlur('receiverName')}
+					label={t('addNewShippingAddress.frmCity')}
+					placeholder={'Sua cidade'}
+					value={address.city || ''}
+					onChange={e => handleAddressChange('city', e)}
+					className={errors.city && touched.city ? 'border-red-500' : ''}
+					onBlur={() => onBlur('city')}
 				/>
-				{errors.receiverName && touched.receiverName && (
-					<Text className='text-xs text-red-500'>{errors.receiverName}</Text>
-				)}
+				{errors.city && touched.city && <Text className='text-xs text-red-500'>{errors.city}</Text>}
+			</View>
+
+			<View>
+				<CustomInput
+					label={t('addNewShippingAddress.frmState')}
+					placeholder={'Seu estado'}
+					value={address?.state || ''}
+					onChange={e => handleAddressChange('state', e)}
+					className={errors.state && touched.state ? 'border-red-500' : ''}
+					onBlur={() => onBlur('state')}
+				/>
+				{errors.state && touched.state && <Text className='text-xs text-red-500'>{errors.state}</Text>}
+			</View>
+
+			<View>
+				<CustomInput
+					label={t('personalData.frmPhone')}
+					placeholder={t('(00) 000000-0000')}
+					inputMode='tel'
+					mask='(99) 99999-9999'
+					variant='mask'
+					value={address?.phone || ''}
+					onChange={e => handleAddressChange('phone', e)}
+					className={errors.phone && touched.phone ? 'border-red-500' : ''}
+					onBlur={() => onBlur('phone')}
+				/>
+				{errors.phone && touched.phone && <Text className='text-xs text-red-500'>{errors.phone}</Text>}
+			</View>
+
+			<View>
+				<CustomInput
+					label={t('personalData.frmTaxpayerId')}
+					placeholder={t('personalData.placeholderTaxpayerId')}
+					inputMode='numeric'
+					mask='999.999.999-99'
+					variant='mask'
+					value={address?.document || ''}
+					onChange={e => handleAddressChange('document', e)}
+					className={errors.document && touched.document ? 'border-red-500' : ''}
+					onBlur={() => onBlur('document')}
+				/>
+				{errors.document && touched.document && <Text className='text-xs text-red-500'>{errors.document}</Text>}
 			</View>
 		</>
 	)
@@ -135,25 +153,29 @@ function validateAddress(address, t) {
 
 	return {
 		postalCode: !address.postalCode
-			? t('addNewShippingAddress.errorPostalCode', 'Informe o CEP')
+			? t('addNewShippingAddress.errorPostalCode')
 			: postalCodeDigits.length !== 8
 				? t('addNewShippingAddress.errorPostalCodeInvalid', 'CEP deve ter 8 dígitos')
 				: '',
-		street: !address.street ? t('addNewShippingAddress.errorStreet', 'Informe a rua/avenida') : '',
-		neighborhood: !address.neighborhood ? t('addNewShippingAddress.errorNeighborhood', 'Informe o bairro') : '',
-		city: !address.city ? t('addNewShippingAddress.errorCity', 'Informe a cidade') : '',
-		state: !address.state ? t('addNewShippingAddress.errorState', 'Informe o estado') : '',
-		receiverName: !address.receiverName
-			? t('addNewShippingAddress.errorReceiverName', 'Informe quem irá receber')
-			: '',
-		number: !address.number ? t('addNewShippingAddress.errorNumber', 'Informe o número') : ''
+		street: !address.street ? t('addNewShippingAddress.errorStreet') : '',
+		neighborhood: !address.neighborhood ? t('addNewShippingAddress.errorNeighborhood') : '',
+		city: !address.city ? t('addNewShippingAddress.errorCity') : '',
+		state: !address.state ? t('addNewShippingAddress.errorState') : '',
+		receiverName: !address.receiverName ? t('addNewShippingAddress.errorReceiverName') : '',
+		number: !address.number ? t('addNewShippingAddress.errorNumber') : '',
+		phone: !address.phone ? t('addNewShippingAddress.errorPhone', 'Telefone é obrigatório') : '',
+		document: !address.document
+			? t('addNewShippingAddress.errorDocument', 'CPF é obrigatório')
+			: !verifySocialNumber(address.document.replace(/\D/g, ''))
+				? t('addNewShippingAddress.errorDocumentInvalid', 'CPF inválido')
+				: ''
 	}
 }
 
 export default function AddressForm(props) {
 	const PAGE_NAME = 'Checkout - Cadastro de Endereço'
 
-	const { cart, cartIsLoading, setLogisticInfo, startCart } = useLocalShoppingCart()
+	const { cart, cartIsLoading, setLogisticInfo, setShippingAddress, startCart } = useLocalShoppingCart()
 	const { t } = useTranslation()
 
 	const [addressId, setAddressId] = useState(props.location?.state?.addressId)
@@ -166,6 +188,8 @@ export default function AddressForm(props) {
 		neighborhood: '',
 		city: '',
 		state: '',
+		phone: '',
+		document: '',
 		country: 'BRA',
 		geoCoordinates: [],
 		number: '',
@@ -185,9 +209,7 @@ export default function AddressForm(props) {
 	}, [])
 
 	useEffect(() => {
-		if (addressId) {
-			init(addressId)
-		}
+		if (addressId) init(addressId)
 	}, [addressId])
 
 	useEffect(() => {
@@ -205,6 +227,7 @@ export default function AddressForm(props) {
 			if (!cart.canEditData) {
 				await requestLogin()
 				const newCart = await startCart()
+
 				const _address = newCart?.shippingData?.selectedAddresses?.find(
 					address => address.addressId === addressId
 				)
@@ -218,7 +241,6 @@ export default function AddressForm(props) {
 
 				if (!_address && cart?.shippingData?.selectedAddresses?.[0]?.addressId) {
 					setAddressId(cart.shippingData.selectedAddresses[0].addressId)
-
 					return
 				}
 
@@ -228,13 +250,13 @@ export default function AddressForm(props) {
 				})
 			}
 		} catch (e) {
+			console.error('ERROR init [AddressForm]', e)
 			Eitri.navigation.back()
 		}
 	}
 
 	const handleAddressChange = useCallback((key, e) => {
 		const { value } = e.target
-
 		setAddress(prev => ({
 			...prev,
 			[key]: key === 'receiverName' ? value.replace(/[^a-zA-Z\s]/g, '') : value
@@ -243,15 +265,14 @@ export default function AddressForm(props) {
 
 	const onChangePostalCodeInput = async e => {
 		const { value } = e.target
-
 		setAddress({ ...address, postalCode: value })
 	}
 
 	const submitZipCode = async postalCode => {
 		try {
 			if (!postalCode) return
-
 			setIsLoading(true)
+
 			const { street, neighborhood, city, state, country, geoCoordinates } = await resolvePostalCode(postalCode)
 
 			setAddress({
@@ -263,7 +284,9 @@ export default function AddressForm(props) {
 				country,
 				geoCoordinates
 			})
+
 			setIsLoading(false)
+
 			// Foco no campo número após buscar o CEP
 			setTimeout(() => {
 				document.getElementById('numberField')?.focus()
@@ -275,7 +298,6 @@ export default function AddressForm(props) {
 
 	const submit = async () => {
 		if (isSubmitting) return
-
 		setIsSubmitting(true)
 		setAddressError('')
 
@@ -297,35 +319,56 @@ export default function AddressForm(props) {
 
 				await setLogisticInfo(payload)
 			} else {
-				const payload = {
-					address,
-					clearAddressIfPostalCodeNotFound: false
-				}
+				// For adding a new address without selecting it, persist locally in session_addresses
+				try {
+					const sessionKey = 'session_addresses'
+					const stored = JSON.parse(localStorage.getItem(sessionKey) || '[]')
+					const normalizedGeo = Array.isArray(address.geoCoordinates)
+						? address.geoCoordinates.map(c => c)
+						: []
+					const sessionAddress = {
+						addressType: address.addressType || 'residential',
+						receiverName: address.receiverName,
+						isDisposable: !!address.isDisposable,
+						postalCode: address.postalCode,
+						city: address.city,
+						state: address.state,
+						country: address.country,
+						street: address.street,
+						number: address.number,
+						neighborhood: address.neighborhood,
+						complement: address.complement,
+						reference: address.reference,
+						geoCoordinates: normalizedGeo
+					}
 
-				await setLogisticInfo(payload)
+					const next = Array.isArray(stored) ? [...stored, sessionAddress] : [sessionAddress]
+					localStorage.setItem(sessionKey, JSON.stringify(next))
+					console.debug('Saved session address', sessionAddress)
+					// go back to shipping method so user can choose it manually
+					navigate('ShippingMethod', {}, true)
+					return
+				} catch (err) {
+					console.error('Error saving session address', err)
+				}
 			}
 
 			navigate('FreightResolver', {}, true)
 		} catch (e) {
 			if (e.response?.status === 400) {
-				setAddressError(
-					t('addNewShippingAddress.errorAddress', 'Endereço inválido, por favor verifique os dados')
-				)
+				setAddressError(t('addNewShippingAddress.errorAddress'))
 				console.error('Error on submit', e)
-
 				return
 			}
 
-			setAddressError(t('addNewShippingAddress.errorDefault', 'Ocorreu um erro inesperado, tente novamente'))
+			setAddressError(t('addNewShippingAddress.errorDefault'))
 			setTimeout(() => setAddressError(''), 8000)
 		} finally {
 			setIsSubmitting(false)
 		}
 	}
 
-	const onBlur = field => {
-		setTouched(prev => ({ ...prev, [field]: true }))
-	}
+	const onBlur = field => setTouched(prev => ({ ...prev, [field]: true }))
 
 	const isValidAddress = useMemo(() => {
 		return !Object.values(errors).some(Boolean)
@@ -335,7 +378,7 @@ export default function AddressForm(props) {
 		<Page title={PAGE_NAME}>
 			<HeaderContentWrapper>
 				<HeaderReturn />
-				<HeaderText text={t('addNewShippingAddress.title', 'Entrega')} />
+				<HeaderText text={t('addNewShippingAddress.title')} />
 			</HeaderContentWrapper>
 
 			<LoadingComponent
@@ -343,7 +386,21 @@ export default function AddressForm(props) {
 				isLoading={cartIsLoading}
 			/>
 
-			<View className='flex flex-col gap-2 p-4 m-4 bg-white rounded shadow-sm border border-gray-300'>
+			<View className='flex flex-col text-gray-700 gap-2 p-4 m-4 bg-white  border border-white'>
+				<View>
+					<CustomInput
+						placeholder={t('addNewShippingAddress.txtName')}
+						label={t('addNewShippingAddress.txtName')}
+						value={address?.receiverName || ''}
+						onChange={e => handleAddressChange('receiverName', e)}
+						className={errors.receiverName && touched.receiverName ? 'border-red-500' : ''}
+						onBlur={() => onBlur('receiverName')}
+					/>
+					{errors.receiverName && touched.receiverName && (
+						<Text className='text-xs text-red-500'>{errors.receiverName}</Text>
+					)}
+				</View>
+
 				<PostalCodeInput
 					value={address?.postalCode}
 					onChange={onChangePostalCodeInput}
@@ -354,11 +411,13 @@ export default function AddressForm(props) {
 					touched={touched.postalCode}
 					onBlur={() => onBlur('postalCode')}
 				/>
+
 				{isLoading && (
 					<View>
-						<Text>{t('addNewShippingAddress.loading', 'Aguarde...')}</Text>
+						<Text>{t('addNewShippingAddress.loading') || 'Aguarde...'}</Text>
 					</View>
 				)}
+
 				<AddressFields
 					address={address}
 					handleAddressChange={handleAddressChange}
@@ -385,13 +444,12 @@ export default function AddressForm(props) {
 					marginTop='large'
 					label={
 						isLoading
-							? t('addNewShippingAddress.loading', 'Aguarde...')
-							: t('addNewShippingAddress.labelButton', 'Continuar')
+							? t('addNewShippingAddress.loading') || 'Aguarde...'
+							: t('addNewShippingAddress.labelButton')
 					}
 					fontSize='medium'
 					disabled={!isValidAddress || isLoading}
 					onPress={() => {
-						// Marca todos os campos como tocados ao tentar submeter
 						setTouched({
 							postalCode: true,
 							street: true,
@@ -399,7 +457,9 @@ export default function AddressForm(props) {
 							city: true,
 							state: true,
 							receiverName: true,
-							number: true
+							number: true,
+							phone: true,
+							document: true
 						})
 						submit()
 					}}

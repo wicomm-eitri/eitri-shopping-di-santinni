@@ -55,7 +55,7 @@ function ColorSwatch({ color, selected, status, onClick }) {
 		<View
 			onClick={onClick}
 			className={`
-				relative w-8 h-8 rounded-full cursor-pointer transition-all duration-200
+				relative w-8 h-8 rounded-full transition-all duration-200
 				flex items-center justify-center
 				${selected ? 'ring-2 ring-offset-2 ring-gray-900 scale-110' : ''}
 				${unavailable && !inexistent ? 'opacity-50' : ''}

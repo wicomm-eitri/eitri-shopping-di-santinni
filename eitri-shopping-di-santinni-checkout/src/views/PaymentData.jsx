@@ -1,30 +1,46 @@
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'eitri-i18n'
-import { Page, View } from 'eitri-luminus'
-import { HeaderContentWrapper, HeaderReturn, BottomInset } from 'eitri-shopping-di-santinni-shared'
+import {
+	BottomInset,
+	CustomButton,
+	HeaderContentWrapper,
+	HeaderReturn,
+	HeaderText,
+	Steps
+} from 'eitri-shopping-di-santinni-shared'
+import CartItemsContent from '../components/CartItemsContent/CartItemsContent'
 import PaymentMethods from '../components/Methods/PaymentMethods'
 import LoadingComponent from '../components/Shared/Loading/LoadingComponent'
 import { useLocalShoppingCart } from '../providers/LocalCart'
 import { trackScreenView } from '../services/Tracking'
+import { navigate } from '../services/navigationService'
 
-export default function PaymentData(props) {
+export default function PaymentData() {
 	const { cart, selectPaymentOption } = useLocalShoppingCart()
-	const { t } = useTranslation()
-
 	const [isLoading, setIsLoading] = useState(false)
+	const [selectedPayment, setSelectedPayment] = useState(null)
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		trackScreenView(`checkout_dados_pagamento`, 'checkout.paymentData')
 	}, [])
 
-	const handlePaymentOptionsChange = async paymentMethod => {
+	const handlePaymentMethodPick = paymentMethod => setSelectedPayment(paymentMethod)
+
+	const applySelectedPayment = async () => {
+		if (!selectedPayment) return
+
 		try {
 			setIsLoading(true)
+
 			const payload = {
-				payments: Array.isArray(paymentMethod) ? paymentMethod : [paymentMethod],
+				payments: Array.isArray(selectedPayment) ? selectedPayment : [selectedPayment],
 				giftCards: cart.paymentData.giftCards
 			}
 
 			await selectPaymentOption(payload)
+
+			navigate('CheckoutReview', {}, true)
 		} catch (error) {
 			console.log('Erro ao selecionar método de pagamento', error)
 		} finally {
@@ -32,27 +48,48 @@ export default function PaymentData(props) {
 		}
 	}
 
-	if (!cart) {
-		return
-	}
+	if (!cart) return
 
 	return (
-		<Page title={t('checkoutPages.paymentData', 'Checkout - Dados de pagamento')}>
+		<Page
+			title='Checkout - Dados de pagamento'
+			className='bg-white'>
 			<HeaderContentWrapper>
 				<HeaderReturn />
+				<HeaderText text={'Checkout'} />
 			</HeaderContentWrapper>
+
+			<Steps current={1} />
 
 			<LoadingComponent
 				fullScreen
 				isLoading={isLoading}
 			/>
 
-			<View className='flex-1 p-4 flex flex-col gap-4'>
-				<Text className='text-xl font-bold'>{t('paymentData.chooseHowToPay', 'Escolha como pagar')}</Text>
-				<PaymentMethods onSelectPaymentMethod={handlePaymentOptionsChange} />
+			<View className='flex flex-col gap-4 px-2.5 pb-8 overflow-auto max-h-[70vh]'>
+				<CartItemsContent />
+
+				<Text className='text-sm  font-medium text-black'>
+					{t('paymentData.txtSelectPayment', 'FORMAS DE PAGAMENTO')}
+				</Text>
+
+				<PaymentMethods
+					onSelectPaymentMethod={handlePaymentMethodPick}
+					selectedPayment={selectedPayment}
+				/>
 			</View>
 
-			<BottomInset />
+			<View className='fixed bottom-0 left-0 w-full z-10 bg-white border-t border-gray-300'>
+				<View className='p-4'>
+					<CustomButton
+						disabled={!selectedPayment}
+						label={'CONTINUAR PARA COMPRA'}
+						onPress={applySelectedPayment}
+					/>
+				</View>
+
+				<BottomInset />
+			</View>
 		</Page>
 	)
 }

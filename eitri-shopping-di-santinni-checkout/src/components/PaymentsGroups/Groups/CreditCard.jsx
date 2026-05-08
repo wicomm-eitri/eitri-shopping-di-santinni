@@ -1,5 +1,4 @@
 import { useTranslation } from 'eitri-i18n'
-import { Text, View } from 'eitri-luminus'
 import { CustomButton, CustomInput } from 'eitri-shopping-di-santinni-shared'
 import { useCustomer } from '../../../providers/Customer'
 import { useLocalShoppingCart } from '../../../providers/LocalCart'
@@ -195,13 +194,13 @@ export default function CreditCard(props) {
 					</View>
 				)}
 
-				<View className='border-b my-4'></View>
+				{/* <View className='border-b my-4'></View> */}
 
-				<View onClick={addNewCard}>
+				{/* <View onClick={addNewCard}>
 					<Text className='text-primary font-bold'>
 						{t('paymentMethods.creditCard.newCard', '+ novo cartão')}
 					</Text>
-				</View>
+				</View> */}
 			</GroupsWrapper>
 
 			{accountToRemove && (

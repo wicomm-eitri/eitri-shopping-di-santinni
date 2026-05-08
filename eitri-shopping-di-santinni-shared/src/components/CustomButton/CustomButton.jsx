@@ -34,7 +34,7 @@ export default function CustomButton(props) {
 			return 'transparent'
 		}
 
-		return isLoading || disabled ? 'bg-gray-300' : 'bg-primary'
+		return isLoading || disabled ? 'bg-gray-300' : 'bg-red-700'
 	})()
 
 	const _contentColor = (() => {
@@ -42,34 +42,37 @@ export default function CustomButton(props) {
 			return 'text-primary'
 		}
 
-		return isLoading || disabled ? 'text-gray-500' : 'text-primary-content'
+		return isLoading || disabled ? 'text-gray-500' : 'text-white'
 	})()
 
 	const renderContent = () => {
+		// Adicionamos uppercase e tracking-wide para o texto ficar igual ao Figma
 		if (leftIcon) {
 			return (
 				<View className='flex items-center gap-2'>
 					<View className={_contentColor}>{leftIcon}</View>
-					<Text className={`font-bold ${_contentColor}`}>{label}</Text>
+					<Text className={`font-bold uppercase tracking-wide text-[14px] ${_contentColor}`}>{label}</Text>
 				</View>
 			)
 		}
 
-		return <Text className={`font-bold ${_contentColor}`}>{label}</Text>
+		return <Text className={`font-bold uppercase tracking-wide text-[14px] ${_contentColor}`}>{label}</Text>
 	}
 
 	return (
 		<View
 			onClick={_onPress}
 			className={`
-				flex items-center justify-center 
-				h-[45px]
-				rounded
-				w-full
-				${_backgroundColor ? `${_backgroundColor}` : ''}
-				${variant === 'outlined' || outlined ? `border border-primary` : ''}
-				${className || ''}
-			`}
+                flex items-center justify-center 
+                h-[48px]
+                rounded-full
+                w-full
+                cursor-pointer
+                transition-opacity active:opacity-80
+                ${_backgroundColor ? `${_backgroundColor}` : ''}
+                ${variant === 'outlined' || outlined ? `border-[1.5px] border-primary` : ''}
+                ${className || ''}
+            `}
 			{...rest}>
 			{children || (isLoading ? <Loading /> : renderContent())}
 		</View>

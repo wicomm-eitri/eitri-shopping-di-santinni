@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'eitri-i18n'
-import { View, Text, Radio } from 'eitri-luminus'
 import { CustomButton, CustomInput, Loading, shippingResolver } from 'eitri-shopping-di-santinni-shared'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { loadPostalCodeFromStorage, savePostalCodeOnStorage } from '../../services/customerService'
@@ -144,7 +143,7 @@ export default function Freight(props) {
 						</View>
 					</View>
 				) : (
-					<View className='mt-2 flex flex-row items-center gap-4'>
+					<View className='mt-2 flex  items-center gap-4'>
 						<Text className='text-base font-medium'>
 							{`${t('freight.receiveAt', 'Receber em')} ${shipping?.postalCode}`}
 						</Text>
@@ -177,12 +176,12 @@ export default function Freight(props) {
 									{deliveryOptions.map((item, index) => (
 										<View
 											key={index}
-											className='flex flex-row items-center w-full'>
+											className='flex  items-center w-full'>
 											{isUnavailable ? (
 												getMessageError(item?.label)
 											) : (
 												<View
-													className='flex flex-row items-center w-full'
+													className='flex  items-center w-full'
 													sendFocusToInput>
 													<Radio
 														className='radio-primary'
@@ -217,7 +216,7 @@ export default function Freight(props) {
 									{pickupOptions.map((item, index) => (
 										<View
 											key={index}
-											className='flex flex-row items-center w-full'>
+											className='flex  items-center w-full'>
 											{isUnavailable ? (
 												getMessageError(item?.label)
 											) : (
