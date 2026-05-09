@@ -1,4 +1,5 @@
 import { useTranslation } from 'eitri-i18n'
+import TrashIcon from '../../assets/icons/trash.svg'
 import { formatAmountInCents } from '../../utils/utils'
 import ModalConfirm from '../ModalConfirm/ModalConfirm'
 import Quantity from '../Quantity/Quantity'
@@ -90,12 +91,12 @@ export default function CartItem(props) {
 			<View className='flex gap-4'>
 				<View className='flex-shrink-0'>
 					<Image
-						className='w-[107px] h-[134px] object-cover'
+						className='w-[107px] h-auto'
 						src={resizedImageUrl}
 					/>
 				</View>
 
-				<View className='flex flex-col gap-2'>
+				<View className='flex flex-col gap-2 w-full'>
 					{item.availability !== 'available' && (
 						<View className='mb-2 p-2 bg-red-50 border border-red-200 rounded'>
 							<Text className='text-sm text-red-600 font-medium'>
@@ -106,18 +107,25 @@ export default function CartItem(props) {
 						</View>
 					)}
 
-					<View className='flex justify-between items-start'>
-						<Text className='text-xs text-primary pr-2'>{item.name}</Text>
+					<View className='flex justify-between gap-2'>
+						<Text className='text-xs pr-2'>{item.name}</Text>
+
+						<View onClick={handleRemoveCartItemIntention}>
+							<Image
+								src={TrashIcon}
+								alt='Ícone de lixeira'
+							/>
+						</View>
 					</View>
 
 					<View className='flex flex-col gap-1'>
 						{size && (
-							<Text className='text-[10px] text-primary'>
+							<Text className='text-[10px]'>
 								Tamanho:<Text className='text-gray-500 font-light'> {size}</Text>
 							</Text>
 						)}
 						{color && (
-							<Text className='text-[10px] text-primary'>
+							<Text className='text-[10px]'>
 								Cor:<Text className='text-gray-500 font-light'> {color}</Text>
 							</Text>
 						)}
@@ -125,7 +133,7 @@ export default function CartItem(props) {
 
 					{/* Preço */}
 					<View className='flex items-center gap-2 my-2'>
-						<Text className='text-xs font-medium text-primary'>{formatAmountInCents(item.price)}</Text>
+						<Text className='text-xs font-medium'>{formatAmountInCents(item.price)}</Text>
 
 						{item?.listPrice && item.price !== item.listPrice && (
 							<Text className='line-through font-light text-gray-500 text-[10px]'>
@@ -135,40 +143,11 @@ export default function CartItem(props) {
 					</View>
 
 					{/* Seletor de Quantidade */}
-					<View className='flex items-center gap-2 justify-between'>
-						<Quantity
-							quantity={item.quantity}
-							handleItemQuantity={handleQuantityOfItemsCart}
-							loadingQuantity={loadingItemQuantity}
-						/>
-
-						<View onClick={handleRemoveCartItemIntention}>
-							<svg
-								xmlns='http://www.w3.org/2000/svg'
-								width='24'
-								height='24'
-								viewBox='0 0 24 24'
-								fill='none'
-								stroke='currentColor'
-								strokeWidth='2'
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								className='text-gray-400'>
-								<polyline points='3 6 5 6 21 6'></polyline>
-								<path d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'></path>
-								<line
-									x1='10'
-									y1='11'
-									x2='10'
-									y2='17'></line>
-								<line
-									x1='14'
-									y1='11'
-									x2='14'
-									y2='17'></line>
-							</svg>
-						</View>
-					</View>
+					<Quantity
+						quantity={item.quantity}
+						handleItemQuantity={handleQuantityOfItemsCart}
+						loadingQuantity={loadingItemQuantity}
+					/>
 				</View>
 			</View>
 

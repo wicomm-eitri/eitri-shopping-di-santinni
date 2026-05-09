@@ -25,8 +25,8 @@
 		"txtInvalidCoupon": "Cupom inválido",
 		"txtExpiredCoupon": "Cupom Expirado",
 		"txtCoupon": "Cupom de desconto",
-		"txtAdd": "ADICIONAR",
-		"labelInsertCode": "Insira o código"
+		"txtAdd": "APLICAR",
+		"labelInsertCode": "CUPOM DE DESCONTO"
 	},
 	"emptyCart": {
 		"txtEmptyCart": "Sua sacola está vazio",
@@ -42,7 +42,7 @@
 		"receiveAt": "Receber em",
 		"change": "Alterar",
 		"unavailableDelivery": "Entrega indisponível",
-		"labelZipCode": "CEP",
+		"labelZipCode": "DIGITE SEU CEP",
 		"txtUnknow": "Não sei meu cep",
 		"tabDelivery": "Opções de Entrega",
 		"tabPickup": "Opções de Retirada",
