@@ -87,7 +87,7 @@ export default function ProductCatalogContent(props) {
 			setCurrentPage(page)
 			setProductLoading(false)
 		} catch (error) {
-			console.log('error', error)
+			console.error('Error fetching products:', error)
 			setProductLoading(false)
 		}
 	}

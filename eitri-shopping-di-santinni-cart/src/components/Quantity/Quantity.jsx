@@ -1,22 +1,21 @@
-import { View, Text } from 'eitri-luminus'
+import { Loading } from 'eitri-shopping-di-santinni-shared'
 
 export default function Quantity(props) {
-	const { quantity, handleItemQuantity, disable } = props
+	const { quantity, handleItemQuantity, disable, loadingQuantity } = props
 
 	return (
-		<View className='flex items-center border border-gray-300 rounded px-2'>
+		<View className='flex items-center border border-gray-300 px-2.5'>
 			<View className='w-1/3 flex items-center justify-center'>
 				{quantity === 1 || disable ? (
 					<svg
-						width='16px'
-						height='16px'
-						viewBox='0 0 24 24'
-						fill='none'
-						xmlns='http://www.w3.org/2000/svg'>
+						xmlns='http://www.w3.org/2000/svg'
+						width='11'
+						height='1'
+						viewBox='0 0 11 1'
+						fill='none'>
 						<path
-							d='M6 12L18 12'
-							stroke='#000000'
-							strokeWidth='2'
+							d='M0.5 0.5H9.83333'
+							stroke='#CCCCCC'
 							strokeLinecap='round'
 							strokeLinejoin='round'
 						/>
@@ -24,15 +23,14 @@ export default function Quantity(props) {
 				) : (
 					<View onClick={() => handleItemQuantity(-1)}>
 						<svg
-							width='16px'
-							height='16px'
-							viewBox='0 0 24 24'
-							fill='none'
-							xmlns='http://www.w3.org/2000/svg'>
+							xmlns='http://www.w3.org/2000/svg'
+							width='11'
+							height='1'
+							viewBox='0 0 11 1'
+							fill='none'>
 							<path
-								d='M6 12L18 12'
-								stroke='#000000'
-								strokeWidth='2'
+								d='M0.5 0.5H9.83333'
+								stroke='black'
 								strokeLinecap='round'
 								strokeLinejoin='round'
 							/>
@@ -41,21 +39,26 @@ export default function Quantity(props) {
 				)}
 			</View>
 
-			<Text className='px-3 py-2 text-sm font-medium min-w-[3rem] text-center'>{quantity}</Text>
+			{loadingQuantity ? (
+				<View className='flex items-center justify-center h-[30px] px-1'>
+					<Loading className='!w-4 !h-4 text-gray-900' />
+				</View>
+			) : (
+				<Text className='px-1 py-[7px] text-xs font-medium min-w-[23px] text-center'>{quantity}</Text>
+			)}
 
 			<View className='w-1/3 items-center justify-center pl-1'>
 				{disable ? (
 					<View className='w-[16px] h-[16px]'>
 						<svg
-							width='16px'
-							height='16px'
-							viewBox='0 0 24 24'
-							fill='none'
-							xmlns='http://www.w3.org/2000/svg'>
+							xmlns='http://www.w3.org/2000/svg'
+							width='11'
+							height='11'
+							viewBox='0 0 11 11'
+							fill='none'>
 							<path
-								d='M6 12H18M12 6V18'
-								stroke='#000000'
-								strokeWidth='2'
+								d='M5.16667 0.5V9.83333M0.5 5.16667H9.83333'
+								stroke='#CCCCCC'
 								strokeLinecap='round'
 								strokeLinejoin='round'
 							/>
@@ -64,15 +67,14 @@ export default function Quantity(props) {
 				) : (
 					<View onClick={() => handleItemQuantity(1)}>
 						<svg
-							width='16px'
-							height='16px'
-							viewBox='0 0 24 24'
-							fill='none'
-							xmlns='http://www.w3.org/2000/svg'>
+							xmlns='http://www.w3.org/2000/svg'
+							width='11'
+							height='11'
+							viewBox='0 0 11 11'
+							fill='none'>
 							<path
-								d='M6 12H18M12 6V18'
-								stroke='#000000'
-								strokeWidth='2'
+								d='M5.16667 0.5V9.83333M0.5 5.16667H9.83333'
+								stroke='black'
 								strokeLinecap='round'
 								strokeLinejoin='round'
 							/>

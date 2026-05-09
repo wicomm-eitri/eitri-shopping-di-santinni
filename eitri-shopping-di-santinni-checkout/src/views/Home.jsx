@@ -54,7 +54,7 @@ export default function Home(props) {
 			loadCheckoutProfile(_cart?.clientProfileData?.email)
 			handleNavigation(_cart)
 		} catch (e) {
-			console.log('Error ao buscar carrinho', e)
+			console.error('Error ao buscar carrinho', e)
 		}
 	}
 

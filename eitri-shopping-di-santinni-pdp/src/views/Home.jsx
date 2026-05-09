@@ -1,14 +1,14 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
 import { View } from 'eitri-luminus'
-import { Loading, BottomInset } from 'eitri-shopping-di-santinni-shared'
+import { BottomInset, Loading } from 'eitri-shopping-di-santinni-shared'
 import ActionButton from '../components/ActionButton/ActionButton'
 import DescriptionComponent from '../components/Description/DescriptionComponent'
 import Freight from '../components/Freight/Freight'
 import Header from '../components/Header/Header'
 import ImageCarousel from '../components/ImageCarousel/ImageCarousel'
 import MainDescription from '../components/MainDescription/MainDescription'
-import RelatedProducts from '../components/RelatedProducts/RelatedProducts'
+import RecommendationProducts from '../components/RecommendationProducts/RecommendationProducts'
 import Reviews from '../components/Reviews/Reviews'
 import SkuSelector from '../components/SkuSelector/SkuSelector'
 import { useLocalShoppingCart } from '../providers/LocalCart'
@@ -158,7 +158,7 @@ export default function Home() {
 							<Reviews />
 						</View>
 
-						{configLoaded && <RelatedProducts product={product} />}
+						{configLoaded && <RecommendationProducts product={product} />}
 					</View>
 
 					<ActionButton currentSku={currentSku} />

@@ -232,7 +232,7 @@ export default function PersonalData() {
 			setIsLoading(false)
 			Eitri.navigation.navigate({ path: 'FreightResolver', replace: true })
 		} catch (error) {
-			console.log('error', error)
+			console.error('Error adding customer data:', error)
 
 			if (error?.response?.data?.error?.code === 'CHK003') {
 				setShowOtpLogin(true)
