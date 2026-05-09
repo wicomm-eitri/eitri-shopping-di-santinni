@@ -142,6 +142,13 @@ const formatInstallments = (seller, t) => {
 }
 
 /**
+ * Extrai a marca do produto
+ */
+const getItemBrand = product => {
+	return product?.brand || ''
+}
+
+/**
  * Calcula o badge de desconto
  */
 const calculateBadge = seller => {
@@ -198,6 +205,7 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 		if (!isValidProduct) return null
 
 		return {
+			brand: getItemBrand(product),
 			name: product.productName,
 			image: item.images?.[0]?.imageUrl || '',
 			video: getProductVideo(product),
@@ -354,6 +362,7 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 
 	// Monta os parâmetros para o componente de apresentação
 	const params = {
+		brand: productData.brand,
 		name: productData.name,
 		image: productData.image,
 		video: productData.video,

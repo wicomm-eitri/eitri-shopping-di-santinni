@@ -1,10 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text } from 'eitri-luminus'
+import { LuChevronLeft, LuChevronRight } from 'react-icons/lu'
 
 export default function BannerList(props) {
 	const { data, onClick } = props
+	const [currentIndex, setCurrentIndex] = useState(0)
+	const [dragOffset, setDragOffset] = useState(0)
+	const [isDragging, setIsDragging] = useState(false)
+	const [startX, setStartX] = useState(0)
 	const imagesList = data.images
 	const { size, aspectRatio } = data
+	const paramsObject = Object.fromEntries((data?.params || []).map(item => [item.key, item.value]))
+	const hasMultipleImages = imagesList?.length > 1
+	const showArrows = paramsObject?.arrow === 'on'
 
 	const getBannerDimensions = () => {
 		const maxWidth = size?.maxWidth
@@ -55,6 +63,56 @@ export default function BannerList(props) {
 		}
 	}
 
+	const bannerDimensions = getBannerDimensions()
+	const bannerWidth = Number.parseInt(bannerDimensions.width, 10) || 300
+	const bannerStep = bannerWidth + 12
+
+	const goToSlide = direction => {
+		if (!imagesList?.length) return
+
+		setDragOffset(0)
+		setIsDragging(false)
+
+		setCurrentIndex(current => {
+			if (direction === 'right') {
+				return (current + 1) % imagesList.length
+			}
+
+			return (current - 1 + imagesList.length) % imagesList.length
+		})
+	}
+
+	const handleDragStart = clientX => {
+		if (!hasMultipleImages) return
+
+		setIsDragging(true)
+		setStartX(clientX)
+		setDragOffset(0)
+	}
+
+	const handleDragMove = clientX => {
+		if (!isDragging) return
+
+		setDragOffset(clientX - startX)
+	}
+
+	const handleDragEnd = () => {
+		if (!isDragging) return
+
+		const threshold = 50
+
+		if (Math.abs(dragOffset) > threshold) {
+			if (dragOffset > 0) {
+				goToSlide('left')
+			} else {
+				goToSlide('right')
+			}
+		} else {
+			setDragOffset(0)
+			setIsDragging(false)
+		}
+	}
+
 	return (
 		<View className={`flex flex-col gap-2 ${data?.isHideBanner ? 'hidden' : 'block'}`}>
 			{data?.mainTitle && (
@@ -63,44 +121,80 @@ export default function BannerList(props) {
 				</View>
 			)}
 
-			<View className='flex overflow-x-auto gap-3 px-4 pb-2'>
-				{imagesList &&
-					imagesList.map(slider => (
-						<View
-							key={slider.imageUrl}
-							className='flex flex-col'>
-							<View
-								style={{
-									backgroundImage: `url(${slider.imageUrl})`,
-									...getBannerDimensions(),
-									backgroundSize: 'cover',
-									borderRadius: '12px'
-								}}
-								className='relative'
-								onClick={() => onClick(slider)}>
-								{slider?.subLabel && (
-									<View className='absolute bottom-3 left-3 bg-white rounded-full px-4 py-1.5'>
-										<Text className='font-semibold text-red-700 text-sm uppercase'>
-											{slider.subLabel}
-										</Text>
-									</View>
-								)}
-							</View>
-
-							{slider?.action?.title && (
+			<View className='relative'>
+				<View className='overflow-hidden px-4 pb-2'>
+					<View
+						className='flex gap-3 transition-transform duration-300 ease-out touch-pan-y'
+						onTouchStart={e => handleDragStart(e.touches[0].clientX)}
+						onTouchMove={e => handleDragMove(e.touches[0].clientX)}
+						onTouchEnd={handleDragEnd}
+						onMouseDown={e => handleDragStart(e.clientX)}
+						onMouseMove={e => isDragging && handleDragMove(e.clientX)}
+						onMouseUp={handleDragEnd}
+						onMouseLeave={handleDragEnd}
+						style={{
+							transform: `translateX(calc(-${currentIndex * bannerStep}px + ${dragOffset}px))`,
+							transitionDuration: isDragging ? '0ms' : '300ms'
+						}}>
+						{imagesList &&
+							imagesList.map(slider => (
 								<View
-									style={{
-										...getBannerDimensions(),
-										height: 'initial'
-									}}
-									className='mt-1'>
-									<Text className='font-bold line-clamp-2 block text-center'>
-										{slider?.action?.title}
-									</Text>
+									key={slider.imageUrl}
+									className='flex flex-col'>
+									<View
+										style={{
+											backgroundImage: `url(${slider.imageUrl})`,
+											...bannerDimensions,
+											backgroundSize: 'cover',
+											borderRadius: '12px'
+										}}
+										className='relative'
+										onClick={() => onClick(slider)}>
+										{slider?.subLabel && (
+											<View className='absolute bottom-3 left-3 bg-white rounded-full px-4 py-1.5'>
+												<Text className='font-semibold text-red-700 text-sm uppercase'>
+													{slider.subLabel}
+												</Text>
+											</View>
+										)}
+									</View>
+
+									{slider?.action?.title && (
+										<View
+											style={{
+												...bannerDimensions,
+												height: 'initial'
+											}}
+											className='mt-1'>
+											<Text className='font-bold line-clamp-2 block text-center'>
+												{slider?.action?.title}
+											</Text>
+										</View>
+									)}
 								</View>
-							)}
+							))}
+					</View>
+				</View>
+
+				{hasMultipleImages && showArrows && (
+					<>
+						<View
+							className='absolute left-3 top-1/2 -translate-y-1/2 z-10'
+							onClick={() => goToSlide('left')}>
+							<View className='w-11 h-11 rounded-full bg-white border border-red-500 shadow-lg flex items-center justify-center'>
+								<LuChevronLeft className='text-red-500 text-2xl' />
+							</View>
 						</View>
-					))}
+
+						<View
+							className='absolute right-3 top-1/2 -translate-y-1/2 z-10'
+							onClick={() => goToSlide('right')}>
+							<View className='w-11 h-11 rounded-full bg-white border border-red-500 shadow-lg flex items-center justify-center'>
+								<LuChevronRight className='text-red-500 text-2xl' />
+							</View>
+						</View>
+					</>
+				)}
 			</View>
 		</View>
 	)
