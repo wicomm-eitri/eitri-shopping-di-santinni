@@ -43,7 +43,7 @@ export default function SearchInput(props) {
 
 			setSearchSuggestion(result?.searches)
 		} catch (error) {
-			console.log('Entrada de pesquisa', 'Erro ao buscar sugestão', error)
+			console.error('Entrada de pesquisa', 'Erro ao buscar sugestão', error)
 		}
 	}
 
@@ -60,8 +60,6 @@ export default function SearchInput(props) {
 	}
 
 	const handleSearch = suggestion => {
-		console.log('suggestion===>', suggestion)
-
 		if (timeoutId) {
 			clearTimeout(timeoutId)
 		}

@@ -15,7 +15,7 @@ export default function Cartman() {
 			console.log('cart========>', cart)
 			setCart(cart)
 		} catch (error) {
-			console.log('Erro ao buscar carrinho', error)
+			console.error('Erro ao buscar carrinho', error)
 		}
 	}
 
@@ -34,7 +34,7 @@ export default function Cartman() {
 
 			setCart(result)
 		} catch (e) {
-			console.log('e', e)
+			console.error('Error adding random item:', e)
 		}
 	}
 
