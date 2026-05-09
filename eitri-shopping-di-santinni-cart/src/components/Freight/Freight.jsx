@@ -87,9 +87,6 @@ export default function Freight(props) {
 	const shipping = shippingResolver(cart)
 	const deliveryOptions = shipping?.options?.filter(option => !option.isPickupInPoint) || []
 
-	console.log('Shipping =>', shipping)
-	console.log('deliveryOptions =>', deliveryOptions)
-
 	return (
 		<View className='px-4'>
 			{cart?.canEditData || isEditingZipCode ? (

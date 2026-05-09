@@ -41,7 +41,7 @@ export default function CartSummary(props) {
 				</View>
 			)}
 
-			{discounts > 0 && (
+			{!!discounts && typeof discounts === 'number' && discounts !== 0 && (
 				<View className='flex justify-between py-2'>
 					<Text className='text-sm'>{t('cartSummary.txtDiscount', 'Desconto')}</Text>
 					<Text className='text-sm'>{formatAmountInCents(discounts)}</Text>
