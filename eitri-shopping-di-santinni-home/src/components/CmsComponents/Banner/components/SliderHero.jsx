@@ -40,7 +40,7 @@ export default function SliderHero(props) {
 	const hasSingleImage = imagesList?.length === 1
 
 	return (
-		<View className={`mb-20 relative ${data?.isHideBanner ? 'hidden' : 'flex flex-col'}`}>
+		<View className={` relative ${data?.isHideBanner ? 'hidden' : 'flex flex-col'}`}>
 			{data.mainTitle && (
 				<View className='px-4 flex items-center justify-center w-full'>
 					<Text className='font-bold mb-8'>{data.mainTitle}</Text>
