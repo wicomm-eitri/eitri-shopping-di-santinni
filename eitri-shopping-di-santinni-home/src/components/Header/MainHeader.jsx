@@ -1,15 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Eitri from 'eitri-bifrost'
-import { View } from 'eitri-luminus'
-import {
-	HeaderCart,
-	HeaderContentWrapper,
-	HeaderReturn,
-	HeaderSearchIcon
-} from 'eitri-shopping-di-santinni-shared'
+import { HeaderCart, HeaderContentWrapper, HeaderReturn, HeaderSearchIcon } from 'eitri-shopping-di-santinni-shared'
+import HeaderLogo from '../../assets/Image/logoHeader.png'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { goToCartman } from '../../utils/utils'
-import HeaderLogo from '../../assets/Image/logoHeader.png'
 
 export default function MainHeader(props) {
 	const { isPLP = false } = props
@@ -19,9 +13,7 @@ export default function MainHeader(props) {
 	const [isScrolled, setIsScrolled] = useState(false)
 
 	useEffect(() => {
-		const handleScroll = () => {
-			setIsScrolled(window.scrollY > 0)
-		}
+		const handleScroll = () => setIsScrolled(window.scrollY > 0)
 
 		window.addEventListener('scroll', handleScroll)
 
@@ -49,7 +41,10 @@ export default function MainHeader(props) {
 				<View
 					className='absolute left-[50%] translate-x-[-50%] flex items-center justify-center'
 					onClick={goToCartman}>
-					<Image src={HeaderLogo} alt='Logo' />
+					<Image
+						src={HeaderLogo}
+						alt='Logo'
+					/>
 				</View>
 
 				<View className='flex items-center justify-end'>

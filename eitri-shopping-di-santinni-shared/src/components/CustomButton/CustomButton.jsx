@@ -12,7 +12,8 @@ export default function CustomButton(props) {
 		isLoading,
 		width,
 		borderRadius,
-		className,
+		className = '',
+		textClassName = '',
 		outlined,
 		children,
 		leftIcon,
@@ -51,28 +52,26 @@ export default function CustomButton(props) {
 			return (
 				<View className='flex items-center gap-2'>
 					<View className={_contentColor}>{leftIcon}</View>
-					<Text className={`font-bold uppercase tracking-wide text-[14px] ${_contentColor}`}>{label}</Text>
+					<Text className={`font-bold ${textClassName} ${_contentColor}`}>{label}</Text>
 				</View>
 			)
 		}
 
-		return <Text className={`font-bold uppercase tracking-wide text-[14px] ${_contentColor}`}>{label}</Text>
+		return <Text className={`font-bold ${textClassName} ${_contentColor}`}>{label}</Text>
 	}
 
 	return (
 		<View
 			onClick={_onPress}
 			className={`
-                flex items-center justify-center 
-                h-[48px]
-                rounded-full
-                w-full
-                cursor-pointer
-                transition-opacity active:opacity-80
-                ${_backgroundColor ? `${_backgroundColor}` : ''}
-                ${variant === 'outlined' || outlined ? `border-[1.5px] border-primary` : ''}
-                ${className || ''}
-            `}
+				flex items-center justify-center 
+				h-[45px]
+				rounded
+				w-full
+				${_backgroundColor ? `${_backgroundColor}` : ''}
+				${variant === 'outlined' || outlined ? `border border-primary` : ''}
+				${className}
+			`}
 			{...rest}>
 			{children || (isLoading ? <Loading /> : renderContent())}
 		</View>

@@ -17,7 +17,7 @@ export default function BannersRichText(props) {
 		return (
 			<View
 				key={`banner_text_${index}`}
-				className='w-full flex gap-1 items-center justify-center px-2 snap-x snap-always bg-primary h-10'>
+				className='w-full flex gap-1 items-center justify-center px-2 snap-x snap-always bg-red-700 h-10 '>
 				{item?.imageUrlLeft && (
 					<Image
 						src={item.imageUrlLeft}
@@ -47,8 +47,8 @@ export default function BannersRichText(props) {
 	const hasSingleBanner = contentList?.length === 1
 
 	return (
-		<View className='w-full h-10'>
-			{data?.title && <Text className='font-bold text-2xl px-4 mb-2'>{data.title}</Text>}
+		<View className='w-full h-10 mb-8'>
+			{data?.title && <Text className=' text-lg  px-4 mb-2'>{data.title}</Text>}
 
 			{hasMultipleBanners ? (
 				<CustomCarousel

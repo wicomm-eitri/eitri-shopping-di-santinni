@@ -42,7 +42,7 @@ export default function PaymentData() {
 
 			navigate('CheckoutReview', {}, true)
 		} catch (error) {
-			console.log('Erro ao selecionar método de pagamento', error)
+			console.error('Erro ao selecionar método de pagamento', error)
 		} finally {
 			setIsLoading(false)
 		}

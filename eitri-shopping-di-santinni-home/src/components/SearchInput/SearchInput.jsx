@@ -60,8 +60,6 @@ export default function SearchInput(props) {
 	}
 
 	const handleSearch = suggestion => {
-		console.log('suggestion===>', suggestion)
-
 		if (timeoutId) {
 			clearTimeout(timeoutId)
 		}
