@@ -3,6 +3,7 @@ import WishlistIcon from './components/WishlistIcon'
 
 export default function ProductCardDefault(props) {
 	const {
+		brand,
 		listPrice,
 		image,
 		name,
@@ -38,12 +39,15 @@ export default function ProductCardDefault(props) {
 						src={image}
 					/>
 					<View className='absolute top-[5px] right-[5px] bg-white rounded-full flex items-center justify-center h-[32px] w-[32px] z-[98]'>
-						<WishlistIcon filled={isOnWishlist} />
+						<WishlistIcon
+							filled={isOnWishlist}
+							className='text-[#555555]'
+						/>
 					</View>
 				</View>
 
 				<View className='mt-2 flex justify-between gap-4 h-[48px]'>
-					<Text className='line-clamp-3 font-medium text-xs'>{name}</Text>
+					{brand && <Text className='text-[#888888] text-xs fon uppercase'>{brand}</Text>}
 				</View>
 
 				<View className='flex flex-col gap-2 mt-1'>
@@ -64,7 +68,7 @@ export default function ProductCardDefault(props) {
 
 				<View
 					onClick={onPressCartButton}
-					className='mt-2 h-[36px] bg-primary w-full rounded-full flex justify-center items-center border border-primary-700 border-[0.5px] bg-primary-700 z-[99]'>
+					className='mt-2 h-[36px] bg-primary w-full rounded-full flex justify-center items-center  border-primary-700 border-[0.5px] bg-primary-700 z-[99]'>
 					{loadingCartOp ? (
 						<Loading width='36px' />
 					) : (

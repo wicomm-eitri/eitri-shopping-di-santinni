@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
-import { View, Text } from 'eitri-luminus'
 import { getProductsService } from '../../../services/ProductService'
 import ShelfOfProducts from '../../ShelfOfProducts/ShelfOfProducts'
 
-export default function ProductTiles(props) {
+export default function ProductTilesHighlights(props) {
 	const { data } = props
 	const [shelves, setShelves] = useState([])
 	const [currentShelf, setCurrentShelf] = useState({})
@@ -60,36 +59,43 @@ export default function ProductTiles(props) {
 
 	const paramsObject = Object.fromEntries((data?.params || []).map(item => [item.key, item.value]))
 
+	const handleBannerClick = action => {
+		if (!action || action.type === 'none') return
+		console.log('Navegar para:', action)
+	}
+
+	const bgColor = data?.backgroundColor || '#C8102E'
+	const textColor = data?.textColor || '#FFFFFF'
+
 	return (
-		<View className='py-2'>
+		<View
+			style={{ backgroundColor: bgColor }}
+			className='py-4 mt-1 mb-[35px]'>
 			{data?.title && (
-				<View className='px-4 pb-3'>
-					<Text className='font-bold text-lg text-white uppercase'>{data?.title}</Text>
+				<View className='px-4 pb-2'>
+					<Text className='font-semibold text-2xl uppercase text-[#FAFAF8]'>{data?.title}</Text>
 				</View>
 			)}
 
-			{/* O Wrapper px-4 garante que a linha branca tenha recuo lateral e fique alinhada com o título */}
-			<View className='px-4 mb-4'>
-				{/* Linha branca firme (border-b-[2px] border-white) que engloba as abas */}
-				<View className='overflow-x-auto flex gap-6 border-b-[2px] border-white hide-scrollbar'>
+			<View className='relative mb-6'>
+				<View className='absolute bottom-0 left-4 right-4 h-[2px] bg-[#FFFFFF]' />
+
+				<View className='flex overflow-x-auto px-4 gap-6 relative z-10 hide-scrollbar'>
 					{shelves?.map(shelf => {
 						const isActive = shelf.title === currentShelf.title
 						return (
 							<View
 								key={shelf.title}
 								onClick={() => onChooseShelf(shelf)}
-								className={`pb-2 min-w-fit cursor-pointer transition-all ${
-									isActive ? 'border-b-[2px]' : ''
-								}`}
+								className='pb-2 min-w-fit cursor-pointer transition-all'
 								style={{
-									borderColor: isActive ? '#2C2C2C' : 'transparent',
-									// O segredo para a linha preta ficar NA FRENTE da linha branca
-									marginBottom: isActive ? -2 : 0
+									borderBottomWidth: '2px',
+									borderBottomStyle: 'solid',
+									borderBottomColor: isActive ? '#2C2C2C' : 'transparent'
 								}}>
 								<Text
-									className={`text-sm tracking-wide uppercase ${
-										isActive ? 'text-white font-bold' : 'text-white opacity-90 font-medium'
-									}`}>
+									style={{ color: '#FAFAF8', opacity: isActive ? 1 : 0.85 }}
+									className={`uppercase whitespace-nowrap ${isActive ? 'font-bold' : 'font-medium'}`}>
 									{shelf.title}
 								</Text>
 							</View>
@@ -98,6 +104,17 @@ export default function ProductTiles(props) {
 				</View>
 			</View>
 
+			{currentShelf?.highlightImage && (
+				<View
+					className='px-4 mb-4 '
+					onClick={() => handleBannerClick(currentShelf?.highlightAction)}>
+					<Image
+						src={currentShelf.highlightImage}
+						alt={currentShelf.title}
+						className='w-full object-cover rounded-xl'
+					/>
+				</View>
+			)}
 			{currentProducts.length > 0 ? (
 				<ShelfOfProducts
 					mode={data.mode || 'scroll'}
@@ -106,9 +123,10 @@ export default function ProductTiles(props) {
 					params={paramsObject}
 				/>
 			) : (
-				<View className='flex w-full items-center justify-center gap-4 py-2 mt-2'>
-					<Skeleton className='w-[150px] h-[300px] bg-gray-200 rounded animate-pulse' />
-					<Skeleton className='w-[150px] h-[300px] bg-gray-200 rounded animate-pulse' />
+				<View className='flex overflow-x-auto gap-2 px-4 py-2 mt-2'>
+					<Skeleton className='min-w-[48vw] min-h-[370px] bg-gray-200 rounded animate-pulse' />
+					<Skeleton className='min-w-[48vw] min-h-[370px] bg-gray-200 rounded animate-pulse' />
+					<Skeleton className='min-w-[48vw] min-h-[370px] bg-gray-200 rounded animate-pulse' />
 				</View>
 			)}
 		</View>

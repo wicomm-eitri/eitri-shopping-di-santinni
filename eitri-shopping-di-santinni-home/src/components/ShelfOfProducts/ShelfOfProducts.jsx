@@ -23,15 +23,16 @@ export default function ShelfOfProducts(props) {
 
 	return (
 		<View
+			className='mb-[37px]'
 			style={{
 				...(marginTop && { marginTop }),
 				...(marginBottom && { marginBottom })
 			}}>
 			{title && (
-				<View className={`flex justify-between items-center px-4`}>
+				<View className={`flex justify-between items-center px-4 mb-5`}>
 					<Text className='font-semibold text-xl'>{isLoading ? t('shelfOfProducts.loading') : title}</Text>
 
-					{searchParams && (
+					{/* {searchParams && (
 						<View
 							onClick={seeMore}
 							className='flex items-center min-w-fit'>
@@ -39,7 +40,7 @@ export default function ShelfOfProducts(props) {
 								{t('shelfOfProducts.seeMore', 'Ver mais')}
 							</Text>
 						</View>
-					)}
+					)} */}
 				</View>
 			)}
 
