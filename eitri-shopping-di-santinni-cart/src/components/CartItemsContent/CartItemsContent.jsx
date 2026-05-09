@@ -7,9 +7,7 @@ export default function CartItemsContent(props) {
 	const [cartItems, setCartItems] = useState([])
 
 	useEffect(() => {
-		if (cart) {
-			setCartItems([...(cart?.items || [])])
-		}
+		if (cart) setCartItems([...(cart?.items || [])])
 	}, [cart])
 
 	const hasMessage = itemEan => {
@@ -18,9 +16,7 @@ export default function CartItemsContent(props) {
 		return message[0] || null
 	}
 
-	const onChangeQuantityItem = async (quantity, index) => {
-		await changeQuantity(index, quantity)
-	}
+	const onChangeQuantityItem = async (quantity, index) => await changeQuantity(index, quantity)
 
 	const handleRemoveCartItem = async index => {
 		try {
@@ -31,13 +27,9 @@ export default function CartItemsContent(props) {
 		}
 	}
 
-	const onAddOfferingToCart = async (itemIndex, offeringId) => {
-		await addItemOffer(itemIndex, offeringId)
-	}
+	const onAddOfferingToCart = async (itemIndex, offeringId) => await addItemOffer(itemIndex, offeringId)
 
-	const onRemoveOfferingFromCart = async (itemIndex, offeringId) => {
-		await removeItemOffer(itemIndex, offeringId)
-	}
+	const onRemoveOfferingFromCart = async (itemIndex, offeringId) => await removeItemOffer(itemIndex, offeringId)
 
 	return (
 		<View className='px-4 flex flex-col gap-4'>

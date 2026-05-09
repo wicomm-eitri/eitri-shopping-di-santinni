@@ -109,7 +109,7 @@ export default function CreditCard(props) {
 				try {
 					await removeAccount(acc.accountId)
 				} catch (error) {
-					console.log(error)
+					console.error('Error removing account:', error)
 				}
 			}
 

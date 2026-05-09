@@ -18,7 +18,7 @@ export default function UserData(props) {
 				navigate('PersonalData')
 			}
 		} catch (e) {
-			console.log('Erro ao limpar dados do cliente', e)
+			console.error('Erro ao limpar dados do cliente', e)
 		}
 	}
 
@@ -26,7 +26,7 @@ export default function UserData(props) {
 		try {
 			navigate('PersonalData')
 		} catch (e) {
-			console.log('Erro ao navegar para a tela de dados pessoais', e)
+			console.error('Erro ao navegar para a tela de dados pessoais', e)
 		}
 	}
 
@@ -38,7 +38,7 @@ export default function UserData(props) {
 				goToPersonalData()
 			}
 		} catch (e) {
-			console.log('Erro ao navegar para a tela de dados pessoais', e)
+			console.error('Erro ao navegar para a tela de dados pessoais', e)
 		}
 	}
 
