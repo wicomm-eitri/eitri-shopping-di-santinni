@@ -31,3 +31,15 @@ export const getSpacingValue = value => {
 
 	return undefined
 }
+
+export const goToCart = () => {
+	Eitri.navigation.open({
+		slug: 'cart'
+	})
+}
+
+export const goToSearch = () => {
+	Eitri.navigation.navigate({
+		path: '/Search'
+	})
+}

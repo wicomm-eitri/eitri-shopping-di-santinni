@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import Eitri from 'eitri-bifrost'
-import { Text, View } from 'eitri-luminus'
 
 export default function HeaderCart(props) {
 	const { quantityOfItems, onClick, cart } = props
@@ -26,7 +25,7 @@ export default function HeaderCart(props) {
 	}
 
 	return (
-		<View className={`relative w-[25px] h-[25px] flex items-center justify-center`}>
+		<View className={`relative w-[20px] h-[20px] flex items-center justify-center`}>
 			<View onClick={handlePress}>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'

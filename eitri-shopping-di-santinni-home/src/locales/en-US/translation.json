@@ -20,7 +20,8 @@
 		"button": "Filter"
 	},
 	"categoryPageItem": {
-		"seeAllIn": "See all in"
+		"seeAllIn": "See all in",
+		"seeAll": "See all"
 	},
 	"pristineView": {
 		"content": "Enter a search term"

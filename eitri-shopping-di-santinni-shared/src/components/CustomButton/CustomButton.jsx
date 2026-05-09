@@ -17,6 +17,7 @@ export default function CustomButton(props) {
 		outlined,
 		children,
 		leftIcon,
+		classNameLabel,
 		...rest
 	} = props
 
@@ -35,7 +36,7 @@ export default function CustomButton(props) {
 			return 'transparent'
 		}
 
-		return isLoading || disabled ? 'bg-gray-300' : 'bg-primary'
+		return isLoading || disabled ? 'bg-gray-300' : `${backgroundColor || 'bg-primary-700'}`
 	})()
 
 	const _contentColor = (() => {

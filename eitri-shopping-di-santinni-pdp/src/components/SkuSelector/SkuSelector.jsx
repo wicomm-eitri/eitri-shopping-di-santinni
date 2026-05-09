@@ -36,18 +36,18 @@ function findSelectedSku(skus, attributeKeys, selections) {
 }
 
 const COR_MAP = {
-	Azul: '#3b5bdb',
-	Vermelho: '#e03131',
-	Verde: '#2f9e44',
-	Preto: '#212529',
-	Branco: '#f8f9fa',
-	Amarelo: '#f59f00',
-	Rosa: '#e64980',
-	Cinza: '#868e96'
+	azul: '#3b5bdb',
+	vermelho: '#e03131',
+	verde: '#2f9e44',
+	preto: '#212529',
+	branco: '#f8f9fa',
+	amarelo: '#f59f00',
+	rosa: '#e64980',
+	cinza: '#868e96'
 }
 
 function ColorSwatch({ color, selected, status, onClick }) {
-	const hex = COR_MAP[color]
+	const hex = COR_MAP[color.toLowerCase()] || color
 	const unavailable = !status.availableExists
 	const inexistent = !status.exists
 
@@ -55,9 +55,9 @@ function ColorSwatch({ color, selected, status, onClick }) {
 		<View
 			onClick={onClick}
 			className={`
-				relative w-8 h-8 rounded-full cursor-pointer transition-all duration-200
-				flex items-center justify-center
-				${selected ? 'ring-2 ring-offset-2 ring-gray-900 scale-110' : ''}
+				relative w-6 h-6 rounded-full cursor-pointer transition-all duration-200
+				flex items-center justify-center scale-110
+				${selected ? 'ring-1 ring-primary' : 'ring-1 ring-[#D5D5D5]'}
 				${unavailable && !inexistent ? 'opacity-50' : ''}
 				${inexistent ? 'opacity-20 cursor-not-allowed' : ''}
 			`}
@@ -79,21 +79,21 @@ function OptionChip({ value, selected, status, onClick }) {
 		<View
 			onClick={!inexistent ? onClick : undefined}
 			className={`
-				relative px-3 py-2 rounded-lg border text-sm font-medium transition-all duration-200 select-none
+				relative flex justify-center items-center w-8 h-8 p-[8px] rounded border text-sm font-medium transition-all duration-200 select-none
 				${inexistent ? 'opacity-20 cursor-not-allowed border-gray-200 text-gray-400' : 'cursor-pointer'}
 				${
 					selected
-						? 'bg-primary text-primary-content border-primary'
+						? 'bg-gray-100 border-red-700 text-red-700'
 						: unavailable && !inexistent
-							? 'bg-white text-gray-400 border-gray-200'
-							: 'bg-white text-gray-800 border-gray-300 active:bg-gray-50'
+							? 'bg-[#F9F9F9] text-[#B4B4B4] border-[#E6E6E6]'
+							: 'bg-gray-100 text-gray-700 border-[#D5D5D5] active:bg-gray-50'
 				}
 			`}>
 			<Text>{value}</Text>
 
 			{unavailable && !inexistent && (
 				<View className='absolute inset-0 flex items-center justify-center rounded-lg overflow-hidden pointer-events-none'>
-					<View className='absolute w-full h-[1.5px] bg-gray-300 rotate-12' />
+					<View className='absolute w-12 h-[1.5px] bg-[#E6E6E6] rotate-45' />
 				</View>
 			)}
 		</View>
@@ -104,6 +104,9 @@ export default function SkuSelector(props) {
 	const { product, currentSku, onSkuChange } = props
 
 	const [selections, setSelections] = useState({})
+
+	console.log('product', product)
+	console.log('currentSku', currentSku)
 
 	useEffect(() => {
 		if (!currentSku?.variations?.length) {
@@ -145,7 +148,21 @@ export default function SkuSelector(props) {
 		return res?.filter(sku => Object.keys(sku.attributes).length > 0)
 	}, [product])
 
-	const attributeKeys = useMemo(() => (skus?.length > 0 ? Object.keys(skus[0].attributes) : []), [skus])
+	const attributeKeys = useMemo(() => {
+		if (!skus?.length) return []
+
+		const keys = Object.keys(skus[0].attributes)
+
+		// Ensure "Tamanho" (size) appears first when present
+		const idx = keys.indexOf('Tamanho')
+
+		if (idx > -1) {
+			keys.splice(idx, 1)
+			keys.unshift('Tamanho')
+		}
+
+		return keys
+	}, [skus])
 
 	const handleSelect = (key, value) => {
 		const isSame = selections[key] === value
@@ -161,23 +178,17 @@ export default function SkuSelector(props) {
 	if (attributeKeys.length === 0) return null
 
 	return (
-		<View className='flex flex-col gap-4 bg-white rounded shadow-sm border border-gray-300 p-4 w-full'>
+		<View className='flex flex-col gap-4 w-full'>
 			{attributeKeys.map(key => {
 				const values = getUniqueValues(skus, key)
 				const statusMap = getOptionStatus(skus, attributeKeys, key, selections)
 				// const isCor = key === 'Cor'
-				const isCor = false // Precisa especificar melhor o tratamento de cores... forcando pra renderizar como Chip
+				const isCor = key.toLowerCase() === 'cor' || key.toLowerCase() === 'color' || key.toLowerCase() === 'cor do produto' || key.toLowerCase() === 'cores'
 
 				return (
 					<View key={key}>
 						<View className='flex items-center gap-2 mb-3'>
-							<Text className='text-lg font-semibold text-gray-700 capitalize'>{key}</Text>
-
-							{selections[key] && (
-								<Text className='text-sm text-gray-400'>
-									— <Text className='text-gray-600'>{selections[key]}</Text>
-								</Text>
-							)}
+							<Text className='text-sm leading-6 font-semibold capitalize'>{key.toLowerCase()}</Text>
 						</View>
 
 						{isCor ? (

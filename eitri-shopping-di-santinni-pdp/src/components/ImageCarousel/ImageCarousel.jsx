@@ -1,47 +1,101 @@
-import { useState } from 'react'
-import { View, Image } from 'eitri-luminus'
-import { CustomCarousel } from 'eitri-shopping-di-santinni-shared'
-
 export default function ImageCarousel(props) {
-	const [currentSlide, setCurrentSlide] = useState(0)
 	const { currentSku } = props
+
+	const [currentSlide, setCurrentSlide] = useState(0)
+	const [carouselProgressPercentage, setCarouselProgressPercentage] = useState(0)
+	const [showProgressBar, setShowProgressBar] = useState(false)
+
+	const viewScrollRef = useRef(null)
+
+	const images = currentSku?.images || []
+
+	useEffect(() => {
+		if (viewScrollRef?.current) {
+			const element = viewScrollRef.current?.getViewElement()
+
+			if (element) {
+				const scrollWidth = element.scrollWidth || 0
+				const clientWidth = element.clientWidth || 0
+
+				if (scrollWidth > clientWidth) {
+					setShowProgressBar(true)
+				}
+			}
+		}
+	}, [currentSku])
+
+	useEffect(() => {
+		setCurrentSlide(0)
+		setCarouselProgressPercentage(0)
+	}, [currentSku])
 
 	const onChange = index => {
 		setCurrentSlide(index)
 	}
 
+	const onThumbnailsScroll = event => {
+		const target = event?.currentTarget
+
+		if (!target || images.length < 2) {
+			setCarouselProgressPercentage(0)
+
+			return
+		}
+
+		const scrollLeft = target.scrollLeft || 0
+		const scrollWidth = target.scrollWidth || 0
+		const clientWidth = target.clientWidth || 0
+
+		const maxScroll = scrollWidth - clientWidth
+
+		if (maxScroll <= 0) {
+			setCarouselProgressPercentage(0)
+
+			return
+		}
+
+		const progress = scrollLeft / maxScroll
+		const percentage = Math.min(Math.max(progress * 100, 0), 100)
+
+		setCarouselProgressPercentage(percentage)
+	}
+
 	return (
-		<View>
-			<CustomCarousel
-				onSlideChange={onChange}
-				autoPlay={false}
-				loop={true}>
-				{currentSku?.images?.map((item, index) => {
-					return (
-						<View
-							key={item.imageUrl}
-							className={`flex justify-center items-center`}>
-							<Image
-								pinchZoom
-								zoomMaxScale={8}
-								fadeIn={500}
-								src={item.imageUrl}
-								width='100vw'
-							/>
-						</View>
-					)
-				})}
-			</CustomCarousel>
-			{currentSku?.images?.length > 1 && (
-				<View className='flex justify-center gap-2 mt-2'>
-					{currentSku?.images?.map((_, index) => (
-						<View
-							key={index}
-							className={`${currentSlide === index ? 'w-[36px]' : 'w-[12px]'} h-[6px] rounded-lg ${
-								currentSlide === index ? 'bg-primary' : 'bg-base-300'
-							} transition-[width,background-color] duration-300 ease-in-out"`}
+		<View className='mx-4'>
+			<Image
+				pinchZoom
+				zoomMaxScale={8}
+				fadeIn={500}
+				src={images[currentSlide]?.imageUrl}
+				width='100vw'
+			/>
+
+			<View
+				ref={viewScrollRef}
+				onScroll={onThumbnailsScroll}
+				className='flex gap-2 overflow-x-auto py-2 scroll-smooth snap-x snap-mandatory'>
+				{images.map((item, index) => (
+					<View
+						key={`${item.imageUrl}-${index}`}
+						className='flex w-16 h-16 shrink-0 snap-start justify-center items-center'
+						onClick={() => onChange(index)}>
+						<Image
+							fadeIn={500}
+							src={item.imageUrl}
+							width='64px'
+							height='64px'
 						/>
-					))}
+					</View>
+				))}
+			</View>
+			{showProgressBar && (
+				<View className='relative w-full h-1.5 mt-2 rounded overflow-hidden'>
+					<View
+						style={{
+							left: `calc(${carouselProgressPercentage}% - ${(carouselProgressPercentage / 100) * 64}px)`
+						}}
+						className='absolute w-16 h-1.5 bg-gray-900 rounded'
+					/>
 				</View>
 			)}
 		</View>

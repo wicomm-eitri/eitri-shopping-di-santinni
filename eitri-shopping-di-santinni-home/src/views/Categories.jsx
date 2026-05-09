@@ -1,8 +1,15 @@
-import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { Loading, HeaderContentWrapper, HeaderText, HeaderSearchIcon } from 'eitri-shopping-di-santinni-shared'
+import {
+	Loading,
+	HeaderContentWrapper,
+	HeaderSearchIcon,
+	HeaderLogo,
+	HeaderCart
+} from 'eitri-shopping-di-santinni-shared'
 import CmsContentRender from '../components/CmsContentRender/CmsContentRender'
 import { getCmsContent } from '../services/CmsService'
+import logo from '../assets/Image/logoHeader.png'
+import { goToCart, goToSearch } from '../utils/utils'
 
 export default function Categories() {
 	const { t } = useTranslation()
@@ -14,26 +21,24 @@ export default function Categories() {
 	}, [])
 
 	const loadCms = async () => {
-		const { sections } = await getCmsContent('categories', 'categorias')
+		const { sections } = await getCmsContent('categories', 'teste-categorias')
+
+		console.log('sections: ', sections)
 
 		setCmsContent(sections)
 		setIsLoading(false)
 	}
 
-	const goToSearch = () => {
-		Eitri.navigation.navigate({
-			path: '/Search'
-		})
-	}
-
 	return (
 		<Page
+			className='bg-white h-screen min-h-screen'
 			title={t('categories.title', 'Categorias')}
 			bottomInset
 			topInset>
 			<HeaderContentWrapper className='justify-between'>
-				<HeaderText text={t('categories.title', 'Categorias')} />
 				<HeaderSearchIcon onClick={goToSearch} />
+				<HeaderLogo src={logo} />
+				<HeaderCart onClick={goToCart} />
 			</HeaderContentWrapper>
 
 			<Loading
@@ -41,7 +46,10 @@ export default function Categories() {
 				isLoading={isLoading}
 			/>
 
-			<CmsContentRender cmsContent={cmsContent} />
+			<CmsContentRender
+				cmsContent={cmsContent}
+				type='categories'
+			/>
 		</Page>
 	)
 }
