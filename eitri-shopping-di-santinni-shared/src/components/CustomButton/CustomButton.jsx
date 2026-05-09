@@ -17,6 +17,7 @@ export default function CustomButton(props) {
 		outlined,
 		children,
 		leftIcon,
+		classNameLabel,
 		...rest
 	} = props
 

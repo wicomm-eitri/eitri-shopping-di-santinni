@@ -1,8 +1,10 @@
 import Eitri from 'eitri-bifrost'
 import { getMappedComponent } from '../../utils/getMappedComponent'
 
-export default function CmsContentRender(props) {
-	const { cmsContent } = props
+export default function CmsContentRender({
+	cmsContent,
+	type = ''
+}) {
 
 	const [key, setKey] = useState(new Date().getTime())
 

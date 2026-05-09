@@ -31,12 +31,12 @@ export default function ProductCardFullImage(props) {
 	return (
 		<View
 			onClick={onPressOnCard}
-			className={`relative bg-white rounded-[24px] w-full max-w-[224px] h-[412px] flex flex-col overflow-hidden ${className}`}>
-			<View className='flex flex-col w-full h-full'>
-				<View className='relative flex flex-col w-full justify-center items-center h-[202px] flex-shrink-0'>
-					{displayBadge && (
-						<View className='absolute top-3 left-3 rounded-full bg-red-700 flex flex-row items-center justify-center h-[24px] min-w-[44px] px-2 gap-1'>
-							<Text className='font-bold text-white text-xs leading-none'>{displayBadge}</Text>
+			className={`relative border-[0.5px] border-neutral-300 bg-white rounded ${className}`}>
+			<View className='flex flex-col w-full'>
+				<View className='relative flex flex-col w-full justify-center items-center rounded-t h-[240px] min-h-[240px] max-h-[240px]'>
+					{badge && (
+						<View className='absolute top-2 left-2 rounded-full flex items-center justify-center h-4 w-[37px] bg-red-700'>
+							<Text className='font-semibold text-white text-sm uppercase'>{badge}</Text>
 						</View>
 					)}
 

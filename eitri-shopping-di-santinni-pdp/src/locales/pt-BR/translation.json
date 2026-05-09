@@ -15,9 +15,10 @@
 		"txtSupplier": "Fornecedor"
 	},
 	"freight": {
-		"labelZipCode": "CEP",
+		"labelZipCode": "00000-000",
 		"labelCalculate": "Calcular",
-		"txtCalculate": "Calcular frete"
+		"txtCalculate": "Consulte o frete",
+		"txtDontKnowZipCode": "Não sei meu CEP"
 	},
 	"productCard": {
 		"actionBuy": "Comprar",
@@ -28,8 +29,9 @@
 		"seeMore": "Ver mais"
 	},
 	"mainDescription": {
-		"txtUntil": "ou em até",
-		"txtOf": "de"
+		"txtUntil": "ou",
+		"txtOf": "de",
+		"txtWithoutInterest": "sem juros"
 	},
 	"modalComponent": {
 		"txtProductAdded": "Produto adicionado",
@@ -39,12 +41,12 @@
 		"txtBuyTogether": "Aproveite e compre junto"
 	},
 	"product": {
-		"labelAddToCart": "Adicionar ao carrinho",
+		"labelAddToCart": "Comprar agora",
 		"labelGoToCart": "Ir para carrinho",
 		"errorNoProduct": "Produto Indisponível"
 	},
 	"productBasicTemplate": {
-		"txtWhoSaw": "Quem viu esta, viu também:"
+		"txtWhoSaw": "Você pode gostar"
 	},
 	"productCardVertical": {
 		"cart": "ver Carrinho",
