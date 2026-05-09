@@ -3,6 +3,7 @@ import WishlistIcon from './components/WishlistIcon'
 
 export default function ProductCardFullImage(props) {
 	const {
+		brand,
 		listPrice,
 		image,
 		name,
@@ -29,12 +30,12 @@ export default function ProductCardFullImage(props) {
 	return (
 		<View
 			onClick={onPressOnCard}
-			className={`relative bg-white rounded ${className}`}>
+			className={`relative border-[0.5px] border-neutral-300 bg-white rounded ${className}`}>
 			<View className='flex flex-col w-full'>
 				<View className='relative flex flex-col w-full justify-center items-center rounded-t h-[240px] min-h-[240px] max-h-[240px]'>
 					{badge && (
-						<View className='absolute top-2 left-2 rounded-sm flex items-center justify-center h-4 w-[37px] bg-primary'>
-							<Text className='font-semibold text-secondary text-[10px]'>{badge}</Text>
+						<View className='absolute top-2 left-2 rounded-full flex items-center justify-center h-4 w-[37px] bg-red-700'>
+							<Text className='font-semibold text-white text-sm uppercase'>{badge}</Text>
 						</View>
 					)}
 
@@ -55,7 +56,12 @@ export default function ProductCardFullImage(props) {
 				</View>
 
 				<View className='flex flex-col w-full p-2'>
-					<Text className='line-clamp-1 break-words font-medium text-xs mb-2'>{name}</Text>
+					<View>
+						{brand && (
+							<Text className='font-bold text-xs text-neutral-500'>{brand}</Text>
+						)}
+						<Text className='line-clamp-1 break-words font-medium text-xs mb-2'>{name}</Text>
+					</View>
 
 					<View className='flex items-center gap-1.5'>
 						<Text className='text-secondary text-xs'>{price}</Text>

@@ -15,9 +15,10 @@
 		"txtSupplier": "Supplier"
 	},
 	"freight": {
-		"labelZipCode": "ZIP code",
+		"labelZipCode": "00000-000",
 		"labelCalculate": "Calculate",
-		"txtCalculate": "Calculate shipping"
+		"txtCalculate": "Consult freight",
+		"txtDontKnowZipCode": "I don't know my ZIP code"
 	},
 	"productCard": {
 		"actionBuy": "Buy",
@@ -29,7 +30,8 @@
 	},
 	"mainDescription": {
 		"txtUntil": "or up to",
-		"txtOf": "of"
+		"txtOf": "of",
+		"txtWithoutInterest": "without interest"
 	},
 	"modalComponent": {
 		"txtProductAdded": "Product added",
@@ -39,12 +41,12 @@
 		"txtBuyTogether": "Take advantage and buy together"
 	},
 	"product": {
-		"labelAddToCart": "Add to cart",
+		"labelAddToCart": "Buy now",
 		"labelGoToCart": "Go to cart",
 		"errorNoProduct": "Product unavailable"
 	},
 	"productBasicTemplate": {
-		"txtWhoSaw": "People who viewed this also viewed:"
+		"txtWhoSaw": "You may like"
 	},
 	"productCardVertical": {
 		"cart": "view cart",

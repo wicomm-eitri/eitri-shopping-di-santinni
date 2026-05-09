@@ -35,10 +35,10 @@ export default function RelatedProducts(props) {
 	if (!relatedProducts && !isLoading) return null
 
 	return (
-		<View className='mt-4'>
+		<View className='px-4 py-8 bg-white'>
 			<View className='px-4'>
-				<Text className='text-lg font-semibold'>
-					{t('productBasicTemplate.txtWhoSaw', 'Quem viu esta, viu também:')}
+				<Text className='text-xl leading-6 tracking-[0.4px] uppercase font-semibold'>
+					{t('productBasicTemplate.txtWhoSaw', 'Você pode gostar')}
 				</Text>
 			</View>
 

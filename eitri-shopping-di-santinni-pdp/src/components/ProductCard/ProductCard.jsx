@@ -120,9 +120,9 @@ export default function ProductCard(props) {
 		if (price !== listPrice) {
 			const discount = ((listPrice - price) / listPrice) * 100
 
-			return `${discount.toFixed(0)}% OFF`
+			return `-${discount.toFixed(0)}%`
 		} else {
-			return ''
+			return '-28%'
 		}
 	}
 

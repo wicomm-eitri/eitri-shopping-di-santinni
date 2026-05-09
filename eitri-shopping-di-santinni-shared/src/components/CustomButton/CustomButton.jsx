@@ -16,6 +16,7 @@ export default function CustomButton(props) {
 		outlined,
 		children,
 		leftIcon,
+		classNameLabel,
 		...rest
 	} = props
 
@@ -34,7 +35,7 @@ export default function CustomButton(props) {
 			return 'transparent'
 		}
 
-		return isLoading || disabled ? 'bg-gray-300' : 'bg-primary'
+		return isLoading || disabled ? 'bg-gray-300' : `${backgroundColor || 'bg-primary-700'}`
 	})()
 
 	const _contentColor = (() => {
@@ -50,12 +51,12 @@ export default function CustomButton(props) {
 			return (
 				<View className='flex items-center gap-2'>
 					<View className={_contentColor}>{leftIcon}</View>
-					<Text className={`font-bold ${_contentColor}`}>{label}</Text>
+					<Text className={`font-bold ${_contentColor} ${classNameLabel || ''}`}>{label}</Text>
 				</View>
 			)
 		}
 
-		return <Text className={`font-bold ${_contentColor}`}>{label}</Text>
+		return <Text className={`font-bold ${_contentColor} ${classNameLabel || ''}`}>{label}</Text>
 	}
 
 	return (

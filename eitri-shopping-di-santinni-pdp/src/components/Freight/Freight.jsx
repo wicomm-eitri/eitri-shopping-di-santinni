@@ -45,13 +45,17 @@ export default function Freight(props) {
 		setLoading(false)
 	}
 
+	const handleClickDontKnowZipCode = () => {
+		console.log('click não sei meu cep')
+	}
+
 	return (
-		<View className='flex flex-col bg-white rounded shadow-sm border border-gray-300 p-4 w-full'>
-			<View className='flex items-center justify-between w-full'>
-				<Text className='text-lg font-semibold'>{t('freight.txtCalculate', 'Calcular frete')}</Text>
+		<View className='flex flex-col py-4 w-full'>
+			<View className='flex items-center justify-between mb-4 w-full'>
+				<Text className='font-bold'>{t('freight.txtCalculate', 'Consulte o frete')}</Text>
 			</View>
 			<View>
-				<View className='flex justify-between items-center w-full gap-2 mt-2'>
+				<View className='flex justify-between items-center w-full gap-2'>
 					<View className='w-2/3'>
 						<CustomInput
 							placeholder={t('freight.labelZipCode', 'CEP')}
@@ -59,13 +63,15 @@ export default function Freight(props) {
 							variant='mask'
 							mask='99999-999'
 							inputMode='numeric'
+							className='border-[#D4D4D4]'
 							onChange={onInputZipCode}
 						/>
 					</View>
 					<View className='w-1/3'>
 						<CustomButton
 							label={t('freight.labelCalculate', 'Calcular')}
-							variant='outlined'
+							classNameLabel='uppercase'
+							className='rounded-full bg-primary'
 							onClick={() => handleFreight(zipCode)}
 						/>
 					</View>
@@ -95,6 +101,13 @@ export default function Freight(props) {
 						))}
 					</View>
 				)}
+			</View>
+			<View
+				className='mt-2'
+				onClick={handleClickDontKnowZipCode}>
+				<Text className='text-xs text-red-900 underline'>
+					{t('freight.txtDontKnowZipCode', 'Não sei meu CEP')}
+				</Text>
 			</View>
 		</View>
 	)
