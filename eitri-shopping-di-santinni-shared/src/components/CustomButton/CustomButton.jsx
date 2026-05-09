@@ -36,7 +36,7 @@ export default function CustomButton(props) {
 			return 'transparent'
 		}
 
-		return isLoading || disabled ? 'bg-gray-300' : `${backgroundColor || 'bg-primary-700'}`
+		return isLoading || disabled ? 'bg-gray-300' : `${backgroundColor || 'bg-red-700'}`
 	})()
 
 	const _contentColor = (() => {

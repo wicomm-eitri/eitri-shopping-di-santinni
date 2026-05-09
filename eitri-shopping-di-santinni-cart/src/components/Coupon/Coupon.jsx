@@ -58,8 +58,6 @@ export default function Coupon(props) {
 
 	return (
 		<View className='px-4'>
-			<Text className='text-xs text-gray-500'>{t('coupon.txtCoupon', 'Cupom de desconto')}</Text>
-
 			<View className='mt-2 flex gap-8 justify-between items-center'>
 				{appliedCoupon ? (
 					<>
@@ -102,7 +100,7 @@ export default function Coupon(props) {
 								<CustomInput
 									placeholder={t('coupon.labelInsertCode', 'Insira o código')}
 									value={coupon}
-									className='!border-x-0 !border-t-0 !border !rounded-none !border-gray-300  !h-10'
+									className='!border-x-0 !border-t-0 !border !rounded-none !border-gray-300  !h-10  !text-xs text-gray-500 !pl-2'
 									onChange={e => inputOnChange(e.target.value)}
 								/>
 							</View>
@@ -113,7 +111,7 @@ export default function Coupon(props) {
 									isLoading={isLoading}
 									label={t('coupon.txtAdd', 'APLICAR')}
 									className='!border-x-0 !border-t-0 !rounded-none !border-gray-300 !h-10'
-									textClassName='!text-xs'
+									textClassName='!text-xs !font-normal !text-xs'
 									onPress={onPressAddCoupon}
 								/>
 							</View>
