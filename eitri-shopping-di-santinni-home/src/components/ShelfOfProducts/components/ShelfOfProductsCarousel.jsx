@@ -35,9 +35,9 @@ export default function ShelfOfProductsCarousel(props) {
 							<View
 								key={`${page?.[0]?.productId}-${index}`}
 								className='grid grid-cols-2 gap-4 px-4 py-2 justify-items-center'>
-									<ProductCard product={page[0]} />
+								<ProductCard product={page[0]} />
 
-									{page.length > 1 && <ProductCard product={page[1]} />}
+								{page.length > 1 && <ProductCard product={page[1]} />}
 							</View>
 						))}
 					</CustomCarousel>

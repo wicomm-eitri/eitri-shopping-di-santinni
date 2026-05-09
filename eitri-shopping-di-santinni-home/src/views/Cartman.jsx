@@ -59,22 +59,22 @@ export default function Cartman() {
 					<Text key={item?.id || index}>{`Item no carrinho: ${item?.name}`}</Text>
 				))}
 				<Button
-					className='btn-primary w-full'
+					className='w-full'
 					onClick={generateNewCart}>
 					Novo carrinho
 				</Button>
 				<Button
-					className='btn-primary w-full'
+					className='w-full'
 					onClick={addRandomItem}>
 					Adicionar item aleatório
 				</Button>
 				<Button
-					className='btn-primary w-full'
+					className='w-full'
 					onClick={clearCart}>
 					Limpar carrinho
 				</Button>
 				<Button
-					className='btn-primary w-full'
+					className='w-full'
 					onClick={goToHome}>
 					Ir pra Home
 				</Button>
