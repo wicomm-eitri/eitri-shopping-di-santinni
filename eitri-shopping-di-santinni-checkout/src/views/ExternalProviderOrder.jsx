@@ -48,7 +48,7 @@ export default function ExternalProviderOrder(props) {
 				})
 			}
 		} catch (error) {
-			console.log('Erro ao verificar status do pedido [checkOrderStatus]', error)
+			console.error('Erro ao verificar status do pedido [checkOrderStatus]', error)
 		}
 	}
 

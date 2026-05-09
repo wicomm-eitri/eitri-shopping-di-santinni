@@ -58,7 +58,7 @@ export default function Search(props) {
 				//saveSearchHistory(term)
 				setParams(params)
 			} catch (error) {
-				console.log('handleSearchSubmit', error)
+				console.error('handleSearchSubmit', error)
 			}
 		}
 	}

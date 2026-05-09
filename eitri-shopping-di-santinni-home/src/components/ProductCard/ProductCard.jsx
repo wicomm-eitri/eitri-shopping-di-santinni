@@ -138,7 +138,14 @@ const formatInstallments = (seller, t) => {
 		return ''
 	}
 
-	return `${t('productCard.installmentsPrefix', 'Em até')} ${maxInstallments.NumberOfInstallments}x ${formatPrice(maxInstallments.Value)}`
+	return `${t('productCard.installmentsPrefix', 'Em até')} ${maxInstallments.NumberOfInstallments}x ${formatPrice(maxInstallments.Value)} sem juros`
+}
+
+/**
+ * Extrai a marca do produto
+ */
+const getItemBrand = product => {
+	return product?.brand || ''
 }
 
 /**
@@ -198,6 +205,7 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 		if (!isValidProduct) return null
 
 		return {
+			brand: getItemBrand(product),
 			name: product.productName,
 			image: item.images?.[0]?.imageUrl || '',
 			video: getProductVideo(product),
@@ -354,6 +362,7 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 
 	// Monta os parâmetros para o componente de apresentação
 	const params = {
+		brand: productData.brand,
 		name: productData.name,
 		image: productData.image,
 		video: productData.video,
@@ -367,7 +376,7 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 		loadingWishlistOp: wishlist.loading,
 		loadingCartOp,
 		itemQuantity,
-		actionLabel: itemInCart ? t('productCard.viewCart', 'Ver carrinho') : t('productCard.buy', 'Comprar'),
+		actionLabel: itemInCart ? t('productCard.viewCart', 'Ver carrinho') : t('productCard.buy', 'COMPRAR AGORA'),
 		onPressOnCard: handleCardPress,
 		onPressCartButton: handleCartButtonPress,
 		onPressOnWishlist: handleWishlistPress,

@@ -1,4 +1,4 @@
-// import Loading from '../Loading/LoadingComponent'
+import Loading from '../Loading/LoadingComponent'
 import WishlistIcon from './components/WishlistIcon'
 
 export default function ProductCardFullImage(props) {
@@ -17,10 +17,11 @@ export default function ProductCardFullImage(props) {
 		onPressOnCard,
 		onPressCartButton,
 		onPressOnWishlist,
-		onChangeQuantity,
 		actionButtonCustomColor,
 		className = ''
 	} = props
+
+	const displayBadge = badge
 
 	const _onPressOnWishlist = e => {
 		e.stopPropagation()
@@ -40,7 +41,7 @@ export default function ProductCardFullImage(props) {
 					)}
 
 					<Image
-						className='object-contain h-full w-full rounded'
+						className='object-cover h-full w-full'
 						src={image}
 					/>
 
@@ -49,65 +50,57 @@ export default function ProductCardFullImage(props) {
 						className='absolute top-1 right-2 p-2 flex items-center justify-center z-[99]'>
 						<WishlistIcon
 							filled={isOnWishlist}
-							className={isOnWishlist ? 'text-primary' : 'text-neutral-100'}
+							className='text-[#555555]'
 							size='20'
 						/>
 					</View>
 				</View>
 
-				<View className='flex flex-col w-full p-2'>
-					<View>
-						{brand && (
-							<Text className='font-bold text-xs text-neutral-500'>{brand}</Text>
-						)}
-						<Text className='line-clamp-1 break-words font-medium text-xs mb-2'>{name}</Text>
+				<View className='flex flex-col w-full flex-1 px-2 pt-5 pb-8 gap-2'>
+					{/* Marca e Nome do Produto */}
+					<View className='flex flex-col gap-0.5'>
+						{brand && <Text className='text-[#888888] text-[10px] font-semibold uppercase'>{brand}</Text>}
+						<Text className='text-black text-sm font-medium line-clamp-2 leading-tight'>{name}</Text>
 					</View>
 
-					<View className='flex items-center gap-1.5'>
-						<Text className='text-secondary text-xs'>{price}</Text>
+					{/* Bloco de Preço e Parcelamento */}
+					<View className='flex flex-col gap-0.5'>
+						<View>
+							{showListItem && listPrice && (
+								<Text className='line-through text-[#888888] text-xs'>{listPrice}</Text>
+							)}
+						</View>
+						<View className='flex items-end gap-1.5'>
+							<Text className='font-bold text-red-700 text-lg'>{price}</Text>
+						</View>
 
-						{showListItem && listPrice && (
-							<Text className='line-through text-neutral-500 text-[10px]'>{listPrice}</Text>
+						{/* Texto de parcelamento logo abaixo do preço */}
+						{installments ? (
+							<Text className='text-[#888888] text-xs font-semibold'>{installments}</Text>
+						) : (
+							<View className='h-3' />
 						)}
 					</View>
 
-					{installments ? (
-						<Text className='text-neutral-500 text-xs'>{installments}</Text>
-					) : (
-						<View className='h-4' />
-					)}
+					{/* Botão de Ação */}
+					<View
+						onClick={e => {
+							e.stopPropagation()
+							onPressCartButton()
+						}}
+						className={`mt-auto h-10 bg-red-700 w-full rounded-full flex justify-center items-center px-3 bg-primary z-[99]`}
+						style={{
+							...(actionButtonCustomColor && {
+								backgroundColor: actionButtonCustomColor
+							})
+						}}>
+						{loadingCartOp ? (
+							<Loading width='36px' />
+						) : (
+							<Text className='text-white font-bold text-xs'>{actionLabel}</Text>
+						)}
+					</View>
 				</View>
-
-				<View
-					onClick={e => {
-						e.stopPropagation()
-						onPressCartButton()
-					}}
-					className={`mt-2 h-[36px] bg-primary w-full rounded-b flex justify-center items-center border-primary-700 border-[0.5px] bg-primary z-[99]`}
-					style={{
-						...(actionButtonCustomColor && {
-							backgroundColor: actionButtonCustomColor
-						})
-					}}>
-					{loadingCartOp ? (
-						<Loading width='36px' />
-					) : (
-						<Text className='text-primary-content font-medium text-xs'>{actionLabel}</Text>
-					)}
-				</View>
-
-				{/* <View
-					onClick={e => {
-						e.stopPropagation()
-						onChangeQuantity(0)
-					}}
-					className={`mt-2 h-[36px] bg-primary w-full rounded-b flex justify-center items-center border-primary-700 border-[0.5px] bg-primary-700 z-[99]`}>
-					{loadingCartOp ? (
-						<Loading width='36px' />
-					) : (
-						<Text className='text-primary-content font-medium text-xs'>Remover</Text>
-					)}
-				</View> */}
 			</View>
 		</View>
 	)

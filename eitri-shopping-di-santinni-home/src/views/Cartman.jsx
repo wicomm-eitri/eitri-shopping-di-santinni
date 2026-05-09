@@ -15,7 +15,7 @@ export default function Cartman() {
 			console.log('cart========>', cart.orderFormId)
 			setCart(cart)
 		} catch (error) {
-			console.log('Erro ao buscar carrinho', error)
+			console.error('Erro ao buscar carrinho', error)
 		}
 	}
 

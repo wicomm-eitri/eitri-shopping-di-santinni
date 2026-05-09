@@ -600,6 +600,146 @@
 		}
 	},
 	{
+		"name": "ProductTilesHighlights",
+		"requiredScopes": [],
+		"schema": {
+			"title": "Prateleira de Produtos com Destaque",
+			"description": "Seção com abas de prateleiras, cor de fundo e uma imagem grande de destaque lado a lado com os produtos.",
+			"type": "object",
+			"properties": {
+				"title": {
+					"title": "Título Principal da Seção",
+					"description": "Ex: NOSSAS MARCAS",
+					"type": "string"
+				},
+				"backgroundColor": {
+					"title": "Cor de fundo",
+					"description": "Ex: #C8102E",
+					"type": "string"
+				},
+				"shelves": {
+					"title": "Prateleiras (Abas)",
+					"description": "Adicione uma prateleira para cada marca/aba (Ex: MIZUNO, ADIDAS, etc)",
+					"type": "array",
+					"items": {
+						"title": "Aba de Prateleira",
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"title": "Nome da Aba (Aparecerá no menu)"
+							},
+							"highlightImage": {
+								"title": "Imagem de Destaque",
+								"description": "Imagem grande que ficará ao lado ou acima dos produtos para esta aba",
+								"type": "string",
+								"widget": {
+									"ui:widget": "media-gallery"
+								}
+							},
+							"highlightAction": {
+								"title": "Destino da Ação da Imagem",
+								"type": "object",
+								"properties": {
+									"type": {
+										"title": "Tipo de ação",
+										"enumNames": [
+											"Nenhum",
+											"Abrir Link Externo",
+											"Abrir Produto (id ou slug)",
+											"Abrir Coleção (Id da coleção)",
+											"Abrir Categoria (cat1/cat2...)",
+											"Abrir Busca",
+											"Abrir Landing Page",
+											"Abrir Marca"
+										],
+										"enum": [
+											"none",
+											"link",
+											"product",
+											"collection",
+											"category",
+											"search",
+											"page",
+											"brand"
+										],
+										"default": "none"
+									},
+									"value": {
+										"title": "Valor",
+										"type": "string"
+									}
+								}
+							},
+							"term": {
+								"type": "string",
+								"title": "Termo de busca dos produtos (opcional)"
+							},
+							"facets": {
+								"title": "Facets (Filtros)",
+								"type": "array",
+								"items": {
+									"title": "Facet",
+									"type": "object",
+									"required": ["key", "value"],
+									"properties": {
+										"key": {
+											"title": "Key",
+											"description": "Para marca use: brand. Para coleção use: productClusterIds",
+											"type": "string",
+											"default": "brand"
+										},
+										"value": {
+											"title": "Value",
+											"type": "string",
+											"default": ""
+										}
+									}
+								}
+							},
+							"sort": {
+								"title": "Ordenação",
+								"description": "Ordenação dos produtos",
+								"default": "score:desc",
+								"enum": [
+									"discount:desc",
+									"name:asc",
+									"name:desc",
+									"orders:desc",
+									"price:asc",
+									"price:desc",
+									"release:desc",
+									"score:desc"
+								],
+								"enumNames": [
+									"Desconto: do maior para o menor",
+									"Nome: A-Z",
+									"Nome: Z-A",
+									"Pedidos: do maior para o menor",
+									"Preço: do menor para o maior",
+									"Preço: do maior para o menor",
+									"Lançamento: mais recentes primeiro",
+									"Relevância: da maior para a menor"
+								]
+							},
+							"numberOfItems": {
+								"type": "integer",
+								"title": "Quantidade de itens",
+								"default": 8
+							}
+						}
+					}
+				},
+				"mode": {
+					"title": "Modo de exibição dos produtos",
+					"enumNames": ["Carrossel", "Scroll Horizontal"],
+					"enum": ["carousel", "scroll"],
+					"default": "carousel"
+				}
+			}
+		}
+	},
+	{
 		"name": "WordPressCardList",
 		"requiredScopes": [],
 		"schema": {

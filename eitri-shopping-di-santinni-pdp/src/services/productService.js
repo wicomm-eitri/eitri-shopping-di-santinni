@@ -14,10 +14,24 @@ export const getProductBySlug = async slug => {
 }
 
 export const getWhoSawAlsoSaw = async productId => {
+	return Vtex.catalog.getWhoSawAlsoSaw(productId)
+}
+
+export const getWhoBoughtAlsoBought = async productId => {
+	const result = await VtexCaller.get(`api/catalog_system/pub/products/crossselling/whoboughtalsobought/${productId}`)
+
+	return result?.data
+}
+
+export const getProductsRecommendations = async productId => {
 	return Vtex.searchGraphql.productRecommendations({
 		identifier: { field: 'id', value: productId },
 		type: 'view'
 	})
+}
+
+export const getSimilarProducts = async productId => {
+	return Vtex.catalog.getSimilarProducts(productId)
 }
 
 export const markLastViewedProduct = async product => {

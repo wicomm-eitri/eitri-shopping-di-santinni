@@ -1,104 +1,200 @@
+import React, { useState } from 'react'
+import { View, Text } from 'eitri-luminus'
+import { LuChevronLeft, LuChevronRight } from 'react-icons/lu'
+
 export default function BannerList(props) {
 	const { data, onClick } = props
+	const [currentIndex, setCurrentIndex] = useState(0)
+	const [dragOffset, setDragOffset] = useState(0)
+	const [isDragging, setIsDragging] = useState(false)
+	const [startX, setStartX] = useState(0)
 	const imagesList = data.images
 	const { size, aspectRatio } = data
+	const paramsObject = Object.fromEntries((data?.params || []).map(item => [item.key, item.value]))
+	const hasMultipleImages = imagesList?.length > 1
+	const showArrows = paramsObject?.arrow === 'on'
 
 	const getBannerDimensions = () => {
 		const maxWidth = size?.maxWidth
 		const maxHeight = size?.maxHeight
 
-		let finalWidth = maxWidth || 300
-		let finalHeight = maxHeight || 400
+		// Puxa as dimensões do CMS. Se não existirem, aí sim cai no padrão 300x400
+		let finalWidth = maxWidth ? Number(maxWidth) : 300
+		let finalHeight = maxHeight ? Number(maxHeight) : 400
 
+		// Se tiver aspectRatio configurado, calcula a proporção em cima do tamanho
 		if (aspectRatio) {
 			try {
 				const [aspectW, aspectH] = aspectRatio.split(':').map(Number)
 				const ratio = aspectH / aspectW
 
 				if (!isNaN(ratio)) {
-					// ✅ Se NÃO passou nenhum limite → usa 80% da tela
 					if (!maxWidth && !maxHeight) {
 						const screenWidth = window.innerWidth * 0.8
-
 						finalWidth = screenWidth
 						finalHeight = screenWidth * ratio
-					}
+					} else if (maxWidth && !maxHeight) {
+						finalWidth = Number(maxWidth)
+						finalHeight = Number(maxWidth) * ratio
+					} else if (!maxWidth && maxHeight) {
+						finalHeight = Number(maxHeight)
+						finalWidth = Number(maxHeight) / ratio
+					} else if (maxWidth && maxHeight) {
+						const heightByWidth = Number(maxWidth) * ratio
 
-					// Só maxWidth
-					else if (maxWidth && !maxHeight) {
-						finalWidth = maxWidth
-						finalHeight = maxWidth * ratio
-					}
-
-					// Só maxHeight
-					else if (!maxWidth && maxHeight) {
-						finalHeight = maxHeight
-						finalWidth = maxHeight / ratio
-					}
-
-					// Ambos
-					else if (maxWidth && maxHeight) {
-						const heightByWidth = maxWidth * ratio
-
-						if (heightByWidth > maxHeight) {
-							finalHeight = maxHeight
-							finalWidth = maxHeight / ratio
+						if (heightByWidth > Number(maxHeight)) {
+							finalHeight = Number(maxHeight)
+							finalWidth = Number(maxHeight) / ratio
 						} else {
-							finalWidth = maxWidth
+							finalWidth = Number(maxWidth)
 							finalHeight = heightByWidth
 						}
 					}
 				}
 			} catch (e) {
-				console.error('Error calculating aspect ratio [BannerList]:', e)
+				// ignore malformed aspectRatio from CMS
 			}
 		}
 
 		return {
 			width: `${Math.round(finalWidth)}px`,
 			height: `${Math.round(finalHeight)}px`,
-			aspectRatio: aspectRatio?.replace(':', '/')
+			...(aspectRatio ? { aspectRatio: aspectRatio.replace(':', '/') } : {})
+		}
+	}
+
+	const bannerDimensions = getBannerDimensions()
+	const bannerWidth = Number.parseInt(bannerDimensions.width, 10) || 300
+	const bannerStep = bannerWidth + 12
+
+	const goToSlide = direction => {
+		if (!imagesList?.length) return
+
+		setDragOffset(0)
+		setIsDragging(false)
+
+		setCurrentIndex(current => {
+			if (direction === 'right') {
+				return (current + 1) % imagesList.length
+			}
+
+			return (current - 1 + imagesList.length) % imagesList.length
+		})
+	}
+
+	const handleDragStart = clientX => {
+		if (!hasMultipleImages) return
+
+		setIsDragging(true)
+		setStartX(clientX)
+		setDragOffset(0)
+	}
+
+	const handleDragMove = clientX => {
+		if (!isDragging) return
+
+		setDragOffset(clientX - startX)
+	}
+
+	const handleDragEnd = () => {
+		if (!isDragging) return
+
+		const threshold = 50
+
+		if (Math.abs(dragOffset) > threshold) {
+			if (dragOffset > 0) {
+				goToSlide('left')
+			} else {
+				goToSlide('right')
+			}
+		} else {
+			setDragOffset(0)
+			setIsDragging(false)
 		}
 	}
 
 	return (
 		<View className={`flex flex-col gap-2 ${data?.isHideBanner ? 'hidden' : 'block'}`}>
 			{data?.mainTitle && (
-				<View className='px-4'>
-					<Text className='font-bold text-lg'>{data.mainTitle}</Text>
+				<View className='px-4 mb-8'>
+					<Text className='font-semibold text-2xl text-[#0C0C0C]'>{data.mainTitle}</Text>
 				</View>
 			)}
 
-			<View className='flex overflow-x-auto gap-2.5 px-4'>
-				{imagesList &&
-					imagesList.map(slider => (
-						<View
-							key={slider.imageUrl}
-							className='flex flex-col'>
-							<View // Adicionado key para melhor performance e para seguir as boas práticas do React
-								style={{
-									backgroundImage: `url(${slider.imageUrl})`,
-									...getBannerDimensions(),
-									backgroundSize: 'cover'
-								}}
-								className='rounded'
-								onClick={() => onClick(slider)}
-							/>
-
-							{slider?.action?.title && (
+			<View className='relative'>
+				<View className='overflow-hidden px-4 pb-2'>
+					<View
+						className='flex gap-3 transition-transform duration-300 ease-out touch-pan-y'
+						onTouchStart={e => handleDragStart(e.touches[0].clientX)}
+						onTouchMove={e => handleDragMove(e.touches[0].clientX)}
+						onTouchEnd={handleDragEnd}
+						onMouseDown={e => handleDragStart(e.clientX)}
+						onMouseMove={e => isDragging && handleDragMove(e.clientX)}
+						onMouseUp={handleDragEnd}
+						onMouseLeave={handleDragEnd}
+						style={{
+							transform: `translateX(calc(-${currentIndex * bannerStep}px + ${dragOffset}px))`,
+							transitionDuration: isDragging ? '0ms' : '300ms'
+						}}>
+						{imagesList &&
+							imagesList.map(slider => (
 								<View
-									style={{
-										...getBannerDimensions(),
-										height: 'initial'
-									}}
-									className='mt-1'>
-									<Text className='font-bold line-clamp-2 block text-center'>
-										{slider?.action?.title}
-									</Text>
+									key={slider.imageUrl}
+									className='flex flex-col'>
+									<View
+										style={{
+											backgroundImage: `url(${slider.imageUrl})`,
+											...bannerDimensions,
+											backgroundSize: 'cover',
+											borderRadius: '12px'
+										}}
+										className='relative'
+										onClick={() => onClick(slider)}>
+										{slider?.subLabel && (
+											<View className='absolute bottom-3 left-3 bg-white rounded-full px-4 py-1.5'>
+												<Text className='font-semibold text-red-700 text-sm uppercase'>
+													{slider.subLabel}
+												</Text>
+											</View>
+										)}
+									</View>
+
+									{slider?.action?.title && (
+										<View
+											style={{
+												...bannerDimensions,
+												height: 'initial'
+											}}
+											className='mt-1'>
+											<Text className='font-bold line-clamp-2 block text-center'>
+												{slider?.action?.title}
+											</Text>
+										</View>
+									)}
 								</View>
-							)}
+							))}
+					</View>
+				</View>
+
+				{hasMultipleImages && showArrows && (
+					<>
+						<View
+							className='absolute left-3 top-1/2 -translate-y-1/2 z-10'
+							onClick={() => goToSlide('left')}>
+							<View className='w-11 h-11 rounded-full bg-white border border-red-500 shadow-lg flex items-center justify-center'>
+								<LuChevronLeft className='text-red-500 text-2xl' />
+							</View>
 						</View>
-					))}
+
+						<View
+							className='absolute right-3 top-1/2 -translate-y-1/2 z-10'
+							onClick={() => goToSlide('right')}>
+							<View className='w-11 h-11 rounded-full bg-white border border-red-500 shadow-lg flex items-center justify-center'>
+								<LuChevronRight className='text-red-500 text-2xl' />
+							</View>
+						</View>
+					</>
+				)}
 			</View>
 		</View>
 	)

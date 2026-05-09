@@ -26,7 +26,7 @@ export default function PaymentData(props) {
 
 			await selectPaymentOption(payload)
 		} catch (error) {
-			console.log('Erro ao selecionar método de pagamento', error)
+			console.error('Erro ao selecionar método de pagamento', error)
 		} finally {
 			setIsLoading(false)
 		}

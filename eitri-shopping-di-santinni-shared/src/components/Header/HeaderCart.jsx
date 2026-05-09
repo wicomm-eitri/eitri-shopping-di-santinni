@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import Eitri from 'eitri-bifrost'
 
 export default function HeaderCart(props) {
@@ -8,7 +9,6 @@ export default function HeaderCart(props) {
 	useEffect(() => {
 		if (cart) {
 			const itemsQuantity = cart.items.reduce((acc, item) => acc + item.quantity, 0)
-
 			setQuantityOfItems(itemsQuantity)
 		}
 	}, [cart])
@@ -16,7 +16,6 @@ export default function HeaderCart(props) {
 	const handlePress = () => {
 		if (onClick) {
 			onClick()
-
 			return
 		} else {
 			Eitri.nativeNavigation.open({
@@ -26,7 +25,7 @@ export default function HeaderCart(props) {
 	}
 
 	return (
-		<View className={`relative w-[20px] h-[20px] flex items-center`}>
+		<View className={`relative w-[20px] h-[20px] flex items-center justify-center`}>
 			<View onClick={handlePress}>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
@@ -52,8 +51,8 @@ export default function HeaderCart(props) {
 
 			{_quantityOfItems > 0 && (
 				<View
-					className={`absolute top-[-10px] right-[-10px] flex rounded-full w-5 h-5 justify-center items-center bg-header-content`}>
-					<Text className='text-[12px] font-bold text-header-background'>{_quantityOfItems}</Text>
+					className={`absolute top-[-2px] right-[-4px] flex rounded-full w-[13px] h-[13px] justify-center items-center bg-red-700`}>
+					<Text className='text-[9px] font-bold text-white'>{_quantityOfItems}</Text>
 				</View>
 			)}
 		</View>

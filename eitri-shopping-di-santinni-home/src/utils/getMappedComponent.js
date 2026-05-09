@@ -8,6 +8,7 @@ import LastSeenProducts from '../components/CmsComponents/LastSeenProducts/LastS
 import ProductInfiniteScroll from '../components/CmsComponents/ProductInfiniteScroll/ProductInfiniteScroll'
 import ProductShelf from '../components/CmsComponents/ProductShelf/ProductShelf'
 import ProductTiles from '../components/CmsComponents/ProductTiles/ProductTiles'
+import ProductTilesHighlights from '../components/CmsComponents/ProductTilesHighlights/ProductTilesHighlights'
 
 const componentMap = {
 	MultipleImageBanner: Banner,
@@ -19,7 +20,8 @@ const componentMap = {
 	ProductInfiniteScroll: ProductInfiniteScroll,
 	WordPressCardList: BlogPostShelf,
 	HighlightedProductShelf: HighlightedProductShelf,
-	BannersRichText: BannersRichText
+	BannersRichText: BannersRichText,
+	ProductTilesHighlights: ProductTilesHighlights
 }
 
 const shouldReloadOnResume = componentName => {

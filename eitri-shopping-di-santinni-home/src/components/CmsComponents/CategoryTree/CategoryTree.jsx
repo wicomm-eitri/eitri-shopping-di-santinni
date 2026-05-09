@@ -20,7 +20,6 @@ export default function CategoryTree(props) {
 	}
 	const chooseCategory = category => {
 		if (legacySearch) {
-			console.log('chooseCategory >> legacySearch >>', JSON.stringify(category))
 			Eitri.navigation.navigate({
 				path: 'ProductCatalog',
 				state: {

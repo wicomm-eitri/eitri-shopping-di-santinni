@@ -204,7 +204,7 @@ export default function SignIn(props) {
 		try {
 			onLoggedIn()
 		} catch (error) {
-			console.log(error)
+			console.error('Error during social login:', error)
 		}
 	}
 
