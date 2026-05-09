@@ -7,22 +7,23 @@ export const getCmsContent = async (contentType, pageName) => {
 		if (!pageName) return null
 
 		const { faststore } = Vtex.configs
-		const cachedPage = await loadPageFromCache(faststore, contentType, pageName)
+		// const cachedPage = await loadPageFromCache(faststore, contentType, pageName)
 
-		if (cachedPage) {
-			loadVtexCmsPage(faststore, contentType, pageName)
-				.then(page => {
-					if (page) {
-						savePageInCache(faststore, contentType, pageName, page)
-					}
-				})
-				.catch(e => console.error('Error loading VTEX CMS page in background:', e))
+		// if (cachedPage) {
+		// 	loadVtexCmsPage(faststore, contentType, pageName)
+		// 		.then(page => {
+		// 			if (page) {
+		// 				savePageInCache(faststore, contentType, pageName, page)
+		// 			}
+		// 		})
+		// 		.catch(e => console.error('Error loading VTEX CMS page in background:', e))
 
-			return cachedPage
-		}
+		// 	return cachedPage
+		// }
 
 		const page = await loadVtexCmsPage(faststore, contentType, pageName)
-
+		console.log('page: ', page);
+		
 		if (page) {
 			savePageInCache(faststore, contentType, pageName, page)
 

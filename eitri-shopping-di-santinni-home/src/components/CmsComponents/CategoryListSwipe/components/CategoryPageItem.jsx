@@ -1,13 +1,23 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { HeaderReturn, HeaderContentWrapper, HeaderText } from 'eitri-shopping-di-santinni-shared'
+import {
+	HeaderReturn,
+	HeaderContentWrapper,
+	HeaderText,
+	HeaderCart,
+	HeaderSearchIcon
+} from 'eitri-shopping-di-santinni-shared'
+import { goToCart, goToSearch } from '../../../../utils/utils'
+import CategoryGroupTitle from './CategoryGroupTitle'
 import CategoryTitle from './CategoryTitle'
 
-export default function CategoryPageItem(props) {
-	const { item, goToItem } = props
+export default function CategoryPageItem({ item, goToItem }) {
 	const { t } = useTranslation()
 
 	const [showSubItems, setShowSubItems] = useState(false)
+
+	console.log('[CategoryPageItem] item: ', item)
+	console.log('[CategoryPageItem] goToItem: ', goToItem)
 
 	useEffect(() => {
 		if (showSubItems) {
@@ -41,15 +51,51 @@ export default function CategoryPageItem(props) {
 				className={`flex flex-col min-h-screen h-screen w-screen fixed ${showSubItems ? 'left-0 ' : 'left-[100vw]'} top-0 transition-left duration-300 z-[9999]`}>
 				<HeaderContentWrapper
 					containerClassName={`${showSubItems ? 'left-0' : '!left-[100vw] !shadow-none'} transition-left !duration-300 !backdrop-blur-none !bg-white`}>
-					<HeaderReturn onClick={() => setShowSubItems(false)} />
-					<HeaderText text={item.title}>{item.title}</HeaderText>
+					<View
+						className='justify-between w-full flex items-center'
+					>
+						<View className='flex items-center gap-3'>
+							<HeaderReturn onClick={() => setShowSubItems(false)} />
+							<HeaderText text={item.title}>{item.title}</HeaderText>
+						</View>
+						<View className='flex items-center gap-6'>
+							<HeaderSearchIcon onClick={goToSearch} />
+							<HeaderCart onClick={goToCart} />
+						</View>
+					</View>
 				</HeaderContentWrapper>
 
 				<View
 					bottomInset={'auto'}
-					className='bg-base-100 flex-1 overflow-y-auto'>
-					<View className='flex flex-col p-4 gap-4'>
-						{item?.action && (
+					className='bg-white flex-1 overflow-y-auto'>
+						{/* TODO: Perguntar Erick sobre o padding horizontal, se é 26px ou 24px */}
+					<View className='flex flex-col px-[26px] py-[32px] gap-8'>
+						{item?.subcategories?.map(s => (
+							<View
+								key={s.title}
+								className='flex flex-col gap-6'>
+								<CategoryGroupTitle title={s.title} />
+								{s?.subSubcategories?.map((subItem, index) => (
+									<CategoryTitle
+										key={`${subItem.title}-${index}`}
+										icon={subItem.icon}
+										hasSubItems={false}
+										title={subItem.title}
+										onClick={() => handleItemPress(subItem)}
+									/>
+								))}
+								{s?.action && (
+									<CategoryTitle
+										icon={s.icon}
+										hasSubItems={false}
+										title={`${t('categoryPageItem.seeAll', 'Ver tudo')}`}
+										onClick={() => goToItem(s)}
+										textClassName='!capitalize !text-red-700'
+									/>
+								)}
+							</View>
+						))}
+						{/* {item?.action && (
 							<CategoryTitle
 								icon={item.icon}
 								hasSubItems={false}
@@ -66,7 +112,7 @@ export default function CategoryPageItem(props) {
 								title={subItem.title}
 								onClick={() => handleItemPress(subItem)}
 							/>
-						))}
+						))} */}
 					</View>
 				</View>
 			</View>

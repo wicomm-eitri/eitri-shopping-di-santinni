@@ -3,8 +3,8 @@ import {
 	HeaderCart,
 	HeaderContentWrapper,
 	HeaderReturn,
-	HeaderShare,
-	HeaderWishList
+	HeaderSearchIcon,
+	HeaderText
 } from 'eitri-shopping-di-santinni-shared'
 import { Vtex } from 'eitri-shopping-vtex-shared'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
@@ -67,16 +67,29 @@ export default function Header(props) {
 		setLoadingWishlist(false)
 	}
 
+	const goToSearch = useCallback(() => {
+		Eitri.navigation.open({
+			slug: 'home',
+			initParams: {
+				route: 'Search'
+			}
+		})
+	}, [])
+
 	return (
-		<HeaderContentWrapper className='justify-between'>
-			<HeaderReturn />
+		<HeaderContentWrapper containerClassName='bg-white'  className='bg-white justify-between'>
+			<View className='flex gap-3'>
+				<HeaderReturn />
+				<HeaderText text={product?.productName} />
+			</View>
 			<View className='flex gap-4'>
-				<HeaderWishList
+				{/* <HeaderWishList
 					filled={itemOnWishlist}
 					onClick={handleSaveFavorite}
 					className={loadingWishlist && itemOnWishlist ? 'text-gray-300' : ''}
 				/>
-				<HeaderShare onClick={shareLink} />
+				<HeaderShare onClick={shareLink} /> */}
+				<HeaderSearchIcon onClick={goToSearch} />
 				<HeaderCart cart={cart} />
 			</View>
 		</HeaderContentWrapper>
