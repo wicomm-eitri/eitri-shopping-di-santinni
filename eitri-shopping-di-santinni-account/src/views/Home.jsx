@@ -30,7 +30,7 @@ export default function Home(props) {
 
 		setTimeout(() => {
 			navigate(PAGES.ABOUT_US)
-		}, 500)
+		}, 1000)
 	}, [])
 
 	const init = async () => {
