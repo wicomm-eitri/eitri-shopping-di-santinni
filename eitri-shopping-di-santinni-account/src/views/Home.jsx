@@ -26,9 +26,9 @@ export default function Home(props) {
 		init()
 		sendScreenView('Perfil', 'Home')
 
-		Eitri.navigation.setOnResumeListener(() => {
-			init()
-		})
+		Eitri.navigation.setOnResumeListener(() => init())
+
+		navigate(PAGES.EXCHANGE_POLICY)
 	}, [])
 
 	const init = async () => {
