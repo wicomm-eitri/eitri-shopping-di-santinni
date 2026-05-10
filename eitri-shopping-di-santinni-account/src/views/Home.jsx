@@ -28,7 +28,9 @@ export default function Home(props) {
 
 		Eitri.navigation.setOnResumeListener(() => init())
 
-		navigate(PAGES.EXCHANGE_POLICY)
+		setTimeout(() => {
+			navigate(PAGES.ABOUT_US)
+		}, 500)
 	}, [])
 
 	const init = async () => {
