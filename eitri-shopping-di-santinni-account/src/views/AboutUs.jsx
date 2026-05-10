@@ -107,10 +107,71 @@ export default function AboutUs() {
 					</View>
 				</View>
 
-				<Image
-					src='https://disantinni.vtexassets.com/assets/vtex.file-manager-graphql/images/cefc9555-93d4-47f1-ad86-3703556d356f___3c1829a4a1ce4605c392cf03f9001f62.png'
-					alt='Imagem com 2 modelos'
-				/>
+				<View>
+					<Image
+						src='https://disantinni.vtexassets.com/assets/vtex.file-manager-graphql/images/cefc9555-93d4-47f1-ad86-3703556d356f___3c1829a4a1ce4605c392cf03f9001f62.png'
+						alt='Imagem com 2 modelos'
+						className='w-full'
+					/>
+
+					<View className='relative flex flex-col gap-12 items-center pt-20  pb-[90px] px-[70px]'>
+						<Image
+							src='https://disantinni.vtexassets.com/assets/vtex.file-manager-graphql/images/1a7eac2c-7648-435d-b40c-1dbeb13cd4c9___39d99d76ddfefdc1f3fe65aec2f16398.png'
+							alt='Imagem com 2 modelos'
+							className='w-[155px] h-auto absolute -top-[77px] left-1/2 -translate-x-1/2'
+						/>
+
+						{[
+							{
+								title: '+45',
+								subtitle: 'Corem ipsum dolor sit amet, consectetur adipiscing elit.'
+							},
+							{
+								title: '+2.500',
+								subtitle: 'Norem ipsum dolor sit amet, consectetur adipiscing elit.'
+							},
+							{
+								title: '+10MI',
+								subtitle: 'Horem ipsum dolor sit amet, consectetur adipiscing elit.'
+							}
+						].map((item, index) => (
+							<View
+								key={`${item.title}-${index}`}
+								className='flex flex-col items-center'>
+								<Text className='text-[52px] font-bold text-red-700'>{item.title}</Text>
+
+								<Text className='text-center text-gray-900'>{item.subtitle}</Text>
+							</View>
+						))}
+					</View>
+				</View>
+
+				<View className='flex overflow-x-auto gap-2'>
+					{[
+						{
+							src: 'https://disantinni.vtexassets.com/assets/vtex.file-manager-graphql/images/13019964-c962-43a8-a719-ad4310c47683___a49822cfbd14388c4000e2d68cedfc0f.png',
+							alt: 'Imagem 1 do carousel'
+						},
+						{
+							src: 'https://disantinni.vtexassets.com/assets/vtex.file-manager-graphql/images/2dae7924-6518-4a93-98ac-b05109d62668___2227b949b0a8e82024315f7760a3a256.png',
+							alt: 'Imagem 2 do carousel'
+						},
+						{
+							src: 'https://disantinni.vtexassets.com/assets/vtex.file-manager-graphql/images/57f5fadb-8ff4-4e94-9aaa-fb5babaa4699___ab3144b64adc7ca2b2bd6e1f1bc288e7.png',
+							alt: 'Imagem 3 do carousel'
+						},
+						{
+							src: 'https://disantinni.vtexassets.com/assets/vtex.file-manager-graphql/images/6229b842-38d9-43e3-8b58-adcd3a920ddb___0bc90eea82f61531bde7383b41596743.png',
+							alt: 'Imagem 4 do carousel'
+						}
+					].map((image, index) => (
+						<Image
+							key={index}
+							src={image.src}
+							alt={image.alt}
+						/>
+					))}
+				</View>
 			</View>
 
 			<BottomInset />

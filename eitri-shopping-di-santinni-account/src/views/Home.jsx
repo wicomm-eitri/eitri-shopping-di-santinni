@@ -60,8 +60,6 @@ export default function Home(props) {
 
 		setIsLogged(isLogged)
 		setIsLoading(false)
-
-		sendPageView(PAGE)
 	}
 
 	const loadMe = async () => {
