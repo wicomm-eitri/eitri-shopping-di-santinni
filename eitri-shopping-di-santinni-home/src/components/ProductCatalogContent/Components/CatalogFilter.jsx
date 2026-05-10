@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'eitri-i18n'
 import { View, Text } from 'eitri-luminus'
-import { CustomButton, BottomInset, CustomCheckbox } from 'eitri-shopping-di-santinni-shared'
+import { BottomInset, CustomCheckbox } from 'eitri-shopping-di-santinni-shared'
 import { getProductsFacetsService } from '../../../services/ProductService'
 import CustomModal from '../../CustomModal/CustomModal'
 import PriceRange from './PriceRange'
@@ -143,25 +143,25 @@ export default function CatalogFilter(props) {
 
 	return (
 		<>
-			<CustomButton
-				disabled={facetsLoading}
-				onClick={() => setShowModal(true)}
-				leftIcon={
-					<svg
-						xmlns='http://www.w3.org/2000/svg'
-						width='16'
-						height='16'
-						viewBox='0 0 24 24'
-						fill='none'
-						stroke='currentColor'
-						strokeWidth='2'
-						strokeLinecap='round'
-						strokeLinejoin='round'>
-						<path d='M22 3H2l8 9.46V19l4 2v-8.54L22 3z' />
-					</svg>
-				}
-				label={t('categoryPageModal.title', 'Filtros')}
-			/>
+			<View
+				onClick={() => !facetsLoading && setShowModal(true)}
+				className={`flex h-[45px] w-full items-center justify-center gap-2 rounded border border-gray-500 bg-transparent px-4 ${
+					facetsLoading ? 'opacity-60 pointer-events-none' : ''
+				}`}>
+				<svg
+					xmlns='http://www.w3.org/2000/svg'
+					width='16'
+					height='16'
+					viewBox='0 0 24 24'
+					fill='none'
+					stroke='currentColor'
+					strokeWidth='2'
+					strokeLinecap='round'
+					strokeLinejoin='round'>
+					<path d='M22 3H2l8 9.46V19l4 2v-8.54L22 3z' />
+				</svg>
+				<Text className='text-xs uppercase text-gray-500'>{t('categoryPageModal.title', 'Filtros')}</Text>
+			</View>
 
 			{showModal && (
 				<CustomModal
@@ -171,7 +171,9 @@ export default function CatalogFilter(props) {
 						onClick={e => e.stopPropagation()}
 						className='bg-white rounded-t w-full max-h-[70vh] overflow-y-auto pointer-events-auto p-4'>
 						<View className='flex flex-row items-center justify-between border-b border-gray-300'>
-							<Text className='text-xl font-semibold'>{t('categoryPageModal.title', 'Filtros')}</Text>
+							<Text className='text-xs uppercase text-gray-500'>
+								{t('categoryPageModal.title', 'Filtros')}
+							</Text>
 						</View>
 
 						<View className='flex flex-col gap-4 mt-4'>
@@ -208,17 +210,22 @@ export default function CatalogFilter(props) {
 						<View className='p-4 w-full bg-white border-t border-gray-200 fixed left-0 bottom-0'>
 							<View className='flex flex-row justify-between w-full gap-4 '>
 								<View className='w-1/2'>
-									<CustomButton
-										outlined
+									<View
 										onClick={onFilterClear}
-										label={t('categoryPageModal.clear', 'Limpar')}
-									/>
+										className='flex h-[45px] items-center justify-center rounded border border-gray-500 bg-transparent px-4'>
+										<Text className=' text-gray-500 text-xs uppercase'>
+											{t('categoryPageModal.clear', 'Limpar')}
+										</Text>
+									</View>
 								</View>
 								<View className='w-1/2'>
-									<CustomButton
+									<View
 										onClick={onApplyFilters}
-										label={t('categoryPageModal.button', 'Filtrar')}
-									/>
+										className='flex h-[45px] items-center justify-center rounded border-gray-500 bg-transparent px-4'>
+										<Text className=' text-gray-500 text-xs uppercase'>
+											{t('categoryPageModal.button', 'Filtrar')}
+										</Text>
+									</View>
 								</View>
 							</View>
 							<BottomInset />
