@@ -22,9 +22,9 @@ export default function FitOnScreen(props) {
 			)}
 
 			<View className={`flex justify-between ${data?.images.length > 1 ? 'px-4 gap-2' : ''}`}>
-				{data?.images?.map(image => (
+				{data?.images?.map((image, idx) => (
 					<View
-						key={image.imageUrl}
+						key={`${image.imageUrl || image.id || 'fit'}-${idx}`}
 						onClick={() => onClick(image)}
 						className='w-full'>
 						<Image
