@@ -38,7 +38,6 @@ export default function SingleBanner(props) {
 
 			{imagesList && imagesList[0] && (
 				<View
-					key={imagesList[0].imageUrl}
 					onClick={() => onClick(imagesList[0])}
 					height={proportionalHeight}
 					className='flex px-4 w-full'>

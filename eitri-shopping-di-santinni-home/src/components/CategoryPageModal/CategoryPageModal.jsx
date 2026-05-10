@@ -32,8 +32,8 @@ export default function CategoryPageModal(props) {
 				minHeight='70vh'
 				width='100vw'
 				className='bg-base-100 overflow-scroll'>
-				<View className='p-2 mx-1 flex flex flex-row justify-between items-center'>
-					<Text>{`${t('categoryPageModal.title', 'Filtros')}`}</Text>
+				<View className='p-2 mx-1 flex  flex-row justify-between items-center'>
+					<Text>{`${t('categoryPageModal.title', 'FILTRAR POR')}`}</Text>
 					<View
 						width='36px'
 						height='36px'
@@ -119,7 +119,7 @@ export default function CategoryPageModal(props) {
 									willStartCollapsed={false}
 									border='none'
 									className='font-light'>
-									<View className='flex flex flex-col'>
+									<View className='flex  flex-col'>
 										{listOrdering.values.map(value => (
 											<View
 												key={value.id}
@@ -145,7 +145,7 @@ export default function CategoryPageModal(props) {
 										willStartCollapsed={false}
 										border='none'
 										className='font-light'>
-										<View className='flex flex flex-col'>
+										<View className='flex  flex-col'>
 											{facet.values.map(value => (
 												<SelectableTouchable
 													key={`${facet.key}_${value.value}`}
@@ -170,13 +170,13 @@ export default function CategoryPageModal(props) {
 							className='flex justify-center'>
 							<View
 								onClick={clearFilters}
-								className='flex p-2 items-center justify-center border-primary-content border grow-1 bg-base-100'>
-								<Text className='text-primary-content'>{t('categoryPageModal.clear', 'Limpar')}</Text>
+								className='flex p-2 items-center justify-center rounded border border-gray-500 bg-transparent grow-1 '>
+								<Text className='text-gray-500 text-xs'>{t('categoryPageModal.clear', 'Limpar')}</Text>
 							</View>
 							<View
 								onClick={executeSearch}
-								className='flex p-2 items-center justify-center grow-1 bg-primary-content font-bold'>
-								<Text className='text-neutral font-bold'>
+								className='flex p-2 items-center justify-center grow-1 rounded border border-gray-500 bg-transparent '>
+								<Text className='text-gray-500 text-xs'>
 									{t('categoryPageModal.button', 'Filtrar')}
 								</Text>
 							</View>
