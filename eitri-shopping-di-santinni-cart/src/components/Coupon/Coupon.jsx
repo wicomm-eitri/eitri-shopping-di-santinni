@@ -90,7 +90,7 @@ export default function Coupon(props) {
 								<CustomInput
 									placeholder={t('coupon.labelInsertCode', 'Insira o código')}
 									value={coupon}
-									className='!border-x-0 !border-t-0 !border !rounded-none !border-gray-300 !h-10  !text-xs text-gray-500 !pl-2'
+									className='!border-x-0 !border-t-0 !rounded-none !border-gray-300 !h-10  !text-xs text-gray-500 !pl-2'
 									onChange={e => inputOnChange(e.target.value)}
 								/>
 							</View>

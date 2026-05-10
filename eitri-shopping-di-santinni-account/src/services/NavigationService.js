@@ -14,7 +14,8 @@ export const PAGES = {
 	WISH_LIST: '/WishList',
 	POINTS: '/Points',
 	EXCHANGE_POLICY: '/ExchangePolicy',
-	ABOUT_US: '/AboutUs'
+	ABOUT_US: '/AboutUs',
+	BECOMEAFRANCHISEE: '/BecomeAFranchisee'
 }
 
 export const openProduct = async product => {

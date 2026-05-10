@@ -29,7 +29,7 @@ export default function Home(props) {
 		Eitri.navigation.setOnResumeListener(() => init())
 
 		setTimeout(() => {
-			navigate(PAGES.ABOUT_US)
+			navigate(PAGES.BECOMEAFRANCHISEE)
 		}, 1000)
 	}, [])
 

@@ -30,7 +30,7 @@ export default function CustomInput(props) {
 			)}
 			<View className='relative'>
 				<TextInput
-					className={`w-full rounded border-gray-300 border-solid border-2 focus:outline-none ${className}`}
+					className={`w-full rounded border-gray-300 border-solid border focus:outline-none ${className}`}
 					type={showPassword ? 'text' : type || 'text'}
 					onChange={onChange}
 					value={value}
