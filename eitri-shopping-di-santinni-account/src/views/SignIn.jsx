@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
 import {
@@ -224,64 +225,58 @@ export default function SignIn(props) {
 
 			<View className='p-4'>
 				<View className='flex flex-col gap-2'>
-					<Text className='w-full font-bold text-xl'>{t('signIn.welcome', 'Bem vindo de volta!')}</Text>
+					<Text className='w-full font-semibold '>{t('signIn.welcome', 'Bem vindo de volta!')}</Text>
 				</View>
 
 				{loginMode === LOGIN_WITH_EMAIL_AND_PASSWORD && (
 					<>
-						<View className='mt-4'>
+						<View className='mt-8 flex flex-col gap-3'>
 							<CustomInput
 								icon={userIcon}
 								value={username}
 								placeholder={t('signIn.formName', 'E-mail')}
 								inputMode='email'
 								onChange={e => setUsername(e?.target?.value)}
+								className='bg-white text-xs h-[42px]'
 							/>
-						</View>
 
-						<View className='mt-4'>
 							<CustomInput
 								placeholder={t('signIn.formPass', 'Senha')}
 								icon={lockIcon}
 								value={password}
 								type='password'
 								onChange={e => setPassword(e.target.value)}
+								className='bg-white text-xs h-[42px]'
 							/>
 						</View>
 
-						<View className='mt-4'>
+						<View
+							className='mt-[10px]'
+							onClick={goToPasswordReset}>
+							<Text className='w-full text-sm underline text-primary'>
+								{t('signIn.forgotPass', 'Esqueceu a senha?')}
+							</Text>
+						</View>
+
+						<View className='flex flex-col gap-2 mt-6'>
 							<CustomButton
 								width='100%'
-								label={t('signIn.labelButton', 'Login')}
+								className='uppercase !h-11 rounded-full'
+								textClassName='font-semibold'
+								label={t('signIn.labelButton', 'ENTRAR')}
 								onPress={handleLogin}
 							/>
-						</View>
 
-						<View className='mt-4'>
 							<CustomButton
 								width='100%'
+								className='uppercase !h-11 rounded-full'
+								textClassName='font-bold text-red-700'
 								variant='outlined'
-								label={t('signIn.labelAccessWithCode', 'Login com código de acesso')}
-								onPress={() => setLoginMethod(LOGIN_WITH_EMAIL_AND_ACCESS_KEY)}
-							/>
-						</View>
-
-						<View className='mt-8 flex justify-center'>
-							<View onClick={goToPasswordReset}>
-								<Text className='w-full text-primary'>
-									{t('signIn.forgotPass', 'Esqueceu a senha?')}
-								</Text>
-							</View>
-						</View>
-						<View className='mt-4 flex justify-center'>
-							<View
-								onClick={() => {
+								label={t('signIn.noRegister', 'CRIAR CONTA')}
+								onPress={() => {
 									navigate(PAGES.SIGNUP)
-								}}>
-								<Text className='w-full text-primary'>
-									{t('signIn.noRegister', 'Não tenho cadastro')}
-								</Text>
-							</View>
+								}}
+							/>
 						</View>
 					</>
 				)}

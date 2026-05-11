@@ -5,6 +5,7 @@ import NoItem from '../components/NoItem/NoItem'
 import WishlistItem from '../components/WishlistItem/WishlistItem'
 import { getWishlist, removeFromWishlist } from '../services/CustomerService'
 import { sendScreenView } from '../services/TrackingService'
+import heartIcon from '../assets/icons/heart.svg'
 import { addonUserTappedActiveTabListener } from '../utils/backToTopListener'
 
 export default function Wishlist(props) {
@@ -85,8 +86,15 @@ export default function Wishlist(props) {
 
 			{wishlistItems.length === 0 && !isLoading && (
 				<NoItem
-					title={t('wishlist.noItems', 'Você não possui nenhum item salvo')}
-					subtitle={t('wishlist.noItemsSubtitle', 'Quando você salvar um produto, ele será listado aqui.')}
+					icon={heartIcon}
+					title={
+						t('wishlist.noFavoritesLine1', 'Você não possui') + '\n' +
+						t('wishlist.noFavoritesLine2', 'nenhum item salvo')
+					}
+					subtitle={t(
+						'wishlist.noFavoritesSubtitle',
+						'Quando você favoritar um produto, ele será listado aqui.'
+					)}
 				/>
 			)}
 

@@ -22,6 +22,55 @@ export default function Home(props) {
 	const [customerData, setCustomerData] = useState(props.customerData || {})
 	const [isLogged, setIsLogged] = useState(null)
 
+	const handlePlaceholderItem = () => {}
+
+	const allCards = [
+		{
+			label: t('home.labelMyAccount', 'Minha conta'),
+			icon: userIcon,
+			isVisible: true,
+			onClick: () => {
+				isLogged
+					? navigate(PAGES.EDIT_PROFILE, { customerData })
+					: navigate(PAGES.SIGNIN, { redirectTo: PAGES.EDIT_PROFILE })
+			}
+		},
+		{
+			label: t('home.labelMyOrders', 'Meus pedidos'),
+			icon: boxIcon,
+			isVisible: isLogged,
+			onClick: () => {
+				isLogged ? navigate(PAGES.ORDER_LIST) : navigate(PAGES.SIGNIN, { redirectTo: PAGES.ORDER_LIST })
+			}
+		},
+		{
+			label: t('home.labelMyFavorites', 'Meus favoritos'),
+			icon: bookmarkIcon,
+			isVisible: isLogged,
+			onClick: () => {
+				isLogged ? navigate(PAGES.WISH_LIST) : navigate(PAGES.SIGNIN, { redirectTo: PAGES.WISH_LIST })
+			}
+		},
+		{
+			label: t('home.labelExchangesReturns', 'Trocas e devoluções'),
+			icon: userIcon,
+			isVisible: true,
+			onClick: handlePlaceholderItem
+		},
+		{
+			label: t('home.labelSupport', 'Suporte'),
+			icon: boxIcon,
+			isVisible: true,
+			onClick: handlePlaceholderItem
+		},
+		{
+			label: t('home.labelStores', 'Nossas lojas'),
+			icon: bookmarkIcon,
+			isVisible: true,
+			onClick: handlePlaceholderItem
+		}
+	]
+
 	useEffect(() => {
 		init()
 		sendScreenView('Perfil', 'Home')
@@ -100,53 +149,44 @@ export default function Home(props) {
 			{!isLoading && (isLogged ? <InfoCard customerData={customerData} /> : <LoginCard />)}
 
 			<View className='px-4 mt-2 mb-2'>
-				<Text className='font-bold text-xl mb-3 text-gray-900'>
-					{t('home.lbPersonalData', 'Dados pessoais')}
-				</Text>
-
 				<View className='flex flex-col gap-3 mt-2'>
-					<ProfileCardButton
-						label={t('home.labelMyAccount', 'Minha conta')}
-						icon={userIcon}
-						onClick={() => {
-							isLogged
-								? navigate(PAGES.EDIT_PROFILE, { customerData })
-								: navigate(PAGES.SIGNIN, { redirectTo: PAGES.EDIT_PROFILE })
-						}}
-					/>
-					<ProfileCardButton
-						label={t('home.labelMyFavorites', 'Meus favoritos')}
-						icon={bookmarkIcon}
-						onClick={() => {
-							isLogged
-								? navigate(PAGES.WISH_LIST)
-								: navigate(PAGES.SIGNIN, { redirectTo: PAGES.WISH_LIST })
-						}}
-					/>
+					{allCards
+						.filter(card => card.isVisible)
+						.map(item => (
+							<ProfileCardButton
+								key={item.label}
+								label={item.label}
+								icon={item.icon}
+								onClick={item.onClick}
+							/>
+						))}
 				</View>
 			</View>
 
-			<View className='px-4 mt-6 mb-2'>
-				<Text className='font-bold text-xl mb-3 text-gray-900'>{t('home.lbOrders', 'Pedidos')}</Text>
-				<View className='flex flex-col gap-3 mt-2'>
-					<ProfileCardButton
-						label={t('home.labelMyOrders', 'Meus pedidos')}
-						icon={boxIcon}
-						onClick={() => {
-							isLogged
-								? navigate(PAGES.ORDER_LIST)
-								: navigate(PAGES.SIGNIN, { redirectTo: PAGES.ORDER_LIST })
-						}}
-					/>
-				</View>
-			</View>
-
-			{isLogged && (
+			{isLogged ? (
 				<View className='px-4 py-6 mt-4'>
 					<CustomButton
 						variant='outlined'
+						className='uppercase !h-11 rounded-full'
+						textClassName='font-semibold text-red-700'
 						label={t('home.labelLeave', 'Sair')}
 						onPress={_doLogout}
+					/>
+				</View>
+			) : (
+				<View className='px-4 flex flex-col gap-2 mt-4'>
+					<CustomButton
+						label={t('home.labelEnter', 'ENTRAR')}
+						className='uppercase !h-11 rounded-full'
+						textClassName='font-semibold'
+						onPress={() => navigate(PAGES.SIGNIN)}
+					/>
+					<CustomButton
+						variant='outlined'
+						label={t('home.labelCreateAccount', 'CRIAR CONTA')}
+						className='uppercase !h-11 rounded-full'
+						textClassName='font-semibold'
+						onPress={() => navigate(PAGES.SIGNUP)}
 					/>
 				</View>
 			)}

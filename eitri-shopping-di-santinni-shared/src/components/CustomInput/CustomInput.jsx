@@ -29,8 +29,16 @@ export default function CustomInput(props) {
 				</View>
 			)}
 			<View className='relative'>
+				{icon && (
+					<View className='absolute left-3 top-1/2 z-10 -translate-y-1/2'>
+						<Image
+							src={icon}
+							className='h-5 w-5'
+						/>
+					</View>
+				)}
 				<TextInput
-					className={`w-full rounded border-gray-300 border-solid border-2 focus:outline-none ${className}`}
+					className={`w-full rounded border-gray-300 border-solid border-2 focus:outline-none ${icon ? 'pl-10' : ''} ${className}`}
 					type={showPassword ? 'text' : type || 'text'}
 					onChange={onChange}
 					value={value}
