@@ -75,20 +75,23 @@ export default function Wishlist(props) {
 			/>
 
 			<View className='grid grid-cols-2 gap-x-2 gap-y-4 p-4'>
-				{wishlistItems?.map(item => (
-					<WishlistItem
-						key={item.id}
-						productId={item.productId}
-						onRemoveFromWishList={() => onRemoveFromWishList(item.id)}
-					/>
-				))}
+				{wishlistItems && wishlistItems.length > 0
+					? wishlistItems.map(item => (
+							<WishlistItem
+								key={item.id}
+								productId={item.productId}
+								onRemoveFromWishList={() => onRemoveFromWishList(item.id)}
+							/>
+						))
+					: null}
 			</View>
 
 			{wishlistItems.length === 0 && !isLoading && (
 				<NoItem
 					icon={heartIcon}
 					title={
-						t('wishlist.noFavoritesLine1', 'Você não possui') + '\n' +
+						t('wishlist.noFavoritesLine1', 'Você não possui') +
+						'\n' +
 						t('wishlist.noFavoritesLine2', 'nenhum item salvo')
 					}
 					subtitle={t(

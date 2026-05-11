@@ -1,8 +1,6 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
 import { BottomInset, CustomButton, HeaderContentWrapper, HeaderText, Loading } from 'eitri-shopping-di-santinni-shared'
-import InfoCard from '../components/InfoCard/InfoCard'
-import LoginCard from '../components/LoginCard/LoginCard'
 import PoweredBy from '../components/PoweredBy/PoweredBy'
 import ProfileCardButton from '../components/ProfileCardButton/ProfileCardButton'
 import { startConfigure } from '../services/AppService'
@@ -61,7 +59,7 @@ export default function Home(props) {
 			label: t('home.labelSupport', 'Suporte'),
 			icon: boxIcon,
 			isVisible: true,
-			onClick: handlePlaceholderItem
+			onClick: () => navigate(PAGES.SUPPORT)
 		},
 		{
 			label: t('home.labelStores', 'Nossas lojas'),
@@ -145,8 +143,8 @@ export default function Home(props) {
 				fullScreen
 				isLoading={isLoading}
 			/>
-
-			{!isLoading && (isLogged ? <InfoCard customerData={customerData} /> : <LoginCard />)}
+			{/* 
+			{!isLoading && (isLogged ? <InfoCard customerData={customerData} /> : <LoginCard />)} */}
 
 			<View className='px-4 mt-2 mb-2'>
 				<View className='flex flex-col gap-3 mt-2'>
