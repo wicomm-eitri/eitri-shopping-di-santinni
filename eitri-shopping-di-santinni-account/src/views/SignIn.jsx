@@ -22,7 +22,7 @@ import { navigate, PAGES } from '../services/NavigationService'
 import { getLoginProviders } from '../services/StoreService'
 import { sendScreenView } from '../services/TrackingService'
 import lockIcon from '../assets/icons/lock.svg'
-import userIcon from '../assets/images/user.svg'
+import userIcon from '../assets/icons/user.svg'
 import { addonUserTappedActiveTabListener } from '../utils/backToTopListener'
 
 export default function SignIn(props) {

@@ -13,7 +13,8 @@ export const PAGES = {
 	ORDER_DETAILS: '/OrderDetails',
 	WISH_LIST: '/WishList',
 	POINTS: '/Points',
-	SUPPORT: '/Support'
+	SUPPORT: '/Support',
+	SETTINGS: '/Settings'
 }
 
 export const openProduct = async product => {

@@ -14,7 +14,6 @@ import CCheckbox from '../components/CCheckbox/CCheckbox'
 import SocialLogin from '../components/SocialLogin/SocialLogin'
 import {
 	getSavedUser,
-	loginWithEmailAndKey,
 	sendAccessKeyByEmail,
 	saveUserCredentialsOnStorage
 } from '../services/CustomerService'
@@ -134,17 +133,8 @@ export default function SignUp(props) {
 		setLoading(true)
 
 		try {
-			const loggedIn = await loginWithEmailAndKey(email, verificationCode)
-
-			if (loggedIn === 'WrongCredentials') {
-				setAlertMessage(t('signUp.alertMessageInvalidToken', 'Token incorreto'))
-				setShowLoginErrorAlert(true)
-			} else if (loggedIn === 'Success') {
-				navigate(PAGES.HOME)
-			} else {
-				setAlertMessage(t('signUp.alertMessageVerify', 'Verifique as informaçoes e tente novamente'))
-				setShowLoginErrorAlert(true)
-			}
+			await setCustomerPassword(email, verificationCode, password)
+			navigate(PAGES.HOME)
 		} catch (e) {
 			const status = e?.response?.status || 400
 
@@ -252,6 +242,7 @@ export default function SignUp(props) {
 								if (!termsChecked) {
 									setAlertMessage(t('signUp.alertMessageAcceptTerms', 'Necessário aceitar os termos'))
 									setShowLoginErrorAlert(true)
+
 									return
 								}
 
@@ -260,6 +251,7 @@ export default function SignUp(props) {
 										t('signUp.alertMessagePasswordsNotMatch', 'As senhas não coincidem')
 									)
 									setShowLoginErrorAlert(true)
+
 									return
 								}
 
@@ -304,15 +296,6 @@ export default function SignUp(props) {
 					canUseGoogleLogin={canUseSocialLogin}
 				/>
 			</View>
-
-			<Alert
-				type='negative'
-				show={showLoginErrorAlert}
-				onDismiss={() => setShowLoginErrorAlert(false)}
-				duration={7}
-				message={alertMessage}
-			/>
-
 			<Alert
 				type='negative'
 				show={showLoginErrorAlert}

@@ -7,9 +7,13 @@ import { startConfigure } from '../services/AppService'
 import { doLogout, getCustomerData, isLoggedIn } from '../services/CustomerService'
 import { navigate, PAGES } from '../services/NavigationService'
 import { sendScreenView } from '../services/TrackingService'
-import bookmarkIcon from '../assets/images/bookmark-01.svg'
-import boxIcon from '../assets/images/box-01.svg'
-import userIcon from '../assets/images/user.svg'
+import suporteIcon from '../assets/icons/Suporte.svg'
+import config from '../assets/icons/config.svg'
+import meusFavoritosIcon from '../assets/icons/meus_favoritos.svg'
+import meusPedidosIcon from '../assets/icons/meus_pedidos.svg'
+import minhaContaIcon from '../assets/icons/minha_conta.svg'
+import nossasLojasIcon from '../assets/icons/nossas_lojas.svg'
+import trocasDevolucoesIcon from '../assets/icons/trocas_devoluções.svg'
 
 export default function Home(props) {
 	const PAGE = 'Minha Conta'
@@ -25,7 +29,7 @@ export default function Home(props) {
 	const allCards = [
 		{
 			label: t('home.labelMyAccount', 'Minha conta'),
-			icon: userIcon,
+			icon: minhaContaIcon,
 			isVisible: true,
 			onClick: () => {
 				isLogged
@@ -35,7 +39,7 @@ export default function Home(props) {
 		},
 		{
 			label: t('home.labelMyOrders', 'Meus pedidos'),
-			icon: boxIcon,
+			icon: meusPedidosIcon,
 			isVisible: isLogged,
 			onClick: () => {
 				isLogged ? navigate(PAGES.ORDER_LIST) : navigate(PAGES.SIGNIN, { redirectTo: PAGES.ORDER_LIST })
@@ -43,7 +47,7 @@ export default function Home(props) {
 		},
 		{
 			label: t('home.labelMyFavorites', 'Meus favoritos'),
-			icon: bookmarkIcon,
+			icon: meusFavoritosIcon,
 			isVisible: isLogged,
 			onClick: () => {
 				isLogged ? navigate(PAGES.WISH_LIST) : navigate(PAGES.SIGNIN, { redirectTo: PAGES.WISH_LIST })
@@ -51,19 +55,19 @@ export default function Home(props) {
 		},
 		{
 			label: t('home.labelExchangesReturns', 'Trocas e devoluções'),
-			icon: userIcon,
+			icon: trocasDevolucoesIcon,
 			isVisible: true,
 			onClick: handlePlaceholderItem
 		},
 		{
 			label: t('home.labelSupport', 'Suporte'),
-			icon: boxIcon,
+			icon: suporteIcon,
 			isVisible: true,
 			onClick: () => navigate(PAGES.SUPPORT)
 		},
 		{
 			label: t('home.labelStores', 'Nossas lojas'),
-			icon: bookmarkIcon,
+			icon: nossasLojasIcon,
 			isVisible: true,
 			onClick: handlePlaceholderItem
 		}
@@ -137,6 +141,13 @@ export default function Home(props) {
 		<Page title={PAGE}>
 			<HeaderContentWrapper className='justify-between'>
 				<HeaderText text={t('home.labelMyAccount', 'Minha conta')} />
+				<Image
+					src={config}
+					width={24}
+					height={24}
+					className='object-contain '
+					onClick={() => navigate(PAGES.SETTINGS)}
+				/>
 			</HeaderContentWrapper>
 
 			<Loading
