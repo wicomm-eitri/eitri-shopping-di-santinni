@@ -1,3 +1,4 @@
+import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
 import { CustomButton, CustomInput } from 'eitri-shopping-di-santinni-shared'
 import { loadPostalCodeFromStorage, savePostalCodeOnStorage } from '../../services/customerService'
@@ -7,6 +8,7 @@ export default function Freight(props) {
 	const { currentSku } = props
 	const { t } = useTranslation()
 	const [zipCode, setZipCode] = useState('')
+	const [errorZipCode, setErrorZipCode] = useState('')
 	const [freightOptions, setFreightOptions] = useState(null)
 	const [loading, setLoading] = useState(false)
 
@@ -24,16 +26,29 @@ export default function Freight(props) {
 	const onInputZipCode = e => {
 		const value = e.target.value
 
+		setErrorZipCode('')
 		setZipCode(value)
 	}
 
-	const handleFreight = async zipCode => {
+	const handleFreight = async (zipCode, buttonIsClicked = false) => {
 		if (loading) return
 
 		setLoading(true)
 
 		try {
+			console.log('zipCode: ', zipCode)
+
 			let freightOpt = await fetchFreight(zipCode, currentSku)
+
+			console.log('freightOpt', freightOpt)
+
+			if (buttonIsClicked && freightOpt?.options?.length === 0) {
+				setErrorZipCode(t('freight.errorInvalidZipCode', 'CEP inválido. Verifique e tente novamente.'))
+				setFreightOptions(null)
+				setLoading(false)
+
+				return
+			}
 
 			setFreightOptions(freightOpt)
 			await savePostalCodeOnStorage(zipCode)
@@ -44,8 +59,11 @@ export default function Freight(props) {
 		setLoading(false)
 	}
 
-	const handleClickDontKnowZipCode = () => {
-		console.log('click não sei meu cep')
+	const handleClickDontKnowZipCode = async () => {
+		await Eitri.openBrowser({
+			url: 'https://buscacepinter.correios.com.br/app/endereco/index.php',
+			inApp: true
+		})
 	}
 
 	return (
@@ -71,10 +89,15 @@ export default function Freight(props) {
 							label={t('freight.labelCalculate', 'Calcular')}
 							classNameLabel='uppercase'
 							className='rounded-full bg-primary'
-							onClick={() => handleFreight(zipCode)}
+							onClick={() => handleFreight(zipCode, true)}
 						/>
 					</View>
 				</View>
+				{errorZipCode && (
+					<View className='mt-2'>
+						<Text className='text-xs text-red-900'>{errorZipCode}</Text>
+					</View>
+				)}
 
 				{loading && <View className={`mt-3 w-full h-[100px] bg-gray-200 rounded animate-pulse`} />}
 
@@ -83,17 +106,17 @@ export default function Freight(props) {
 						{freightOptions?.options?.map(item => (
 							<View
 								key={item?.label}
-								className='flex flex flex-col items-center w-full'>
+								className='flex flex-col items-center w-full'>
 								<View className='flex items-center justify-between w-full'>
-									<Text className='font-bold'>{item?.label}</Text>
-									<Text>{item?.price}</Text>
+									<Text className='font-bold'>{item?.name}</Text>
+									<Text>{item?.formatedPrice}</Text>
 								</View>
 								<View className='flex items-center justify-between w-full'>
-									<Text className='text-neutral-content'>{item?.shippingEstimate}</Text>
+									<Text className='text-neutral-content'>{item?.formattedShippingEstimate}</Text>
 								</View>
-								{item.isPickupInPoint && (
+								{item?.pickupStoreInfo?.isPickupStore && (
 									<View className='flex items-center w-full'>
-										<Text className='text-neutral-content'>{item.pickUpAddress}</Text>
+										<Text className='text-neutral-content'>{item.pickupStoreInfo?.address}</Text>
 									</View>
 								)}
 							</View>
