@@ -1,6 +1,5 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { View } from 'eitri-luminus'
 import { BottomInset, Loading } from 'eitri-shopping-di-santinni-shared'
 import ActionButton from '../components/ActionButton/ActionButton'
 import Badges from '../components/Badges/Badges'
