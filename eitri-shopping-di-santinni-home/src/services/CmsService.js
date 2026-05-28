@@ -22,7 +22,7 @@ export const getCmsContent = async (contentType, pageName) => {
 		// }
 
 		const page = await loadVtexCmsPage(faststore, contentType, pageName)
-	
+
 		if (page) {
 			savePageInCache(faststore, contentType, pageName, page)
 

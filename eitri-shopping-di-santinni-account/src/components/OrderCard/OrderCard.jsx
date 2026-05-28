@@ -45,7 +45,7 @@ export default function OrderCard(props) {
 	return (
 		<View className='flex flex-col bg-white rounded-lg shadow-sm border border-gray-200 w-full'>
 			<View className='p-4 grid grid-cols-2 gap-x-4 gap-y-4'>
-				<View className='flex flex flex-col'>
+				<View className='flex  flex-col'>
 					<Text className='text-xs font-semibold uppercase text-gray-500'>
 						{t('orderCard.order', 'Pedido')}
 					</Text>
@@ -59,12 +59,12 @@ export default function OrderCard(props) {
 					/>
 				</View>
 
-				<View className='flex flex flex-col'>
+				<View className='flex  flex-col'>
 					<Text className='text-xs font-semibold uppercase text-gray-500'>{t('orderCard.date', 'Data')}</Text>
 					<Text className='text-sm text-gray-700'>{formatDateDaysMonthYear(order?.creationDate)}</Text>
 				</View>
 
-				<View className='flex flex flex-col text-right'>
+				<View className='flex  flex-col text-right'>
 					<Text className='text-xs font-semibold uppercase text-gray-500'>
 						{t('orderCard.total', 'Total')} (
 						{`${order?.totalItems} ${

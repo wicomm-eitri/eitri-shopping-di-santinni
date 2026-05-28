@@ -32,7 +32,7 @@ export default function CartItemsContent(props) {
 	const onRemoveOfferingFromCart = async (itemIndex, offeringId) => await removeItemOffer(itemIndex, offeringId)
 
 	return (
-		<View className='px-4 flex flex-col gap-4'>
+		<View className='flex flex-col gap-4 px-4'>
 			{cartItems?.map((item, index) => (
 				<CartItem
 					key={item.uniqueId}

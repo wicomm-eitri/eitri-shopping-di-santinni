@@ -61,7 +61,6 @@ export default function ProductTilesHighlights(props) {
 
 	const handleBannerClick = action => {
 		if (!action || action.type === 'none') return
-		console.log('Navegar para:', action)
 	}
 
 	const bgColor = data?.backgroundColor || '#C8102E'

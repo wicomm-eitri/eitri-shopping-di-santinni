@@ -23,9 +23,9 @@ export default function GridList(props) {
 			)}
 
 			<View className='grid grid-cols-2 gap-2 px-4'>
-				{imagesList?.map(image => (
+				{imagesList?.map((image, idx) => (
 					<View
-						key={image.imageUrl}
+						key={`${image.imageUrl || image.id || 'grid'}-${idx}`}
 						onClick={() => onClick(image)}
 						className='' // Adjust for two items per row with spacing
 					>

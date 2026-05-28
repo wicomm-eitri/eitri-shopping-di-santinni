@@ -39,7 +39,7 @@ export default function RoundedBannerList(props) {
 
 					return (
 						<View
-							key={slider.imageUrl || `circle-${index}`}
+							key={`${slider.imageUrl || slider.id || 'circle'}-${index}`}
 							className='flex flex-col items-center justify-start shrink-0 '
 							onClick={() => onClick(slider)}>
 							<View

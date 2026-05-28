@@ -114,7 +114,7 @@ export default function HeaderContentWrapper(props) {
 			<View
 				id='header-container'
 				style={{ transform: `translateY(${translate})` }}
-				className={`fixed top-0 left-0 right-0 z-[9900] transition-all duration-500 ease-in-out w-full border-b border-neutral-300 backdrop-blur-sm bg-header-background ${containerClassName}`}>
+				className={`fixed top-0 left-0 right-0 z-[9900] transition-all duration-500 ease-in-out w-full border-b border-neutral-300 bg-base-100 ${containerClassName}`}>
 				{!isHome && <View topInset='auto' />}
 
 				<View id='header'>
