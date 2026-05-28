@@ -12,8 +12,6 @@ export default function ModalImagesPDP(props) {
 
 	const safeImages = Array.isArray(images) ? images : []
 
-	console.log('images: ', images)
-
 	const normalizedStart =
 		safeImages.length > 0 ? Math.min(Math.max(Number(currentSlide) || 0, 0), safeImages.length - 1) : 0
 

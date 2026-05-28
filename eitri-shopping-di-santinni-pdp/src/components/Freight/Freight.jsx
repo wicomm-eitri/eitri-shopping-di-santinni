@@ -36,11 +36,8 @@ export default function Freight(props) {
 		setLoading(true)
 
 		try {
-			console.log('zipCode: ', zipCode)
 
 			let freightOpt = await fetchFreight(zipCode, currentSku)
-
-			console.log('freightOpt', freightOpt)
 
 			if (buttonIsClicked && freightOpt?.options?.length === 0) {
 				setErrorZipCode(t('freight.errorInvalidZipCode', 'CEP inválido. Verifique e tente novamente.'))
