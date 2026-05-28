@@ -1,4 +1,5 @@
 // /Users/calindra/Workspace/Eitri/eitri-shopping-template/shopping-vtex-template-account/src/views/PasswordResetNewPass.jsx
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'eitri-i18n'
 import {
 	Loading,
@@ -12,6 +13,7 @@ import Alert from '../components/Alert/Alert'
 import { setPassword } from '../services/CustomerService'
 import { navigate, PAGES } from '../services/NavigationService'
 import { sendScreenView } from '../services/TrackingService'
+import lockIcon from '../assets/icons/lock.svg'
 import { addonUserTappedActiveTabListener } from '../utils/backToTopListener'
 
 export default function PasswordResetNewPass(props) {
@@ -90,23 +92,28 @@ export default function PasswordResetNewPass(props) {
 					</Text>
 				</View>
 
-				<View className='mt-4 flex flex-col gap-2'>
+				<View className='mt-8 flex flex-col gap-3'>
 					<CustomInput
 						autoFocus
+						icon={lockIcon}
 						type='password'
-						label={t('passwordResetNewPass.newPass', 'Nova senha')}
+						placeholder={t('passwordResetNewPass.newPass', 'Nova senha')}
+						className='bg-white text-xs h-[42px]'
 						value={newPassword}
 						onChange={e => setNewPassword(e.target.value)}
 					/>
 					<CustomInput
+						icon={lockIcon}
 						type='password'
-						label={t('passwordResetNewPass.confirmPass', 'Confirme a senha')}
+						placeholder={t('passwordResetNewPass.confirmPass', 'Confirme a senha')}
+						className='bg-white text-xs h-[42px]'
 						value={confirmPassword}
 						onChange={e => setConfirmPassword(e.target.value)}
 					/>
 				</View>
 
-				<View className='mt-4'>
+				<View className='mt-6'>
+					<Text className='text-sm text-red-700 font-bold '>requisitos da senha:</Text>
 					<View className='flex flex-col gap-1'>
 						{requirements.map(req => (
 							<View
@@ -147,10 +154,12 @@ export default function PasswordResetNewPass(props) {
 					</View>
 				</View>
 
-				<View className='mt-6'>
+				<View className='mt-8'>
 					<CustomButton
 						disabled={!allRequirementsMet || !passwordsMatch || loading}
-						label={t('passwordResetNewPass.sendButton', 'Continuar')}
+						className='uppercase !h-11 rounded-full'
+						textClassName='font-semibold'
+						label={t('passwordResetNewPass.sendButton', 'CONTINUAR')}
 						onPress={confirmNewPassword}
 					/>
 				</View>

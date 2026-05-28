@@ -17,18 +17,18 @@
 		"sendButton": "Enviar código",
 		"messageError": "Houve um erro ao enviar o código de recuperação de senha. Tente novamente mais tarde.",
 		"recoveryPass": "Recuperação de senha",
-		"headerText": "Senha",
+		"headerText": "Esqueceu a senha?",
 		"forgotPass": "Esqueceu a senha?",
 		"setEmail": "Digite seu e-mail"
 	},
 	"passwordResetCode": {
 		"messageEmail": "Digite o código de 6 dígitos enviado para o email",
 		"sendButton": "Continuar",
-		"headerText": "Senha",
+		"headerText": "Esqueceu a senha?",
 		"forgotPass": "Esqueceu a senha?"
 	},
 	"passwordResetNewPass": {
-		"headerText": "Senha",
+		"headerText": "Esqueceu a senha?",
 		"forgotPass": "Esqueceu a senha?",
 		"newPass": "Nova senha",
 		"confirmPass": "Confirme a senha",
@@ -49,10 +49,10 @@
 		"formName": "E-mail",
 		"formPass": "Senha",
 		"formEmail": "Email",
-		"labelButton": "Login",
+		"labelButton": "ENTRAR",
 		"labelAccessWithCode": "Login com código de acesso",
 		"forgotPass": "Esqueceu a senha?",
-		"noRegister": "Não tenho cadastro",
+		"noRegister": "Criar conta",
 		"formCodeVerification": "Código de verificação",
 		"textSendCode": "Enviar código",
 		"textResendCode": "Reenviar código",
@@ -173,7 +173,7 @@
 		"item": "item",
 		"loadingProducts": "Carregando produtos...",
 		"unit": "un",
-		"viewOrderDetails": "Ver detalhes do pedido"
+		"viewOrderDetails": "Ver detalhes"
 	},
 	"productCard": {
 		"upTo": "em até",
