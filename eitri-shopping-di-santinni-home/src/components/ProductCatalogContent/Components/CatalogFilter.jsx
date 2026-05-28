@@ -6,6 +6,36 @@ import { getProductsFacetsService } from '../../../services/ProductService'
 import CustomModal from '../../CustomModal/CustomModal'
 import PriceRange from './PriceRange'
 
+const CollapsableFilterSection = ({ title, children }) => {
+	const [collapsed, setCollapsed] = useState(true)
+
+	return (
+		<View className='flex flex-col gap-4'>
+			<View
+				onClick={() => setCollapsed(!collapsed)}
+				className='flex flex-row justify-between items-center cursor-pointer hover:bg-gray-100 p-2 rounded transition-colors'>
+				<Text className='text-base font-medium'>{title}</Text>
+				<svg
+					viewBox='0 0 24 24'
+					width='20'
+					height='20'
+					fill='none'
+					xmlns='http://www.w3.org/2000/svg'
+					className={`transition-transform ${collapsed ? 'rotate-180' : ''}`}>
+					<path
+						d='M19 14l-7 7-7-7'
+						stroke='currentColor'
+						strokeWidth='2'
+						strokeLinecap='round'
+						strokeLinejoin='round'
+					/>
+				</svg>
+			</View>
+			{!collapsed && <View>{children}</View>}
+		</View>
+	)
+}
+
 export default function CatalogFilter(props) {
 	const {
 		currentFilters,
@@ -170,27 +200,16 @@ export default function CatalogFilter(props) {
 					<View
 						onClick={e => e.stopPropagation()}
 						className='bg-white rounded-t w-full max-h-[70vh] overflow-y-auto pointer-events-auto p-4'>
-						<View className='flex flex-row items-center justify-between border-b border-gray-300'>
-							<Text className='text-xs uppercase text-gray-500'>
-								{t('categoryPageModal.title', 'Filtros')}
-							</Text>
+						<View className='flex flex-row items-center justify-between border-b border-gray-300 pb-4'>
+							<Text className=' font-bold text-red-700 uppercase'>{t('Filtros')}</Text>
 						</View>
 
 						<View className='flex flex-col gap-4 mt-4'>
-							<PriceRange
-								initialMin={initialMinPriceRange || minPriceRange} // valor inicial selecionado mínimo
-								initialMax={initialMaxPriceRange || maxPriceRange} // valor inicial selecionado máximo
-								rangeMin={minPriceRange} // limite mínimo da escala
-								rangeMax={maxPriceRange} // limite máximo da escala
-								step={1}
-								onChange={range => setCurrentPriceRange(range)}
-							/>
 							{filterFacets.map(facet => (
-								<View
+								<CollapsableFilterSection
 									key={facet.key}
-									className='flex flex-col gap-4 border-t pt-2 border-gray-300'>
-									<Text className='text-base font-bold text-gray-800'>{facet.name}</Text>
-									<View className='flex flex-col gap-4 mt-1'>
+									title={facet.name}>
+									<View className='flex flex-col gap-4 mt-2'>
 										{facet.values.map((value, index) => (
 											<View
 												key={`${facet.key}-${index}`}
@@ -203,26 +222,40 @@ export default function CatalogFilter(props) {
 											</View>
 										))}
 									</View>
-								</View>
+								</CollapsableFilterSection>
 							))}
+							<CollapsableFilterSection
+								key='price'
+								title='Faixa de preço'>
+								<View className='mt-2'>
+									<PriceRange
+										initialMin={initialMinPriceRange || minPriceRange}
+										initialMax={initialMaxPriceRange || maxPriceRange}
+										rangeMin={minPriceRange}
+										rangeMax={maxPriceRange}
+										step={1}
+										onChange={range => setCurrentPriceRange(range)}
+									/>
+								</View>
+							</CollapsableFilterSection>
 						</View>
 
 						<View className='p-4 w-full bg-white border-t border-gray-200 fixed left-0 bottom-0'>
-							<View className='flex flex-row justify-between w-full gap-4 '>
-								<View className='w-1/2'>
+							<View className='flex flex-row gap-3 w-full'>
+								<View className='flex-1'>
 									<View
 										onClick={onFilterClear}
-										className='flex h-[45px] items-center justify-center rounded border border-gray-500 bg-transparent px-4'>
-										<Text className=' text-gray-500 text-xs uppercase'>
+										className='flex h-[48px] items-center justify-center rounded-full border-2 border-red-700 bg-white hover:bg-red-50 transition-colors px-4'>
+										<Text className='text-red-700 font-bold text-xs uppercase'>
 											{t('categoryPageModal.clear', 'Limpar')}
 										</Text>
 									</View>
 								</View>
-								<View className='w-1/2'>
+								<View className='flex-1'>
 									<View
 										onClick={onApplyFilters}
-										className='flex h-[45px] items-center justify-center rounded border-gray-500 bg-transparent px-4'>
-										<Text className=' text-gray-500 text-xs uppercase'>
+										className='flex h-[48px] items-center justify-center rounded-full bg-red-700 hover:bg-red-800 transition-colors px-4'>
+										<Text className='text-white font-bold text-xs uppercase'>
 											{t('categoryPageModal.button', 'Filtrar')}
 										</Text>
 									</View>

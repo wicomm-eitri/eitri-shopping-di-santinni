@@ -3,29 +3,24 @@ import { useTranslation } from 'eitri-i18n'
 import { CustomButton } from 'eitri-shopping-di-santinni-shared'
 import { getOrderById } from '../../services/CustomerService'
 import { navigate, PAGES } from '../../services/NavigationService'
-import { formatDateDaysMonthYear, formatPriceInCents } from '../../utils/utils'
+import { formatPriceInCents } from '../../utils/utils'
 import ImageCard from '../Image/ImageCard'
-import OrderStatusBadge from '../OrderStatusBadge/OrderStatusBadge'
 
 export default function OrderCard(props) {
-	const { order, showOrderDetails } = props
+	const { order } = props
 	const { t } = useTranslation()
 
 	const [loadingDetails, setLoadingDetails] = useState(false)
 	const [orderDetail, setOrderDetails] = useState(null)
 
 	useEffect(() => {
-		if (showOrderDetails) {
-			loadDetails()
-		}
-	}, [order, showOrderDetails])
+		loadDetails()
+	}, [order])
 
 	const loadDetails = async () => {
 		setLoadingDetails(true)
-
 		try {
 			const result = await getOrderById(order?.orderId)
-
 			setOrderDetails(result)
 		} catch (e) {
 			console.error(t('orderCard.loadDetailsError', 'Falha ao carregar detalhes do pedido:'), e)
@@ -42,84 +37,60 @@ export default function OrderCard(props) {
 		}
 	}
 
+	const formatDateTime = dateString => {
+		if (!dateString) return ''
+		const d = new Date(dateString)
+		const day = String(d.getDate()).padStart(2, '0')
+		const month = String(d.getMonth() + 1).padStart(2, '0')
+		const year = d.getFullYear()
+		const hours = String(d.getHours()).padStart(2, '0')
+		const minutes = String(d.getMinutes()).padStart(2, '0')
+		return `${day}/${month}/${year} às ${hours}:${minutes}`
+	}
+
+	const firstItemImage = orderDetail?.items?.[0]?.imageUrl
+
+	// ... (imports e lógica do componente mantidos)
+
+	// ... (imports e lógica do componente mantidos)
+
 	return (
-		<View className='flex flex-col bg-white rounded-lg shadow-sm border border-gray-200 w-full'>
-			<View className='p-4 grid grid-cols-2 gap-x-4 gap-y-4'>
-				<View className='flex  flex-col'>
-					<Text className='text-xs font-semibold uppercase text-gray-500'>
-						{t('orderCard.order', 'Pedido')}
-					</Text>
-					<Text className='text-sm font-medium text-gray-900 truncate'>{order?.orderId}</Text>
-				</View>
-
-				<View className='flex justify-end items-start'>
-					<OrderStatusBadge
-						statusId={order?.status}
-						statusDescription={order?.statusDescription}
-					/>
-				</View>
-
-				<View className='flex  flex-col'>
-					<Text className='text-xs font-semibold uppercase text-gray-500'>{t('orderCard.date', 'Data')}</Text>
-					<Text className='text-sm text-gray-700'>{formatDateDaysMonthYear(order?.creationDate)}</Text>
-				</View>
-
-				<View className='flex  flex-col text-right'>
-					<Text className='text-xs font-semibold uppercase text-gray-500'>
-						{t('orderCard.total', 'Total')} (
-						{`${order?.totalItems} ${
-							order?.totalItems > 1 ? t('orderCard.items', 'itens') : t('orderCard.item', 'item')
-						}`}
-						)
-					</Text>
-					<Text className='text-sm font-bold text-gray-900'>{formatPriceInCents(order?.totalValue)}</Text>
-				</View>
-			</View>
-
-			{showOrderDetails && (
-				<View className='p-4 border-t border-gray-200'>
+		<View className='flex flex-col bg-white rounded shadow-sm border border-gray-100 w-full p-4'>
+			<View className='flex flex-row items-center gap-4 mb-4'>
+				{/* Removido o 'rounded' para deixar quadrado como na imagem */}
+				<View className='w-24 h-24 bg-gray-50 flex items-center justify-center shrink-0'>
 					{loadingDetails ? (
-						<View className='flex justify-center items-center py-2'>
-							<Text className='text-sm text-gray-500'>
-								{t('orderCard.loadingProducts', 'Carregando produtos...')}
-							</Text>
-						</View>
+						<View className='w-full h-full bg-gray-100 animate-pulse' />
+					) : firstItemImage ? (
+						<ImageCard
+							imageUrl={firstItemImage}
+							className='w-full h-full object-contain mix-blend-multiply p-1'
+						/>
 					) : (
-						orderDetail && (
-							<View className='flex flex-col gap-y-4'>
-								{orderDetail?.items?.map(item => (
-									<View
-										key={item.uniqueId}
-										className='flex items-center gap-x-3'>
-										<ImageCard
-											imageUrl={item.imageUrl}
-											className='w-16 h-16 rounded-md object-cover'
-										/>
-										<View className='flex flex-1 flex-col justify-center'>
-											<Text className='text-sm text-gray-800 font-medium line-clamp-2 mb-1'>
-												{item.name}
-											</Text>
-											<Text className='text-xs text-gray-600'>
-												{`${item.quantity} ${t('orderCard.unit', 'un')} • ${formatPriceInCents(
-													item.price
-												)}`}
-											</Text>
-										</View>
-									</View>
-								))}
-							</View>
-						)
+						<View className='w-full h-full bg-gray-50' />
 					)}
 				</View>
-			)}
-
-			<View className='p-4 border-t border-gray-200'>
-				<CustomButton
-					width='100%'
-					label={t('orderCard.viewOrderDetails', 'Ver detalhes do pedido')}
-					onPress={openOrderDetails}
-				/>
+				<View className='flex flex-col flex-1 justify-center'>
+					<Text className='text-sm font-semibold text-red-700'>
+						{t('orderCard.orderLabel', 'Nº do pedido:')} {order?.orderId}
+					</Text>
+					<Text className='text-xs text-gray-500 mt-2'>
+						{t('orderCard.realizedAt', 'Realizado em:')} {formatDateTime(order?.creationDate)}
+					</Text>
+					<Text className='text-xs text-gray-500 mt-1'>
+						{t('orderCard.value', 'Valor:')} {formatPriceInCents(order?.totalValue)}
+					</Text>
+				</View>
 			</View>
+
+			<CustomButton
+				width='100%'
+				variant='outlined'
+				className='!border-red-700 !rounded-full !h-[36px]'
+				textClassName='!text-red-700 font-bold text-xs uppercase tracking-wide'
+				label={t('orderCard.viewOrderDetails', 'Ver detalhes')}
+				onPress={openOrderDetails}
+			/>
 		</View>
 	)
 }
