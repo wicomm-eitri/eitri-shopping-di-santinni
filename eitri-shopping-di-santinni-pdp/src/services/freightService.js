@@ -1,12 +1,24 @@
 import { shippingResolver } from 'eitri-shopping-di-santinni-shared'
 import { Vtex } from 'eitri-shopping-vtex-shared'
 
+// const formatZipCode = zipCode => {
+// 	if (!zipCode) {
+// 		return zipCode
+// 	}
+
+// 	return String(zipCode).replace(/\D/g, '')
+// }
+
 export default async function fetchFreight(zipCode, currentSku) {
 	if (!zipCode) {
 		return
 	}
 
 	try {
+		// const formattedZipCode = formatZipCode(zipCode)
+
+		// console.log('formattedZipCode: ', formattedZipCode);
+
 		const address = await Vtex.checkout.resolveZipCode(zipCode)
 		const { postalCode, country, geoCoordinates } = address
 

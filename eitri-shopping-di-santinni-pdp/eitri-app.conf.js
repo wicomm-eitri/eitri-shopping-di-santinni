@@ -6,7 +6,7 @@ module.exports = {
 	'eitri-bifrost': '5.1.0',
 	'eitri-commons': '2.2.1',
 	'version': '0.1.2',
-	'versionMessage': 'Atualizei/refatorei componentes',
+	'versionMessage': 'PDP - Initial version',
 	'public-key': 'c2f9dde9-bc71-4210-a097-c1bcf880e443',
 	'applicationId': 'f0301a60-5a72-487b-8855-a4fbd21d1f39',
 	'id': '65bdb95e-0316-49c7-829f-9de28e112a5d',

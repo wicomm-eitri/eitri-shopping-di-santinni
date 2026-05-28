@@ -24,3 +24,4 @@ export { default as productGroupShippingResolver } from './utils/productGroupShi
 export { default as TrackingService } from './services/TrackingService'
 export { default as BottomInset } from './components/BottomInset/BottomInset'
 export { default as CustomCarousel } from './components/CustomCarousel/CustomCarousel'
+export { default as FloatNotification } from './components/FloatNotification/FloatNotification'
