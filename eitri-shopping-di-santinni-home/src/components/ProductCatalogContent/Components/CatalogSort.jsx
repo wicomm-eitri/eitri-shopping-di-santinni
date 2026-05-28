@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useTranslation } from 'eitri-i18n'
-import { View, Text } from 'eitri-luminus'
 import { LIST_ORDERING } from '../../../utils/lists'
 import CustomModal from '../../CustomModal/CustomModal'
 
@@ -8,11 +7,17 @@ export default function CatalogSort(props) {
 	const { currentSort, onSortChange } = props
 
 	const [showModal, setShowModal] = useState(false)
+	const [selectedSort, setSelectedSort] = useState(currentSort)
 
 	const { t } = useTranslation()
 
-	const handleSortSelect = sortValue => {
-		onSortChange(sortValue)
+	const handleSortSelect = () => {
+		onSortChange(selectedSort)
+		setShowModal(false)
+	}
+
+	const handleCancel = () => {
+		setSelectedSort(currentSort)
 		setShowModal(false)
 	}
 
@@ -87,49 +92,77 @@ export default function CatalogSort(props) {
 				onClose={() => setShowModal(false)}>
 				<View
 					bottomInset={'auto'}
-					className='bg-white rounded-t w-full max-h-[70vh] overflow-y-auto pointer-events-auto p-4'>
-					<Text className='text-lg font-semibold uppercase'>{t('lists.title', 'Ordenar por')}</Text>
+					className='bg-white rounded-t w-full h-full max-h-screen overflow-y-auto pointer-events-auto p-4 flex flex-col'>
+					<View className='flex flex-row items-center justify-between mb-4'>
+						<Text className='text-lg font-semibold  text-red-700'>{t('lists.title', 'Ordenar por')}</Text>
+						<View
+							onClick={() => handleCancel()}
+							className='cursor-pointer flex items-center justify-center'>
+							<svg
+								xmlns='http://www.w3.org/2000/svg'
+								width='24'
+								height='24'
+								viewBox='0 0 24 24'
+								fill='none'
+								stroke='currentColor'
+								strokeWidth='2'
+								strokeLinecap='round'
+								strokeLinejoin='round'
+								className='text-gray-600'>
+								<line
+									x1='18'
+									y1='6'
+									x2='6'
+									y2='18'
+								/>
+								<line
+									x1='6'
+									y1='6'
+									x2='18'
+									y2='18'
+								/>
+							</svg>
+						</View>
+					</View>
 
-					<View className='flex flex-col mt-4'>
+					<View className='flex flex-col gap-2 flex-1 overflow-y-auto'>
 						{LIST_ORDERING.values.map((option, index) => (
 							<View
 								key={option.value}
-								onClick={() => handleSortSelect(option.value)}
-								className={`flex flex-row items-center justify-between p-4 cursor-pointer transition-colors ${
-									currentSort === option.value
-										? 'bg-primary/10 border-l-4 border-primary'
-										: 'border-l-4 border-transparent'
-								}`}>
+								onClick={() => setSelectedSort(option.value)}
+								className='flex flex-row items-center gap-3 p-4 cursor-pointer border border-gray-200 rounded'>
+								<View
+									className={`flex items-center justify-center w-5 h-5 rounded-full border-2 ${
+										selectedSort === option.value ? 'border-red-700 bg-red-700' : 'border-red-300'
+									}`}>
+									{selectedSort === option.value && (
+										<View className='w-2 h-2 bg-white rounded-full' />
+									)}
+								</View>
 								<Text
-									className={`text-base ${
-										currentSort === option.value ? 'text-primary font-medium' : 'text-gray-700'
+									className={`text-base flex-1 ${
+										selectedSort === option.value ? 'text-gray-900 font-medium' : 'text-gray-700'
 									}`}>
 									{t(option.name, '')}
 								</Text>
-								{currentSort === option.value && (
-									<svg
-										xmlns='http://www.w3.org/2000/svg'
-										width='20'
-										height='20'
-										viewBox='0 0 24 24'
-										fill='none'
-										stroke='currentColor'
-										strokeWidth='2'
-										strokeLinecap='round'
-										strokeLinejoin='round'
-										className='text-primary'>
-										<polyline points='20,6 9,17 4,12' />
-									</svg>
-								)}
 							</View>
 						))}
 					</View>
 
-					<View className='mb-4'>
+					<View className='flex gap-3 mt-6'>
 						<View
-							onClick={() => setShowModal(false)}
-							className='flex h-[45px] w-full items-center justify-center rounded bg-red-700 px-4'>
-							<Text className='font-bold text-white uppercase'>{t('lists.cancel', 'Cancelar')}</Text>
+							onClick={() => handleCancel()}
+							className='flex h-[45px] flex-1 items-center justify-center rounded-full border-2 border-red-700 px-4'>
+							<Text className='font-bold text-red-700 uppercase text-sm'>
+								{t('lists.cancel', 'Cancelar')}
+							</Text>
+						</View>
+						<View
+							onClick={() => handleSortSelect()}
+							className='flex h-[45px] flex-1 items-center justify-center rounded-full bg-red-700 px-4 mb-2'>
+							<Text className='font-bold text-white uppercase text-sm'>
+								{t('lists.apply', 'Filtrar')}
+							</Text>
 						</View>
 					</View>
 				</View>

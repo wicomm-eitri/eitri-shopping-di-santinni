@@ -163,20 +163,21 @@ export default function CategoryPageModal(props) {
 						</>
 					)}
 					<View height={120} />
-					<View className='fixed bottom-0 left-0 right-0 py-1 px-2 bg-base-100'>
+					<View className='fixed bottom-0 left-0 right-0 py-4 px-4 bg-white border-t border-gray-200'>
 						<View
 							width='100%'
-							height='48px'
-							className='flex justify-center'>
+							className='flex gap-3'>
 							<View
 								onClick={clearFilters}
-								className='flex p-2 items-center justify-center rounded border border-gray-500 bg-transparent grow-1 '>
-								<Text className='text-gray-500 text-xs'>{t('categoryPageModal.clear', 'Limpar')}</Text>
+								className='flex-1 flex items-center justify-center rounded-lg border-2 border-red-700 bg-white hover:bg-red-50 transition-colors py-3'>
+								<Text className='text-red-700 font-bold text-sm uppercase'>
+									{t('categoryPageModal.clear', 'Limpar')}
+								</Text>
 							</View>
 							<View
 								onClick={executeSearch}
-								className='flex p-2 items-center justify-center grow-1 rounded border border-gray-500 bg-transparent '>
-								<Text className='text-gray-500 text-xs'>
+								className='flex-1 flex items-center justify-center rounded-lg bg-red-700 hover:bg-red-800 transition-colors py-3'>
+								<Text className='text-white font-bold text-sm uppercase'>
 									{t('categoryPageModal.button', 'Filtrar')}
 								</Text>
 							</View>

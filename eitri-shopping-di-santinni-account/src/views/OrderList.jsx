@@ -6,6 +6,7 @@ import OrderCard from '../components/OrderCard/OrderCard'
 import ProtectedView from '../components/ProtectedView/ProtectedView'
 import { listOrders } from '../services/CustomerService'
 import { sendScreenView } from '../services/TrackingService'
+import boxIcon from '../assets/icons/pedidosOut.svg'
 import { addonUserTappedActiveTabListener } from '../utils/backToTopListener'
 
 export default function OrderList(props) {
@@ -85,7 +86,12 @@ export default function OrderList(props) {
 									</InfiniteScroll>
 								) : (
 									<NoItem
-										title={t('orderList.noOrders', 'Você não possui nenhum pedido')}
+										icon={boxIcon}
+										title={
+											t('orderList.noOrdersLine1', 'Você não possui') +
+											'\n' +
+											t('orderList.noOrdersLine2', 'nenhum pedido')
+										}
 										subtitle={t(
 											'orderList.noOrdersSubtitle',
 											'Quando você fizer uma compra, ela será listada aqui.'
