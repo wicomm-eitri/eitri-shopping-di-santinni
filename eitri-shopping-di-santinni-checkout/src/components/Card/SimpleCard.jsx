@@ -6,19 +6,20 @@ export default function SimpleCard(props) {
 	const { t } = useTranslation()
 
 	return (
-		<View className='bg-white rounded shadow-sm border border-gray-300 p-4 w-full flex flex-col'>
-			<View className='flex flex-row justify-between'>
+		<View className='w-full flex flex-col'>
+			{title && (
+				<Text className='text-[10px] text-gray-500 font-medium mb-1 uppercase tracking-wider'>
+					{title}
+				</Text>
+			)}
+			<View className='bg-white rounded border border-gray-300 p-4 flex flex-col relative w-full'>
+				<View className='w-full'>
+					{children}
+				</View>
+					
 				<View
 					onClick={onPress}
-					className='flex items-center justify-center gap-3'>
-					<Image
-						src={icon}
-						width='24px'
-						height='24px'
-					/>
-					<Text className='text-sm font-bold'>{title}</Text>
-				</View>
-				<View className='flex flex-col items-center justify-center'>
+					className='absolute top-4 right-4 z-10'>
 					{isFilled ? (
 						<svg
 							width='20'
@@ -46,21 +47,6 @@ export default function SimpleCard(props) {
 					)}
 				</View>
 			</View>
-
-			{isFilled && (
-				<>
-					<View className='mt-4'>
-						<View>{children}</View>
-						<View
-							onClick={onPress}
-							className='mt-2'>
-							<Text className='uppercase text-xs text-primary-700'>
-								{mainActionLabel || t('simpleCard.txtEdit', 'ALTERAR')}
-							</Text>
-						</View>
-					</View>
-				</>
-			)}
 		</View>
 	)
 }

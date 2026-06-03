@@ -69,10 +69,6 @@ export const setCustomerData = async profileData => {
 	}
 }
 
-// ============================================================================
-// BYPASS WISHLIST (vtex.my-wishlists@2.x) - LEITURA E REMOÇÃO
-// ============================================================================
-
 const getAuthHeaders = async () => {
 	try {
 		const tokenData = await Vtex.customer.getCustomerToken()

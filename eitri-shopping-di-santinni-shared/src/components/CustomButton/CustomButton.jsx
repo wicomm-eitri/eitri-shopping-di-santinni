@@ -36,7 +36,6 @@ export default function CustomButton(props) {
 			return 'transparent'
 		}
 
-		return isLoading || disabled ? 'bg-gray-300' : 'bg-red-700'
 		return isLoading || disabled ? 'bg-gray-300' : `${backgroundColor || 'bg-red-700'}`
 	})()
 
@@ -68,7 +67,7 @@ export default function CustomButton(props) {
 			className={`
 				flex items-center justify-center 
 				h-[45px]
-				rounded
+				${borderRadius || 'rounded-full'}
 				w-full
 				${_backgroundColor ? `${_backgroundColor}` : ''}
 				${variant === 'outlined' || outlined ? `border border-primary` : ''}

@@ -126,14 +126,14 @@
 	},
 	"deliveryData": {
 		"txtWithdrawal": "RETIRADA",
-		"txtDelivery": "ENTREGA",
+		"txtDelivery": "FORMA DE ENTREGA",
 		"txtNoNumber": "sem número",
 		"txtAlert": "Suas informações de endereço estão incompletas. Por favor clique aqui para atualizá-las.",
 		"storeAddress": "Endereço da Loja",
 		"deliveryAddress": "Endereço de Entrega"
 	},
 	"selectedPaymentData": {
-		"txtPayment": "PAGAMENTO",
+		"txtPayment": "FORMA DE PAGAMENTO",
 		"txtFillCard": "Preencha os dados do cartão",
 		"cardType": "CARTÃO DE CRÉDITO",
 		"cardNumber": "Número do cartão",

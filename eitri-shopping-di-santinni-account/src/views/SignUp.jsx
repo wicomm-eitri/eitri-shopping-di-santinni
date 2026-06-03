@@ -133,7 +133,7 @@ export default function SignUp(props) {
 		setLoading(true)
 
 		try {
-			await setCustomerPassword(email, verificationCode, password)
+			await setPassword(email, verificationCode, password)
 			navigate(PAGES.HOME)
 		} catch (e) {
 			const status = e?.response?.status || 400

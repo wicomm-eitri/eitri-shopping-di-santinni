@@ -1,7 +1,8 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { HeaderContentWrapper, HeaderReturn, BottomInset, CustomButton } from 'eitri-shopping-di-santinni-shared'
+import { HeaderContentWrapper, HeaderReturn, BottomInset, CustomButton, Steps, HeaderText } from 'eitri-shopping-di-santinni-shared'
 import CartSummary from '../components/CartSummary/CartSummary'
+import AddressData from '../components/FinishCart/AddressData'
 import DeliveryData from '../components/FinishCart/DeliveryData'
 import SelectedPaymentData from '../components/FinishCart/SelectedPaymentData'
 import UserData from '../components/FinishCart/UserData'
@@ -18,7 +19,7 @@ let selectedShipping = null
 let selectedPayment = null
 
 export default function CheckoutReview() {
-	const { cart, cardInfo, selectedPaymentData, cartIsLoading, removeCartItem } = useLocalShoppingCart()
+	const { cart, cardInfo, selectedPaymentData, cartIsLoading, removeCartItem, setPaymentOption } = useLocalShoppingCart()
 	const { t } = useTranslation()
 
 	const [isLoading, setIsLoading] = useState(false)
@@ -128,6 +129,19 @@ export default function CheckoutReview() {
 
 				return
 			}
+			
+			if (errorCode === 'CHK0016') {
+				setError({
+					state: true,
+					message: t('checkoutReview.errorValueMismatch', 'O valor do carrinho foi alterado. Por favor, re-selecione a forma de pagamento.')
+				})
+				setIsLoading(false)
+				setTimeout(() => {
+					setError({ state: false, message: '' })
+					navigate('PaymentData', true)
+				}, 3000)
+				return
+			}
 
 			setError({
 				state: true,
@@ -177,7 +191,10 @@ export default function CheckoutReview() {
 		<Page title={t('checkoutPages.home', 'Checkout - Home')}>
 			<HeaderContentWrapper>
 				<HeaderReturn />
+				<HeaderText text={'Checkout'} />
 			</HeaderContentWrapper>
+
+			<Steps current={2} />
 
 			<LoadingComponent
 				text={t('checkoutReview.loading', 'Estamos preparando a sua compra')}
@@ -186,9 +203,7 @@ export default function CheckoutReview() {
 			/>
 
 			<View className='p-4'>
-				<View className='mb-2'>
-					<Text className='text-xl font-bold'>{t('checkoutReview.title', 'Revise e confirme')}</Text>
-				</View>
+
 
 				{/* Adiciona padding-bottom para não sobrepor o botão */}
 				<>
@@ -226,12 +241,14 @@ export default function CheckoutReview() {
 
 						{unavailableItems.length === 0 && (
 							<>
-								<DeliveryData />
-
 								<SelectedPaymentData
 									selectedPaymentData={selectedPaymentData}
 									onPress={() => navigate('PaymentData', true)}
 								/>
+
+								<DeliveryData />
+
+								<AddressData />
 							</>
 						)}
 					</View>
