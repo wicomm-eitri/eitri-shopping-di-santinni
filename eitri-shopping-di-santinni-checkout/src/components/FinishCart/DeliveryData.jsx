@@ -1,5 +1,4 @@
 import { useTranslation } from 'eitri-i18n'
-import { Text, View } from 'eitri-luminus'
 import { shippingResolver } from 'eitri-shopping-di-santinni-shared'
 import iconStore from '../../assets/images/store.svg'
 import iconTruck from '../../assets/images/truck.svg'
@@ -31,10 +30,10 @@ export default function DeliveryData(props) {
 					}
 					icon={currentDelivery?.isPickupInPoint ? iconStore : iconTruck}
 					onPress={onPressMainAction}>
-					<View className='flex flex-row'>
+					<View className='flex '>
 						{currentDelivery?.isPickupInPoint ? (
 							<View className='flex flex-col gap-3'>
-								<View className='flex flex-row items-center justify-between gap-2'>
+								<View className='flex  items-center justify-between gap-2'>
 									<Text className='text-sm font-medium'>{currentDelivery?.name}</Text>
 									<Text
 										className={`text-sm font-bold ${
@@ -46,7 +45,7 @@ export default function DeliveryData(props) {
 
 								{/* Pickup Estimate */}
 								{currentDelivery.formattedShippingEstimate && (
-									<View className='flex flex-row items-center gap-2'>
+									<View className='flex  items-center gap-2'>
 										<svg
 											width='16'
 											height='16'
@@ -95,7 +94,7 @@ export default function DeliveryData(props) {
 								{/* Important Information */}
 								{currentDelivery?.pickupStoreInfo?.additionalInfo && (
 									<View className='bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400'>
-										<View className='flex flex-row items-start gap-2'>
+										<View className='flex  items-start gap-2'>
 											<svg
 												width='16'
 												height='16'
@@ -126,7 +125,7 @@ export default function DeliveryData(props) {
 							</View>
 						) : (
 							<View className='flex flex-col gap-3 w-full'>
-								<View className='flex flex-row items-center justify-between'>
+								<View className='flex  items-center justify-between'>
 									<Text className='text-sm font-medium'>{currentDelivery.name}</Text>
 									<Text
 										className={`text-sm font-bold ${
@@ -138,7 +137,7 @@ export default function DeliveryData(props) {
 
 								{/* Delivery Estimate */}
 								{currentDelivery.formattedShippingEstimate && (
-									<View className='flex flex-row items-center gap-2'>
+									<View className='flex  items-center gap-2'>
 										<svg
 											width='16'
 											height='16'

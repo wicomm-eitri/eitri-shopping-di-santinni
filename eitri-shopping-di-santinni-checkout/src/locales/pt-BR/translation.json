@@ -93,7 +93,8 @@
 		"labelBack": "Voltar"
 	},
 	"addNewShippingAddress": {
-		"title": "Entrega",
+		"title": "Novo endereço",
+		"txtName": "Nome completo ",
 		"errorAddress": "Endereço inválido, por favor verifique os dados",
 		"errorDefault": "Ocorreu um erro inesperado, tente novamente",
 		"txtCalculate": "Calcule o frete e prazo",
@@ -105,10 +106,10 @@
 		"frmReference": "Referência",
 		"frmReceiveName": "Quem irá receber o pedido?",
 		"frmStreet": "Rua / Avenida",
-		"frmNeighborhood": "Rua / Avenida",
+		"frmNeighborhood": "Bairro",
 		"frmCity": "Cidade",
 		"frmState": "Estado",
-		"labelButton": "Continuar",
+		"labelButton": "Salvar endereço",
 		"ok": "OK",
 		"loading": "Aguarde...",
 		"errorPostalCode": "Informe o CEP",
@@ -309,8 +310,8 @@
 		"package": "Pacote"
 	},
 	"shippingMethod": {
-		"title": "Como você prefere receber seu produto?",
-		"sendToAddress": "Enviar para o meu endereço",
+		"title": "MEUS ENDEREÇOS",
+		"sendToAddress": "Endereço de entrega",
 		"changeDeliveryAddress": "Trocar endereço de entrega",
 		"pickupOtherStore": "Retirar em outra loja"
 	},

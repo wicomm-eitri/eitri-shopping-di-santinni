@@ -1,25 +1,63 @@
-import { FaChevronRight } from 'react-icons/fa'
+import { FaChevronRight, FaTrash } from 'react-icons/fa'
 
 export default function CardSelector(props) {
-	const { children, mainTitle, mainClickHandler, secondaryActionHandler, secondaryActionTitle } = props
+	const {
+		children,
+		mainTitle,
+		mainClickHandler,
+		secondaryActionHandler,
+		secondaryActionTitle,
+		selectable,
+		checked,
+		onSelect,
+		radioName,
+		onRemove
+	} = props
+
+	const shouldShowRemove = typeof onRemove === 'function'
+
+	const handleClick = () => {
+		if (selectable) {
+			typeof onSelect === 'function' && onSelect()
+			return
+		}
+
+		typeof mainClickHandler === 'function' && mainClickHandler()
+	}
 
 	return (
-		<View className='bg-white rounded shadow-sm border border-gray-300 p-4 mt-4'>
+		<View className='border border-red-700 p-4 rounded relative'>
 			<View
-				onClick={mainClickHandler}
+				onClick={handleClick}
 				className='flex flex-col'>
-				<View className='flex flex-row items-center justify-between mb-1 gap-2'>
-					<Text className='font-bold text-lg block'>{mainTitle}</Text>
-					<FaChevronRight className='text-primary w-[24px]' />
+				<View className='flex items-center justify-between gap-2'>
+					<Text className='font-semibold text-gray-500 border-red-700  block'>{mainTitle}</Text>
+
+					{selectable ? (
+						<Radio
+							className='radio-primary'
+							name={radioName || 'card-selector'}
+							checked={!!checked}
+							onChange={() => typeof onSelect === 'function' && onSelect()}
+						/>
+					) : (
+						<FaChevronRight className='text-red-700 border-red-700 w-[24px]' />
+					)}
 				</View>
+
 				{children}
 			</View>
 
-			<View className='border-b my-4'></View>
-
-			<View onClick={secondaryActionHandler}>
-				<Text className='text-primary font-bold'>{secondaryActionTitle}</Text>
-			</View>
+			{shouldShowRemove && (
+				<View
+					className='absolute bottom-3 right-4 text-red-700 border-red-700 '
+					onClick={e => {
+						e.stopPropagation()
+						onRemove()
+					}}>
+					<FaTrash className='w-5 h-5' />
+				</View>
+			)}
 		</View>
 	)
 }

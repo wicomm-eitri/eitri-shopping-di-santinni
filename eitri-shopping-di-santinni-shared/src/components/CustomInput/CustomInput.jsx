@@ -25,7 +25,7 @@ export default function CustomInput(props) {
 		<View className='w-full'>
 			{label && (
 				<View className='mb-1'>
-					<Text className='text-xs font-bold'>{label}</Text>
+					<Text className='text-xs text-gray-700 font-bold'>{label}</Text>
 				</View>
 			)}
 			<View className='relative'>
