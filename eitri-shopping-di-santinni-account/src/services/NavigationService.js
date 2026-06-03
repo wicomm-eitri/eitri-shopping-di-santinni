@@ -14,7 +14,10 @@ export const PAGES = {
 	WISH_LIST: '/WishList',
 	POINTS: '/Points',
 	SUPPORT: '/Support',
-	SETTINGS: '/Settings'
+	SETTINGS: '/Settings',
+	EXCHANGE_POLICY: '/ExchangePolicy',
+	ABOUT_US: '/AboutUs',
+	BECOMEAFRANCHISEE: '/BecomeAFranchisee'
 }
 
 export const openProduct = async product => {

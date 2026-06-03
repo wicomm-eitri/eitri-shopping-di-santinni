@@ -98,7 +98,7 @@ export default function Freight(props) {
 							variant='mask'
 							mask='99999-999'
 							inputMode='numeric'
-							className='!border-x-0 !border-t-0 !border !rounded-none !border-gray-300 !h-10 !text-xs text-gray-500 !pl-2'
+							className='!border-x-0 !border-t-0 !rounded-none !border-gray-300 !h-10 !text-xs text-gray-500 !pl-2'
 							onChange={onInputZipCode}
 						/>
 					</View>
