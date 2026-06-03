@@ -1,5 +1,4 @@
 import { useTranslation } from 'eitri-i18n'
-import { Badge, Text, View } from 'eitri-luminus'
 import { useLocalShoppingCart } from '../../../providers/LocalCart'
 import { navigate } from '../../../services/navigationService'
 import Pix from '../../Icons/MethodIcons/Pix'
@@ -32,7 +31,6 @@ export default function InstantPayment(props) {
 	return (
 		<GroupsWrapper
 			title={t('paymentMethods.instantPayment.title', 'Pix')}
-			subtitle={t('paymentMethods.instantPayment.subtitle', 'Pagamento instantâneo')}
 			icon={<Pix />}
 			onPress={onSelectThisGroup}
 			isChecked={systemGroup.isCurrentPaymentSystemGroup}>
@@ -44,14 +42,14 @@ export default function InstantPayment(props) {
 						</Badge>
 					</View>
 				)}
-				<View className='mt-2 bg-neutral-100 p-4 rounded'>
+				{/* <View className='mt-2 bg-neutral-100 p-4 rounded'>
 					<Text className='text-sm text-neutral-500'>
 						{t(
 							'paymentMethods.instantPayment.info',
 							'O código Pix será exibido na próxima etapa, após a revisão do seu pedido.'
 						)}
 					</Text>
-				</View>
+				</View> */}
 			</View>
 		</GroupsWrapper>
 	)

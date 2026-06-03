@@ -188,7 +188,11 @@ export default function SkuSelector(props) {
 				const values = getUniqueValues(skus, key)
 				const statusMap = getOptionStatus(skus, attributeKeys, key, selections)
 				// const isCor = key === 'Cor'
-				const isCor = key.toLowerCase() === 'cor' || key.toLowerCase() === 'color' || key.toLowerCase() === 'cor do produto' || key.toLowerCase() === 'cores'
+				const isCor =
+					key.toLowerCase() === 'cor' ||
+					key.toLowerCase() === 'color' ||
+					key.toLowerCase() === 'cor do produto' ||
+					key.toLowerCase() === 'cores'
 
 				return (
 					<View key={key}>

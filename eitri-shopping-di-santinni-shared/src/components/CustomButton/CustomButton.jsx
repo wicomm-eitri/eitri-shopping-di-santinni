@@ -36,6 +36,7 @@ export default function CustomButton(props) {
 			return 'transparent'
 		}
 
+		return isLoading || disabled ? 'bg-gray-300' : 'bg-red-700'
 		return isLoading || disabled ? 'bg-gray-300' : `${backgroundColor || 'bg-red-700'}`
 	})()
 
@@ -44,10 +45,11 @@ export default function CustomButton(props) {
 			return 'text-primary'
 		}
 
-		return isLoading || disabled ? 'text-gray-500' : 'text-primary-content'
+		return isLoading || disabled ? 'text-gray-500' : 'text-white'
 	})()
 
 	const renderContent = () => {
+		// Adicionamos uppercase e tracking-wide para o texto ficar igual ao Figma
 		if (leftIcon) {
 			return (
 				<View className='flex items-center gap-2'>
