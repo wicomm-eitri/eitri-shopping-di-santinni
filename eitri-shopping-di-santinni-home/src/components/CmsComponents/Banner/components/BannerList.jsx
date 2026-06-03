@@ -137,9 +137,9 @@ export default function BannerList(props) {
 							transitionDuration: isDragging ? '0ms' : '300ms'
 						}}>
 						{imagesList &&
-							imagesList.map(slider => (
+							imagesList.map((slider, idx) => (
 								<View
-									key={slider.imageUrl}
+									key={`${slider.imageUrl || slider.id || 'slide'}-${idx}`}
 									className='flex flex-col'>
 									<View
 										style={{

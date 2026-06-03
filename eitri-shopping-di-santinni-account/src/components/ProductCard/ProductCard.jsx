@@ -33,6 +33,10 @@ export default function ProductCard(props) {
 		}
 	}
 
+	const getItemBrand = () => {
+		return product?.brand || product?.brandName || product?.properties?.find(p => p.name === 'brand')?.values?.[0]
+	}
+
 	const getItemImage = () => {
 		if (item) {
 			return item?.images?.[0]?.imageUrl
@@ -207,6 +211,7 @@ export default function ProductCard(props) {
 		image: getItemImage(),
 		video: productVideo,
 		badge: getBadge(),
+		brand: getItemBrand(),
 		listPrice: getListPrice(),
 		showListItem: App?.configs?.appConfigs?.productCard?.showListPrice ?? true,
 		price: formatPrice(sellerDefault?.commertialOffer.Price),

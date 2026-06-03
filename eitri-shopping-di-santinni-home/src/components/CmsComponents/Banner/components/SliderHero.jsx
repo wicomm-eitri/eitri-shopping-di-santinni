@@ -19,9 +19,9 @@ export default function SliderHero(props) {
 		}
 	}
 
-	const renderImage = image => (
+	const renderImage = (image, idx) => (
 		<Carousel.Item
-			key={`image_${image.imageUrl}`}
+			key={`${image.imageUrl || image.id || 'image'}-${idx}`}
 			className='w-full'>
 			<View
 				onClick={() => onClick(image)}

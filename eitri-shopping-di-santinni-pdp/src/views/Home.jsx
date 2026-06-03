@@ -1,6 +1,5 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { View } from 'eitri-luminus'
 import { BottomInset, Loading } from 'eitri-shopping-di-santinni-shared'
 import ActionButton from '../components/ActionButton/ActionButton'
 import Badges from '../components/Badges/Badges'
@@ -179,7 +178,7 @@ export default function Home() {
 	return (
 		<Page
 			statusBarTextColor='black'
-			className='bg-[#F2F2F2]'
+			// className='bg-[#F2F2F2]'
 			title={t('home.pageTitle', 'Página de produto')}>
 			<Header
 				product={product}
@@ -193,7 +192,7 @@ export default function Home() {
 
 			{product && (
 				<View>
-					<View className='pb-4'>
+					<View className='bg-[#F2F2F2]'>
 						<ImageCarousel currentSku={currentSku} />
 
 						<View className='mt-8 px-4 flex flex-col gap-4'>
@@ -210,6 +209,8 @@ export default function Home() {
 								/>
 								<ActionButton currentSku={currentSku} />
 							</View>
+							{/* TODO: Esconder scrollbar no iOS quando a Eitri lançar o CSS */}
+
 							<View className='flex items-center gap-2 mt-2 overflow-x-auto'>
 								{findBadges()?.map((badge, index) => (
 									<Badges
@@ -221,14 +222,17 @@ export default function Home() {
 							</View>
 
 							{configLoaded && <Freight currentSku={currentSku} />}
-							<RenderVideo videoUrl={'https://shoulder.com.br/cdn/ecommerce/lps/2024/lpgetbeemob.mp4'} />
+							<RenderVideo
+								isMocked
+								videoUrl={'https://shoulder.com.br/cdn/ecommerce/lps/2024/lpgetbeemob.mp4'}
+							/>
 							{/*<RichContent product={product} />*/}
 
 							<DescriptionComponent product={product} />
 
 							{/* <Reviews /> */}
 						</View>
-
+						{/* TODO: Anthonius - Alterar componente para deixar igual figma */}
 						{configLoaded && <RecommendationProducts product={product} />}
 					</View>
 

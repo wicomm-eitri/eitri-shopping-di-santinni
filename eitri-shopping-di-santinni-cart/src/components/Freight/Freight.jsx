@@ -1,15 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'eitri-i18n'
-import { CustomButton, CustomInput, Loading, shippingResolver } from 'eitri-shopping-di-santinni-shared'
+import { CustomButton, CustomInput, shippingResolver } from 'eitri-shopping-di-santinni-shared'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { loadPostalCodeFromStorage, savePostalCodeOnStorage } from '../../services/customerService'
 
 export default function Freight(props) {
-	const { cart, setNewAddress, setFreight } = useLocalShoppingCart()
+	const { cart, setNewAddress } = useLocalShoppingCart()
 	const { t } = useTranslation()
 
 	const [zipCode, setZipCode] = useState('')
-	const [isUnavailable, setIsUnavailable] = useState(false)
 	const [messagesError, setMessagesError] = useState([])
 	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState(false)
@@ -72,31 +71,6 @@ export default function Freight(props) {
 		}
 	}
 
-	const handleOptionSelect = async option => {
-		try {
-			setIsLoading(true)
-
-			const payload = {
-				clearAddressIfPostalCodeNotFound: true,
-				logisticsInfo: option?.slas?.map(sla => {
-					return {
-						itemIndex: sla.itemIndex,
-						selectedDeliveryChannel: sla.deliveryChannel,
-						selectedSla: sla.id
-					}
-				}),
-				selectedAddresses: cart?.shippingData?.selectedAddresses
-			}
-
-			await setFreight(payload)
-			setIsLoading(false)
-		} catch (e) {
-			console.error('Error handleOptionSelect', e)
-		} finally {
-			setIsLoading(false)
-		}
-	}
-
 	const getMessageError = label => {
 		const message = messagesError.find(item => item.code === 'cannotBeDelivered')
 
@@ -112,12 +86,9 @@ export default function Freight(props) {
 
 	const shipping = shippingResolver(cart)
 	const deliveryOptions = shipping?.options?.filter(option => !option.isPickupInPoint) || []
-	const pickupOptions = shipping?.options?.filter(option => option.isPickupInPoint) || []
 
 	return (
 		<View className='px-4'>
-			<Text className='text-xs text-gray-500 uppercase'>{t('freight.txtDelivery', 'Entrega')}</Text>
-
 			{cart?.canEditData || isEditingZipCode ? (
 				<View className='flex justify-between mt-2 items-center w-full'>
 					<View className='w-2/3'>
@@ -127,7 +98,7 @@ export default function Freight(props) {
 							variant='mask'
 							mask='99999-999'
 							inputMode='numeric'
-							className='!border-x-0 !border-t-0 !border !rounded-none !border-gray-300 !h-10'
+							className='!border-x-0 !border-t-0 !rounded-none !border-gray-300 !h-10 !text-xs text-gray-500 !pl-2'
 							onChange={onInputZipCode}
 						/>
 					</View>
@@ -138,20 +109,49 @@ export default function Freight(props) {
 							isLoading={isLoading}
 							label={t('freight.txtCalculate', 'CALCULAR')}
 							className='!border-x-0 !border-t-0 !rounded-none !border-gray-300 !h-10'
-							textClassName='!text-xs'
+							textClassName='!text-xs !font-normal !text-xs'
 							onPress={onPressZipCodeChange}
 						/>
 					</View>
 				</View>
 			) : (
-				<View className='mt-2 flex flex-row items-center gap-4'>
-					<Text className='text-base font-medium'>
+				<View className='mt-2 flex items-center justify-between gap-4'>
+					<Text className='text-sm font-medium'>
 						{`${t('freight.receiveAt', 'Receber em')} ${shipping?.postalCode}`}
 					</Text>
 
 					<View onClick={onPressEditZipCode}>
-						<Text className='text-sm text-primary font-bold'>{t('freight.change', 'Alterar')}</Text>
+						<Text className='text-sm font-semibold underline'>{t('freight.change', 'Alterar')}</Text>
 					</View>
+				</View>
+			)}
+
+			{!zipCode && (
+				<View
+					className='flex items-center gap-1 w-fit mt-2'
+					onClick={() =>
+						Eitri.openBrowser({
+							url: 'https://buscacepinter.correios.com.br/app/endereco/index.php',
+							inApp: true
+						})
+					}>
+					<Text className='text-gray-700 text-xs underline'>Não sei meu CEP</Text>
+
+					<svg
+						xmlns='http://www.w3.org/2000/svg'
+						width='12'
+						height='12'
+						viewBox='0 0 12 12'
+						fill='none'>
+						<path
+							d='M11.2496 0H5.99961V1.5H9.44961L4.72461 6.225L5.77461 7.275L10.4996 2.55V6H11.9996V0.75C11.9996 0.3 11.6996 0 11.2496 0Z'
+							fill='#555'
+						/>
+						<path
+							d='M10.5 12H0.75C0.3 12 0 11.7 0 11.25V1.5C0 1.05 0.3 0.75 0.75 0.75H3.75V2.25H1.5V10.5H9.75V8.25H11.25V11.25C11.25 11.7 10.95 12 10.5 12Z'
+							fill='#555'
+						/>
+					</svg>
 				</View>
 			)}
 
@@ -163,99 +163,17 @@ export default function Freight(props) {
 				</View>
 			)}
 
+			{/* Remover talvez */}
 			{isLoading && <View className={`mt-4 w-full h-[120px] bg-gray-200 rounded animate-pulse`} />}
 
 			{!isLoading && shipping && shipping?.options.length > 0 && (
 				<>
 					{deliveryOptions.length > 0 && (
-						<View className='mt-4'>
-							<Text className='text-sm font-semibold text-neutral-700 mb-2'>
-								{t('freight.tabDelivery', 'Opções de Entrega')}
+						<View className='py-2'>
+							<Text className='text-sm text-gray-500'>
+								{deliveryOptions[0]?.formattedShippingEstimate}{' '}
+								<Text className='text-sm text-red-700'>{deliveryOptions[0]?.formatedPrice}</Text>
 							</Text>
-
-							<View className='flex flex-col p-4 mt-2 border border-neutral-300 rounded items-center justify-between gap-2'>
-								{deliveryOptions.map((item, index) => (
-									<View
-										key={index}
-										className='flex flex-row items-center w-full'>
-										{isUnavailable ? (
-											getMessageError(item?.label)
-										) : (
-											<View
-												className='flex flex-row items-center w-full'
-												sendFocusToInput>
-												<Radio
-													className='radio-primary'
-													checked={item.isCurrent}
-													name='freight-option'
-													value={item?.label}
-													onChange={() => handleOptionSelect(item)}
-												/>
-												<View className='w-full flex flex-col flex-1 ml-3'>
-													<Text className='font-bold'>{item?.label}</Text>
-													<Text className='text-xs text-neutral-500'>
-														{item?.shippingEstimate}
-													</Text>
-												</View>
-												<View className='flex items-center'>
-													<Text className='font-semibold'>{item?.price}</Text>
-												</View>
-											</View>
-										)}
-									</View>
-								))}
-							</View>
-						</View>
-					)}
-
-					{pickupOptions.length > 0 && (
-						<View className='mt-4'>
-							<Text className='text-sm font-semibold text-neutral-700 mb-2'>
-								{t('freight.tabPickup', 'Retirada')}
-							</Text>
-							<View className='flex flex-col p-4 border border-neutral-300 rounded items-center justify-between gap-2'>
-								{pickupOptions.map((item, index) => (
-									<View
-										key={index}
-										className='flex flex-row items-center w-full'>
-										{isUnavailable ? (
-											getMessageError(item?.label)
-										) : (
-											<>
-												{isLoading ? (
-													<View className='w-full flex items-center justify-center'>
-														<Loading />
-													</View>
-												) : (
-													<>
-														<Radio
-															className='radio-primary'
-															checked={item.isCurrent}
-															name='freight-option'
-															value={item?.label}
-															onChange={() => handleOptionSelect(item)}
-														/>
-														<View className='w-full flex flex-col flex-1 ml-3'>
-															<Text className='font-bold'>{item?.label}</Text>
-															<Text className='text-xs text-neutral-500'>
-																{item?.shippingEstimate}
-															</Text>
-															{item.isPickupInPoint && (
-																<Text className='text-xs text-neutral-500'>
-																	{item?.pickUpAddress}
-																</Text>
-															)}
-														</View>
-														<View className='flex items-center'>
-															<Text className='font-semibold'>{item?.price}</Text>
-														</View>
-													</>
-												)}
-											</>
-										)}
-									</View>
-								))}
-							</View>
 						</View>
 					)}
 				</>

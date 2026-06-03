@@ -50,7 +50,6 @@ export default function ProductCardFullImage(props) {
 						className='absolute top-1 right-2 p-2 flex items-center justify-center z-[99]'>
 						<WishlistIcon
 							filled={isOnWishlist}
-							className='text-[#555555]'
 							size='20'
 						/>
 					</View>

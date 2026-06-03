@@ -16,9 +16,6 @@ export default function CategoryPageItem({ item, goToItem }) {
 
 	const [showSubItems, setShowSubItems] = useState(false)
 
-	console.log('[CategoryPageItem] item: ', item)
-	console.log('[CategoryPageItem] goToItem: ', goToItem)
-
 	useEffect(() => {
 		if (showSubItems) {
 			Eitri.navigation.addBackHandler(() => {
@@ -51,9 +48,7 @@ export default function CategoryPageItem({ item, goToItem }) {
 				className={`flex flex-col min-h-screen h-screen w-screen fixed ${showSubItems ? 'left-0 ' : 'left-[100vw]'} top-0 transition-left duration-300 z-[9999]`}>
 				<HeaderContentWrapper
 					containerClassName={`${showSubItems ? 'left-0' : '!left-[100vw] !shadow-none'} transition-left !duration-300 !backdrop-blur-none !bg-white`}>
-					<View
-						className='justify-between w-full flex items-center'
-					>
+					<View className='justify-between w-full flex items-center'>
 						<View className='flex items-center gap-3'>
 							<HeaderReturn onClick={() => setShowSubItems(false)} />
 							<HeaderText text={item.title}>{item.title}</HeaderText>
@@ -68,7 +63,7 @@ export default function CategoryPageItem({ item, goToItem }) {
 				<View
 					bottomInset={'auto'}
 					className='bg-white flex-1 overflow-y-auto'>
-						{/* TODO: Perguntar Erick sobre o padding horizontal, se é 26px ou 24px */}
+					{/* TODO: Perguntar Erick sobre o padding horizontal, se é 26px ou 24px */}
 					<View className='flex flex-col px-[26px] py-[32px] gap-8'>
 						{item?.subcategories?.map(s => (
 							<View

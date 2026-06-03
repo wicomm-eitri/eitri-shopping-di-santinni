@@ -37,6 +37,7 @@ export default function CustomButton(props) {
 		}
 
 		return isLoading || disabled ? 'bg-gray-300' : 'bg-red-700'
+		return isLoading || disabled ? 'bg-gray-300' : `${backgroundColor || 'bg-red-700'}`
 	})()
 
 	const _contentColor = (() => {

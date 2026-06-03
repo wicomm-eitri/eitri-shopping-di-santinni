@@ -1,9 +1,13 @@
+import zoom from '../../assets/images/zoom.svg'
+import ModalImagesPDP from './ModalImagesPDP'
+
 export default function ImageCarousel(props) {
 	const { currentSku } = props
 
 	const [currentSlide, setCurrentSlide] = useState(0)
 	const [carouselProgressPercentage, setCarouselProgressPercentage] = useState(0)
 	const [showProgressBar, setShowProgressBar] = useState(false)
+	const [showModalImagePDP, setShowModalImagePDP] = useState(false)
 
 	const viewScrollRef = useRef(null)
 
@@ -62,13 +66,24 @@ export default function ImageCarousel(props) {
 
 	return (
 		<View className='mx-4'>
-			<Image
-				pinchZoom
-				zoomMaxScale={8}
-				fadeIn={500}
-				src={images[currentSlide]?.imageUrl}
-				width='100vw'
-			/>
+			<View className='relative'>
+				<Image
+					pinchZoom
+					zoomMaxScale={8}
+					fadeIn={500}
+					src={images[currentSlide]?.imageUrl}
+					width='100vw'
+				/>
+				<View
+				onClick={() => setShowModalImagePDP(true)}
+				className='absolute top-2.5 right-[18px] p-1.5 rounded-full bg-primary flex items-center justify-center'>
+					<Image
+						src={zoom}
+						width='19px'
+						height='19px'
+					/>
+				</View>
+			</View>
 
 			<View
 				ref={viewScrollRef}
@@ -98,6 +113,13 @@ export default function ImageCarousel(props) {
 					/>
 				</View>
 			)}
+			<ModalImagesPDP
+				images={images}
+				showModal={showModalImagePDP}
+				closeModal={() => setShowModalImagePDP(false)}
+				currentSlide={currentSlide}
+				onChange={onChange}
+			/>
 		</View>
 	)
 }

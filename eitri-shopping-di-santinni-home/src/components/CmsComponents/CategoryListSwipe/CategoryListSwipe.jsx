@@ -2,8 +2,6 @@ import { processActions } from '../../../services/ResolveCmsActions'
 import CategoryPageItem from './components/CategoryPageItem'
 
 export default function CategoryListSwipe({ data }) {
-	console.log('data: ', data)
-
 	const openItem = item => processActions(item)
 
 	return (

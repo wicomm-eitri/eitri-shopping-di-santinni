@@ -32,8 +32,8 @@ export default function CategoryPageModal(props) {
 				minHeight='70vh'
 				width='100vw'
 				className='bg-base-100 overflow-scroll'>
-				<View className='p-2 mx-1 flex flex flex-row justify-between items-center'>
-					<Text>{`${t('categoryPageModal.title', 'Filtros')}`}</Text>
+				<View className='p-2 mx-1 flex  flex-row justify-between items-center'>
+					<Text>{`${t('categoryPageModal.title', 'FILTRAR POR')}`}</Text>
 					<View
 						width='36px'
 						height='36px'
@@ -119,7 +119,7 @@ export default function CategoryPageModal(props) {
 									willStartCollapsed={false}
 									border='none'
 									className='font-light'>
-									<View className='flex flex flex-col'>
+									<View className='flex  flex-col'>
 										{listOrdering.values.map(value => (
 											<View
 												key={value.id}
@@ -145,7 +145,7 @@ export default function CategoryPageModal(props) {
 										willStartCollapsed={false}
 										border='none'
 										className='font-light'>
-										<View className='flex flex flex-col'>
+										<View className='flex  flex-col'>
 											{facet.values.map(value => (
 												<SelectableTouchable
 													key={`${facet.key}_${value.value}`}
@@ -163,20 +163,21 @@ export default function CategoryPageModal(props) {
 						</>
 					)}
 					<View height={120} />
-					<View className='fixed bottom-0 left-0 right-0 py-1 px-2 bg-base-100'>
+					<View className='fixed bottom-0 left-0 right-0 py-4 px-4 bg-white border-t border-gray-200'>
 						<View
 							width='100%'
-							height='48px'
-							className='flex justify-center'>
+							className='flex gap-3'>
 							<View
 								onClick={clearFilters}
-								className='flex p-2 items-center justify-center border-primary-content border grow-1 bg-base-100'>
-								<Text className='text-primary-content'>{t('categoryPageModal.clear', 'Limpar')}</Text>
+								className='flex-1 flex items-center justify-center rounded-lg border-2 border-red-700 bg-white hover:bg-red-50 transition-colors py-3'>
+								<Text className='text-red-700 font-bold text-sm uppercase'>
+									{t('categoryPageModal.clear', 'Limpar')}
+								</Text>
 							</View>
 							<View
 								onClick={executeSearch}
-								className='flex p-2 items-center justify-center grow-1 bg-primary-content font-bold'>
-								<Text className='text-neutral font-bold'>
+								className='flex-1 flex items-center justify-center rounded-lg bg-red-700 hover:bg-red-800 transition-colors py-3'>
+								<Text className='text-white font-bold text-sm uppercase'>
 									{t('categoryPageModal.button', 'Filtrar')}
 								</Text>
 							</View>
