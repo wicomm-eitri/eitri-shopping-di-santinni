@@ -57,7 +57,7 @@ export default function Home(props) {
 			label: t('home.labelExchangesReturns', 'Trocas e devoluções'),
 			icon: trocasDevolucoesIcon,
 			isVisible: true,
-			onClick: handlePlaceholderItem
+			onClick: () => navigate(PAGES.EXCHANGE_POLICY)
 		},
 		{
 			label: t('home.labelSupport', 'Suporte'),
@@ -69,7 +69,7 @@ export default function Home(props) {
 			label: t('home.labelStores', 'Nossas lojas'),
 			icon: nossasLojasIcon,
 			isVisible: true,
-			onClick: handlePlaceholderItem
+			onClick: () => navigate(PAGES.ABOUT_US)
 		}
 	]
 
@@ -79,9 +79,9 @@ export default function Home(props) {
 
 		Eitri.navigation.setOnResumeListener(() => init())
 
-		setTimeout(() => {
-			navigate(PAGES.BECOMEAFRANCHISEE)
-		}, 1000)
+		// setTimeout(() => {
+		// 	navigate(PAGES.BECOMEAFRANCHISEE)
+		// }, 1000)
 	}, [])
 
 	const init = async () => {

@@ -138,7 +138,7 @@ export default function Settings() {
 					<View
 						className='p-4 flex items-center justify-between border-b border-neutral-300 cursor-pointer hover:bg-gray-50'
 						onClick={() => navigate(PAGES.SUPPORT)}>
-						<Text className='text-base text-neutral-700'>{t('settings.aboutUs', 'Sobre nós')}</Text>
+						<Text className='text-base text-gray-500'>{t('settings.aboutUs', 'Sobre nós')}</Text>
 						<svg
 							xmlns='http://www.w3.org/2000/svg'
 							width='20'
@@ -157,7 +157,7 @@ export default function Settings() {
 					<View
 						className='p-4 flex items-center justify-between border-b border-neutral-300 cursor-pointer hover:bg-gray-50'
 						onClick={() => navigate(PAGES.SUPPORT)}>
-						<Text className='text-base text-neutral-700'>
+						<Text className='text-base text-gray-500'>
 							{t('settings.privacyPolicy', 'Políticas de Privacidade')}
 						</Text>
 						<svg
@@ -176,9 +176,9 @@ export default function Settings() {
 
 					{/* Item: Trocas e devoluções */}
 					<View
-						className='p-4 flex items-center justify-between border-b border-neutral-300 cursor-pointer hover:bg-gray-50'
-						onClick={() => navigate(PAGES.SUPPORT)}>
-						<Text className='text-base text-neutral-700'>
+						className='p-4 flex items-center justify-between border-b border-neutral-300  hover:bg-gray-50'
+						onClick={() => navigate(PAGES.EXCHANGE_POLICY)}>
+						<Text className='text-base text-gray-500'>
 							{t('settings.exchangesReturns', 'Trocas e devoluções')}
 						</Text>
 						<svg
@@ -198,8 +198,8 @@ export default function Settings() {
 					{/* Item: Nossas Lojas */}
 					<View
 						className='p-4 flex items-center justify-between border-b border-neutral-300 cursor-pointer hover:bg-gray-50'
-						onClick={() => navigate(PAGES.SUPPORT)}>
-						<Text className='text-base text-neutral-700'>{t('settings.ourStores', 'Nossas Lojas')}</Text>
+						onClick={() => navigate(PAGES.ABOUT_US)}>
+						<Text className='text-base text-gray-500'>{t('settings.ourStores', 'Nossas Lojas')}</Text>
 						<svg
 							xmlns='http://www.w3.org/2000/svg'
 							width='20'
