@@ -93,8 +93,8 @@ export default function ProductTilesHighlights(props) {
 									borderBottomColor: isActive ? '#2C2C2C' : 'transparent'
 								}}>
 								<Text
-									style={{ color: '#FAFAF8', opacity: isActive ? 1 : 0.85 }}
-									className={`uppercase whitespace-nowrap ${isActive ? 'font-bold' : 'font-medium'}`}>
+									style={{ opacity: isActive ? 1 : 0.85 }}
+									className={`uppercase whitespace-nowrap text-white ${isActive ? 'font-bold' : 'font-medium'}`}>
 									{shelf.title}
 								</Text>
 							</View>

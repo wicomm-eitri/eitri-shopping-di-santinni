@@ -18,11 +18,9 @@ export default function BannerList(props) {
 		const maxWidth = size?.maxWidth
 		const maxHeight = size?.maxHeight
 
-		// Puxa as dimensões do CMS. Se não existirem, aí sim cai no padrão 300x400
 		let finalWidth = maxWidth ? Number(maxWidth) : 300
 		let finalHeight = maxHeight ? Number(maxHeight) : 400
 
-		// Se tiver aspectRatio configurado, calcula a proporção em cima do tamanho
 		if (aspectRatio) {
 			try {
 				const [aspectW, aspectH] = aspectRatio.split(':').map(Number)

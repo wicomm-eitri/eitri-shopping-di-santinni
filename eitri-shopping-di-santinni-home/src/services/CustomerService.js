@@ -6,7 +6,6 @@ export const requestLogin = () => {
 		;(async () => {
 			if (await isLoggedIn()) {
 				resolve()
-
 				return
 			}
 
@@ -18,7 +17,7 @@ export const requestLogin = () => {
 				if (await isLoggedIn()) {
 					resolve()
 				} else {
-					reject('User not logged in')
+					reject(new Error('User not logged in'))
 				}
 			})
 		})()
@@ -30,34 +29,265 @@ export const isLoggedIn = async () => {
 		return await Vtex.customer.isLoggedIn()
 	} catch (e) {
 		console.error('Erro ao buscar dados do cliente', e)
-
 		return false
 	}
 }
 
-export const productOnWishlist = async productId => {
-	if (!(await isLoggedIn())) {
-		return { inList: false }
-	}
+// Helper para enviar a autenticação limpa e evitar o Cache agressivo da VTEX
+const getAuthHeaders = async () => {
+	try {
+		const tokenData = await Vtex.customer.getCustomerToken()
+		const token = typeof tokenData === 'object' ? tokenData?.token : tokenData
 
-	const result = await Vtex.wishlist.checkItem(productId)
-	const inList = result?.data?.checkList?.inList
-
-	if (inList) {
-		const listId = result?.data?.checkList?.listIds?.[0]
-
-		return { inList, listId }
-	} else {
-		return { inList }
+		return {
+			'Content-Type': 'application/json',
+			'Accept': 'application/json',
+			'Cache-Control': 'no-cache, no-store',
+			...(token ? { Cookie: `VtexIdclientAutCookie_disantinni=${token}` } : {})
+		}
+	} catch (error) {
+		return {
+			'Content-Type': 'application/json',
+			'Accept': 'application/json',
+			'Cache-Control': 'no-cache, no-store'
+		}
 	}
 }
 
-export const removeItemFromWishlist = async id => {
-	return await Vtex.wishlist.removeItem(id)
+const GRAPHQL_URL = 'https://disantinni.myvtex.com/_v/private/graphql/v1?app=vtex.my-wishlists@2.x&locale=pt-BR'
+
+export const getWishlist = async () => {
+	try {
+		if (!(await isLoggedIn())) return []
+
+		// REMOVIDO os parâmetros (page, pageSize) igual ao viewListQuery do FastStore
+		const query = `
+            query GetUserWishlists {
+                getWishlistsByEmail {
+                    id
+                    wishlistType
+                    isPublic
+                    products {
+                        ID
+                        skuCodeReference
+                        nameProduct
+                        quantityProduct
+                    }
+                }
+            }
+        `
+		const headers = await getAuthHeaders()
+		const response = await Eitri.http.post(GRAPHQL_URL, { query, variables: {} }, { headers })
+
+		const wishlists = response.data?.data?.getWishlistsByEmail || []
+		if (wishlists.length === 0) return []
+
+		const products = wishlists[0].products || []
+
+		return products.map(p => ({
+			id: p.ID,
+			productId: String(p.ID),
+			name: p.nameProduct,
+			sku: p.skuCodeReference
+		}))
+	} catch (error) {
+		console.error('Erro ao carregar wishlist via bypass:', error)
+		return []
+	}
+}
+
+export const productOnWishlist = async productId => {
+	try {
+		const products = await getWishlist()
+		const itemExists = products.find(item => String(item.productId) === String(productId))
+		return { inList: !!itemExists, listId: itemExists ? true : null }
+	} catch (error) {
+		return { inList: false }
+	}
+}
+
+export const removeItemFromWishlist = async productId => {
+	try {
+		const headers = await getAuthHeaders()
+		const queryList = `
+            query GetUserWishlists {
+                getWishlistsByEmail {
+                    id
+                    wishlistType
+                    isPublic
+                    products {
+                        ID
+                        Image
+                        linkProduct
+                        nameProduct
+                        quantityProduct
+                        skuCodeReference
+                        department
+                        bundle
+                        notes
+                    }
+                }
+            }
+        `
+		const listResponse = await Eitri.http.post(GRAPHQL_URL, { query: queryList, variables: {} }, { headers })
+		const wishlists = listResponse.data?.data?.getWishlistsByEmail || []
+		if (wishlists.length === 0) return true
+
+		const targetList = wishlists[0]
+		const updatedProducts = (targetList.products || []).filter(item => String(item.ID) !== String(productId))
+
+		const mutationUpdate = `
+            mutation UpdateWishlist($wishlist: WishlistInput!) {
+                updateWishlist(wishlist: $wishlist) {
+                    id
+                }
+            }
+        `
+
+		const variables = {
+			wishlist: {
+				id: targetList.id,
+				wishlistType: targetList.wishlistType || 'Wishlist',
+				isPublic: targetList.isPublic || false,
+				products: updatedProducts.map(p => ({
+					ID: Number(p.ID),
+					Image: p.Image || '',
+					linkProduct: p.linkProduct || '',
+					nameProduct: String(p.nameProduct || ''),
+					quantityProduct: Number(p.quantityProduct || 1),
+					skuCodeReference: String(p.skuCodeReference || p.ID),
+					department: p.department || '',
+					bundle: Number(p.bundle || 1),
+					notes: p.notes || ''
+				}))
+			}
+		}
+
+		await Eitri.http.post(GRAPHQL_URL, { query: mutationUpdate, variables }, { headers })
+		return true
+	} catch (error) {
+		console.error('Erro no removeFromWishlist manual:', error)
+		return false
+	}
 }
 
 export const addToWishlist = async (productId, title, sku) => {
 	await requestLogin()
 
-	return await Vtex.wishlist.addItem(productId, title, sku)
+	try {
+		const headers = await getAuthHeaders()
+
+		const queryList = `
+            query GetUserWishlists {
+                getWishlistsByEmail {
+                    id
+                    wishlistType
+                    isPublic
+                    products {
+                        ID
+                        Image
+                        linkProduct
+                        nameProduct
+                        quantityProduct
+                        skuCodeReference
+                        department
+                        bundle
+                        notes
+                    }
+                }
+            }
+        `
+
+		const listResponse = await Eitri.http.post(GRAPHQL_URL, { query: queryList, variables: {} }, { headers })
+		let wishlists = listResponse.data?.data?.getWishlistsByEmail || []
+
+		const newProduct = {
+			ID: Number(productId),
+			Image: '',
+			linkProduct: '',
+			nameProduct: String(title || 'Favorito'),
+			quantityProduct: 1,
+			skuCodeReference: String(sku || productId),
+			department: '',
+			bundle: 1,
+			notes: ''
+		}
+
+		let response = null
+
+		if (wishlists.length > 0) {
+			const targetList = wishlists[0]
+			const currentProducts = targetList.products || []
+			const hasProduct = currentProducts.find(p => String(p.ID) === String(productId))
+			const updatedProducts = hasProduct ? currentProducts : [...currentProducts, newProduct]
+
+			const mutationUpdate = `
+                mutation UpdateWishlist($wishlist: WishlistInput!) {
+                    updateWishlist(wishlist: $wishlist) {
+                        id
+                    }
+                }
+            `
+
+			response = await Eitri.http.post(
+				GRAPHQL_URL,
+				{
+					query: mutationUpdate,
+					variables: {
+						wishlist: {
+							id: targetList.id,
+							wishlistType: targetList.wishlistType || 'Wishlist',
+							isPublic: targetList.isPublic || false,
+							products: updatedProducts.map(p => ({
+								ID: Number(p.ID),
+								Image: p.Image || '',
+								linkProduct: p.linkProduct || '',
+								nameProduct: String(p.nameProduct || ''),
+								quantityProduct: Number(p.quantityProduct || 1),
+								skuCodeReference: String(p.skuCodeReference || p.ID),
+								department: p.department || '',
+								bundle: Number(p.bundle || 1),
+								notes: p.notes || ''
+							}))
+						}
+					}
+				},
+				{ headers }
+			)
+		} else {
+			const mutationCreate = `
+                mutation CreateWishlist($wishlist: WishlistInput!) {
+                    createWishlist(wishlist: $wishlist) {
+                        Id
+                    }
+                }
+            `
+
+			response = await Eitri.http.post(
+				GRAPHQL_URL,
+				{
+					query: mutationCreate,
+					variables: {
+						wishlist: {
+							wishlistType: 'Wishlist',
+							isPublic: false,
+							products: [newProduct]
+						}
+					}
+				},
+				{ headers }
+			)
+		}
+
+		const result = response.data
+		if (result?.errors) {
+			console.error('Detalhes do Erro GraphQL:', JSON.stringify(result.errors))
+			throw new Error('Falha na validação do GraphQL')
+		}
+
+		return result
+	} catch (error) {
+		console.error('Erro ao adicionar item na wishlist (manual):', error)
+		throw error
+	}
 }
