@@ -36,10 +36,10 @@ export const getCustomerData = async () => {
 	try {
 		const result = await Vtex.customer.getCustomerProfile()
 		const profile = result?.data?.profile
-
 		return profile
 	} catch (e) {
 		console.log('getCustomerData error', e)
+		return null
 	}
 }
 
@@ -62,7 +62,6 @@ export const setCustomerData = async profileData => {
 		}
 		const result = await Vtex.customer.updateCustomerProfile(payload)
 		const updateProfile = result?.data?.updateProfile
-
 		return updateProfile
 	} catch (e) {
 		console.log('setCustomerData error', e)
@@ -71,7 +70,6 @@ export const setCustomerData = async profileData => {
 
 export const getWishlist = async () => {
 	const result = await Vtex.wishlist.listItems()
-
 	return result?.data?.viewLists?.[0]?.data || []
 }
 
@@ -88,7 +86,8 @@ export async function loginWithFacebook() {
 }
 
 export const listOrders = async page => {
-	return await Vtex.customer.listOrders(page)
+	const response = await Vtex.customer.listOrders(page)
+	return response
 }
 
 export const getOrderById = async orderId => {
@@ -101,4 +100,14 @@ export const saveUserEmailOnStorage = async email => {
 
 export const loadUserEmailFromStorage = async () => {
 	return await Vtex.customer.getCustomerData('email')
+}
+
+export const saveUserCredentialsOnStorage = async (email, password) => {
+	try {
+		await Vtex.customer.setCustomerData('email', email)
+		await Vtex.customer.setCustomerData('password', password)
+	} catch (e) {
+		// swallow error; storage is best-effort
+		console.warn('saveUserCredentialsOnStorage error', e)
+	}
 }

@@ -1,5 +1,5 @@
 import { useTranslation } from 'eitri-i18n'
-import { CustomButton } from 'eitri-shopping-di-santinni-shared'
+import { CustomButton, Loading, FloatNotification } from 'eitri-shopping-di-santinni-shared'
 import cartRed from '../../assets/images/cart-red.svg'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { openCart } from '../../services/NavigationService'
@@ -10,6 +10,11 @@ export default function ActionButton(props) {
 	const { currentSku } = props
 	const [isAvailable, setIsAvailable] = useState(true)
 	const [isLoading, setLoading] = useState(false)
+	const [isLoadingAddToCart, setLoadingAddToCart] = useState(false)
+	const [notification, setNotification] = useState({
+		show: false,
+		title: ''
+	})
 
 	useEffect(() => {
 		const mainSeller = currentSku.sellers.find(seller => seller.sellerDefault)
@@ -25,9 +30,19 @@ export default function ActionButton(props) {
 	const getButtonLabel = () => {
 		if (!isAvailable) return t('product.errorNoProduct', 'Produto Indisponível')
 
-		return isItemOnCart()
-			? t('product.labelGoToCart', 'Ir para carrinho')
-			: t('product.labelAddToCart', 'Comprar agora')
+		return t('product.labelAddToCart', 'Comprar agora')
+	}
+
+	const handleClickAddToCart = () => {
+		if (!isAvailable) return
+
+		setLoadingAddToCart(true)
+		addItem(currentSku)
+		setLoadingAddToCart(false)
+		setNotification({
+			show: true,
+			title: t('product.txtProductAdded', 'Produto adicionado ao carrinho')
+		})
 	}
 
 	const handleButtonClick = () => {
@@ -39,6 +54,7 @@ export default function ActionButton(props) {
 			openCart()
 		} else {
 			addItem(currentSku)
+			openCart()
 		}
 
 		setLoading(false)
@@ -57,11 +73,26 @@ export default function ActionButton(props) {
 					className='rounded-full !w-full'
 					label={getButtonLabel()}
 				/>
-				<View className='rounded-full border w-[52px] h-[43px] border-red-700 flex items-center justify-center'>
-					<Image src={cartRed} className='w-5 h-5' />
-				</View>
-				{/* TODO: Adicionar o botão de adicionar a sacola */}
+				{isLoadingAddToCart ? (
+					<View className='rounded-full border w-[52px] h-[43px] border-red-700 flex items-center justify-center'>
+						<Loading size={20} />
+					</View>
+				) : (
+					<View onClick={handleClickAddToCart} className='rounded-full border w-[52px] h-[43px] border-red-700 flex items-center justify-center'>
+						<Image
+							src={cartRed}
+							className='w-5 h-5'
+						/>
+					</View>
+				)}
 			</View>
+			<FloatNotification
+				showNotification={notification.show}
+				title={notification.title}
+				onCloseNotification={() => setNotification({ show: false, title: '' })}
+				functionExitNotification={() => setNotification({ show: false, title: '' })}
+				toast
+			/>
 			{/* </View> */}
 
 			{/* <BottomInset /> */}

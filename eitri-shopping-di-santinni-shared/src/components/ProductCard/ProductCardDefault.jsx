@@ -25,13 +25,13 @@ export default function ProductCardDefault(props) {
 	return (
 		<View className={`relative drop-shadow-[0px_0px_6px_rgba(0,0,0,0.2)] bg-white rounded ${className}`}>
 			<View className='flex flex-col rounded-sm p-2'>
-				{/*{badge ? (*/}
-				{/*	<View className="max-h-[27px] min-h-[27px] rounded-full w-fit bg-green-300 px-4 py-1">*/}
-				{/*		<Text className="font-bold">{badge}</Text>*/}
-				{/*	</View>*/}
-				{/*) : (*/}
-				{/*	<View className="h-[27px]" />*/}
-				{/*)}*/}
+				{badge ? (
+					<View className='max-h-[27px] min-h-[27px] rounded-full w-fit bg-red-700 px-3 py-1'>
+						<Text className='font-bold text-white text-xs uppercase'>{badge}</Text>
+					</View>
+				) : (
+					<View className='h-[27px]' />
+				)}
 
 				<View className='relative flex flex-col w-full justify-center items-center h-[160px] min-h-[160px] max-h-[160px]'>
 					<Image
@@ -39,10 +39,7 @@ export default function ProductCardDefault(props) {
 						src={image}
 					/>
 					<View className='absolute top-[5px] right-[5px] bg-white rounded-full flex items-center justify-center h-[32px] w-[32px] z-[98]'>
-						<WishlistIcon
-							filled={isOnWishlist}
-							className='text-[#555555]'
-						/>
+						<WishlistIcon filled={isOnWishlist} />
 					</View>
 				</View>
 

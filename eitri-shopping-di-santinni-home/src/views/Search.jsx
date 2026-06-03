@@ -67,19 +67,29 @@ export default function Search(props) {
 		<Page title={t('search.title', 'Tela de busca')}>
 			<HeaderContentWrapper
 				scrollEffect={false}
-				className='gap-3 w-full justify-between relative'>
-				<HeaderReturn />
+				className='relative bg-base-100 w-full'>
+				<View className='relative flex items-center justify-between pt-4 px-4 w-screen gap-3'>
+					<HeaderReturn />
 
+					<View className='flex-1 flex items-center justify-center'>
+						<Text className='text-xl font-semibold tracking-wide uppercase'>
+							{t('brand.name', 'DI SANTINNI')}
+						</Text>
+					</View>
+
+					<HeaderWishList
+						onPress={() => {}}
+						padding='none'
+					/>
+				</View>
+			</HeaderContentWrapper>
+
+			<View className='px-4 pt-8'>
 				<SearchInput
 					incomingValue={params?.query}
 					onSubmit={handleSearchSubmit}
 				/>
-
-				<HeaderWishList
-					onPress={() => {}}
-					padding='none'
-				/>
-			</HeaderContentWrapper>
+			</View>
 
 			{pristine && (
 				<View className='flex flex-col items-center justify-center py-12'>

@@ -1,17 +1,19 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
 import { BottomInset, CustomButton, HeaderContentWrapper, HeaderText, Loading } from 'eitri-shopping-di-santinni-shared'
-import InfoCard from '../components/InfoCard/InfoCard'
-import LoginCard from '../components/LoginCard/LoginCard'
 import PoweredBy from '../components/PoweredBy/PoweredBy'
 import ProfileCardButton from '../components/ProfileCardButton/ProfileCardButton'
 import { startConfigure } from '../services/AppService'
 import { doLogout, getCustomerData, isLoggedIn } from '../services/CustomerService'
 import { navigate, PAGES } from '../services/NavigationService'
 import { sendScreenView } from '../services/TrackingService'
-import bookmarkIcon from '../assets/images/bookmark-01.svg'
-import boxIcon from '../assets/images/box-01.svg'
-import userIcon from '../assets/images/user.svg'
+import suporteIcon from '../assets/icons/Suporte.svg'
+import config from '../assets/icons/config.svg'
+import meusFavoritosIcon from '../assets/icons/meus_favoritos.svg'
+import meusPedidosIcon from '../assets/icons/meus_pedidos.svg'
+import minhaContaIcon from '../assets/icons/minha_conta.svg'
+import nossasLojasIcon from '../assets/icons/nossas_lojas.svg'
+import trocasDevolucoesIcon from '../assets/icons/trocas_devoluções.svg'
 
 export default function Home(props) {
 	const PAGE = 'Minha Conta'
@@ -21,6 +23,55 @@ export default function Home(props) {
 	const [isLoading, setIsLoading] = useState(true)
 	const [customerData, setCustomerData] = useState(props.customerData || {})
 	const [isLogged, setIsLogged] = useState(null)
+
+	const handlePlaceholderItem = () => {}
+
+	const allCards = [
+		{
+			label: t('home.labelMyAccount', 'Minha conta'),
+			icon: minhaContaIcon,
+			isVisible: true,
+			onClick: () => {
+				isLogged
+					? navigate(PAGES.EDIT_PROFILE, { customerData })
+					: navigate(PAGES.SIGNIN, { redirectTo: PAGES.EDIT_PROFILE })
+			}
+		},
+		{
+			label: t('home.labelMyOrders', 'Meus pedidos'),
+			icon: meusPedidosIcon,
+			isVisible: isLogged,
+			onClick: () => {
+				isLogged ? navigate(PAGES.ORDER_LIST) : navigate(PAGES.SIGNIN, { redirectTo: PAGES.ORDER_LIST })
+			}
+		},
+		{
+			label: t('home.labelMyFavorites', 'Meus favoritos'),
+			icon: meusFavoritosIcon,
+			isVisible: isLogged,
+			onClick: () => {
+				isLogged ? navigate(PAGES.WISH_LIST) : navigate(PAGES.SIGNIN, { redirectTo: PAGES.WISH_LIST })
+			}
+		},
+		{
+			label: t('home.labelExchangesReturns', 'Trocas e devoluções'),
+			icon: trocasDevolucoesIcon,
+			isVisible: true,
+			onClick: handlePlaceholderItem
+		},
+		{
+			label: t('home.labelSupport', 'Suporte'),
+			icon: suporteIcon,
+			isVisible: true,
+			onClick: () => navigate(PAGES.SUPPORT)
+		},
+		{
+			label: t('home.labelStores', 'Nossas lojas'),
+			icon: nossasLojasIcon,
+			isVisible: true,
+			onClick: handlePlaceholderItem
+		}
+	]
 
 	useEffect(() => {
 		init()
@@ -90,63 +141,61 @@ export default function Home(props) {
 		<Page title={PAGE}>
 			<HeaderContentWrapper className='justify-between'>
 				<HeaderText text={t('home.labelMyAccount', 'Minha conta')} />
+				<Image
+					src={config}
+					width={24}
+					height={24}
+					className='object-contain '
+					onClick={() => navigate(PAGES.SETTINGS)}
+				/>
 			</HeaderContentWrapper>
 
 			<Loading
 				fullScreen
 				isLoading={isLoading}
 			/>
-
-			{!isLoading && (isLogged ? <InfoCard customerData={customerData} /> : <LoginCard />)}
+			{/* 
+			{!isLoading && (isLogged ? <InfoCard customerData={customerData} /> : <LoginCard />)} */}
 
 			<View className='px-4 mt-2 mb-2'>
-				<Text className='font-bold text-xl mb-3 text-gray-900'>
-					{t('home.lbPersonalData', 'Dados pessoais')}
-				</Text>
-
 				<View className='flex flex-col gap-3 mt-2'>
-					<ProfileCardButton
-						label={t('home.labelMyAccount', 'Minha conta')}
-						icon={userIcon}
-						onClick={() => {
-							isLogged
-								? navigate(PAGES.EDIT_PROFILE, { customerData })
-								: navigate(PAGES.SIGNIN, { redirectTo: PAGES.EDIT_PROFILE })
-						}}
-					/>
-					<ProfileCardButton
-						label={t('home.labelMyFavorites', 'Meus favoritos')}
-						icon={bookmarkIcon}
-						onClick={() => {
-							isLogged
-								? navigate(PAGES.WISH_LIST)
-								: navigate(PAGES.SIGNIN, { redirectTo: PAGES.WISH_LIST })
-						}}
-					/>
+					{allCards
+						.filter(card => card.isVisible)
+						.map(item => (
+							<ProfileCardButton
+								key={item.label}
+								label={item.label}
+								icon={item.icon}
+								onClick={item.onClick}
+							/>
+						))}
 				</View>
 			</View>
 
-			<View className='px-4 mt-6 mb-2'>
-				<Text className='font-bold text-xl mb-3 text-gray-900'>{t('home.lbOrders', 'Pedidos')}</Text>
-				<View className='flex flex-col gap-3 mt-2'>
-					<ProfileCardButton
-						label={t('home.labelMyOrders', 'Meus pedidos')}
-						icon={boxIcon}
-						onClick={() => {
-							isLogged
-								? navigate(PAGES.ORDER_LIST)
-								: navigate(PAGES.SIGNIN, { redirectTo: PAGES.ORDER_LIST })
-						}}
-					/>
-				</View>
-			</View>
-
-			{isLogged && (
+			{isLogged ? (
 				<View className='px-4 py-6 mt-4'>
 					<CustomButton
 						variant='outlined'
+						className='uppercase !h-11 rounded-full'
+						textClassName='font-semibold text-red-700'
 						label={t('home.labelLeave', 'Sair')}
 						onPress={_doLogout}
+					/>
+				</View>
+			) : (
+				<View className='px-4 flex flex-col gap-2 mt-4'>
+					<CustomButton
+						label={t('home.labelEnter', 'ENTRAR')}
+						className='uppercase !h-11 rounded-full'
+						textClassName='font-semibold'
+						onPress={() => navigate(PAGES.SIGNIN)}
+					/>
+					<CustomButton
+						variant='outlined'
+						label={t('home.labelCreateAccount', 'CRIAR CONTA')}
+						className='uppercase !h-11 rounded-full'
+						textClassName='font-semibold'
+						onPress={() => navigate(PAGES.SIGNUP)}
 					/>
 				</View>
 			)}

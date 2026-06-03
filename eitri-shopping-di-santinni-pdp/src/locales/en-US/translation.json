@@ -18,7 +18,8 @@
 		"labelZipCode": "00000-000",
 		"labelCalculate": "Calculate",
 		"txtCalculate": "Consult freight",
-		"txtDontKnowZipCode": "I don't know my ZIP code"
+		"txtDontKnowZipCode": "I don't know my ZIP code",
+		"errorInvalidZipCode": "Invalid ZIP code. Please check and try again."
 	},
 	"productCard": {
 		"actionBuy": "Buy",
@@ -34,7 +35,7 @@
 		"txtWithoutInterest": "without interest"
 	},
 	"modalComponent": {
-		"txtProductAdded": "Product added",
+		"txtProductAdded": "Product added to cart",
 		"txtQuantity": "Quantity:",
 		"txtGoToCart": "Go to cart",
 		"txtAddToCart": "Add to cart",

@@ -13,6 +13,8 @@ export const PAGES = {
 	ORDER_DETAILS: '/OrderDetails',
 	WISH_LIST: '/WishList',
 	POINTS: '/Points',
+	SUPPORT: '/Support',
+	SETTINGS: '/Settings',
 	EXCHANGE_POLICY: '/ExchangePolicy',
 	ABOUT_US: '/AboutUs',
 	BECOMEAFRANCHISEE: '/BecomeAFranchisee'

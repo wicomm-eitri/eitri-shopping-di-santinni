@@ -139,19 +139,23 @@ export default function ProductCatalogContent(props) {
 			{products.length > 0 && !hideFilters && (
 				<>
 					<View className='p-4 flex flex-between gap-4 w-full'>
-						<CatalogFilter
-							minPriceRange={minPriceRange}
-							setMinPriceRange={setMinPriceRange}
-							maxPriceRange={maxPriceRange}
-							setMaxPriceRange={setMaxPriceRange}
-							currentFilters={appliedFacets}
-							onFilterChange={handleFilterChange}
-							onFilterClear={onFilterClear}
-						/>
-						<CatalogSort
-							currentSort={appliedFacets?.sort}
-							onSortChange={handleSortChange}
-						/>
+						<View className='flex-1 min-w-0'>
+							<CatalogFilter
+								minPriceRange={minPriceRange}
+								setMinPriceRange={setMinPriceRange}
+								maxPriceRange={maxPriceRange}
+								setMaxPriceRange={setMaxPriceRange}
+								currentFilters={appliedFacets}
+								onFilterChange={handleFilterChange}
+								onFilterClear={onFilterClear}
+							/>
+						</View>
+						<View className='flex-1 min-w-0'>
+							<CatalogSort
+								currentSort={appliedFacets?.sort}
+								onSortChange={handleSortChange}
+							/>
+						</View>
 					</View>
 
 					{totalProducts > 0 && (

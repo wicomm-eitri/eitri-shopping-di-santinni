@@ -1,5 +1,3 @@
-import { View } from 'eitri-luminus'
-
 export default function CustomModal(props) {
 	const { children, open, onClose } = props
 
@@ -11,7 +9,11 @@ export default function CustomModal(props) {
 			onClick={() => {
 				if (typeof onClose === 'function') onClose()
 			}}>
-			{children}
+			<View
+				className='w-full flex items-end justify-center'
+				onClick={e => e.stopPropagation()}>
+				{children}
+			</View>
 		</View>
 	)
 }

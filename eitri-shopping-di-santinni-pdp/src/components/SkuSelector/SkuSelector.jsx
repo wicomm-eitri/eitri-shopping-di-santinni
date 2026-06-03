@@ -38,12 +38,17 @@ function findSelectedSku(skus, attributeKeys, selections) {
 const COR_MAP = {
 	azul: '#3b5bdb',
 	vermelho: '#e03131',
+	vermelha: '#e03131',
 	verde: '#2f9e44',
 	preto: '#212529',
+	preta: '#212529',
 	branco: '#f8f9fa',
+	branca: '#f8f9fa',
 	amarelo: '#f59f00',
+	amarela: '#f59f00',
 	rosa: '#e64980',
-	cinza: '#868e96'
+	cinza: '#868e96',
+	marrom: '#6f4e37',
 }
 
 function ColorSwatch({ color, selected, status, onClick }) {
@@ -79,7 +84,7 @@ function OptionChip({ value, selected, status, onClick }) {
 		<View
 			onClick={!inexistent ? onClick : undefined}
 			className={`
-				relative flex justify-center items-center w-8 h-8 p-[8px] rounded border text-sm font-medium transition-all duration-200 select-none
+				relative flex justify-center items-center min-w-8 min-h-8 p-[8px] rounded border text-sm font-medium transition-all duration-200 select-none
 				${inexistent ? 'opacity-20 cursor-not-allowed border-gray-200 text-gray-400' : 'cursor-pointer'}
 				${
 					selected
