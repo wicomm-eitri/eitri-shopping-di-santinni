@@ -72,34 +72,42 @@ export default function DeliveryData(props) {
 					<View className='flex '>
 						{currentDelivery?.isPickupInPoint ? (
 							<View className='flex flex-col w-full'>
-								<Text className='text-xs text-gray-500 mb-1'>{displayLabel || currentDelivery?.name}</Text>
-								
+								<Text className='text-xs text-gray-500 mb-1'>
+									{displayLabel || currentDelivery?.name}
+								</Text>
+
 								{currentDelivery.formattedShippingEstimate && (
 									<Text className='text-xs text-gray-500 mb-1'>
 										{currentDelivery.formattedShippingEstimate}
 									</Text>
 								)}
-								
+
 								<Text
 									className={`text-xs ${
-										currentDelivery.formatedPrice === 'Grátis' ? 'text-green-600 font-medium' : 'text-gray-500'
+										currentDelivery.formatedPrice === 'Grátis'
+											? 'text-green-600 font-medium'
+											: 'text-gray-500'
 									}`}>
 									{currentDelivery.formatedPrice}
 								</Text>
 							</View>
 						) : (
 							<View className='flex flex-col w-full'>
-								<Text className='text-xs text-gray-500 mb-1'>{displayLabel || currentDelivery?.name}</Text>
-								
+								<Text className='text-xs text-gray-500 mb-1'>
+									{displayLabel || currentDelivery?.name}
+								</Text>
+
 								{currentDelivery.formattedShippingEstimate && (
 									<Text className='text-xs text-gray-500 mb-1'>
 										{currentDelivery.formattedShippingEstimate}
 									</Text>
 								)}
-								
+
 								<Text
 									className={`text-xs ${
-										currentDelivery.formatedPrice === 'Grátis' ? 'text-green-600 font-medium' : 'text-gray-500'
+										currentDelivery.formatedPrice === 'Grátis'
+											? 'text-green-600 font-medium'
+											: 'text-gray-500'
 									}`}>
 									{currentDelivery.formatedPrice}
 								</Text>

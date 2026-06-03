@@ -12,11 +12,7 @@ import {
 import Alert from '../components/Alert/Alert'
 import CCheckbox from '../components/CCheckbox/CCheckbox'
 import SocialLogin from '../components/SocialLogin/SocialLogin'
-import {
-	getSavedUser,
-	sendAccessKeyByEmail,
-	saveUserCredentialsOnStorage
-} from '../services/CustomerService'
+import { getSavedUser, sendAccessKeyByEmail, saveUserCredentialsOnStorage } from '../services/CustomerService'
 import { navigate, PAGES } from '../services/NavigationService'
 import { getStorePreferences, getLoginProviders } from '../services/StoreService'
 import { sendScreenView } from '../services/TrackingService'
