@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { View } from 'eitri-luminus'
 import { CustomCarousel } from 'eitri-shopping-di-santinni-shared'
 import ProductCard from '../../ProductCard/ProductCard'
 
@@ -5,15 +7,7 @@ export default function ShelfOfProductsCarousel(props) {
 	const { isLoading, products } = props
 
 	const [currentSlide, setCurrentSlide] = useState(0)
-	const products_per_page = 2
-
-	const productsPage = []
-
-	if (Array.isArray(products)) {
-		for (let i = 0; i < products.length; i += products_per_page) {
-			productsPage.push(products.slice(i, i + products_per_page))
-		}
-	}
+	const productsList = Array.isArray(products) ? products : []
 
 	const handleScroll = e => setCurrentSlide(e)
 
@@ -30,21 +24,20 @@ export default function ShelfOfProductsCarousel(props) {
 					<CustomCarousel
 						autoPlay={false}
 						loop={true}
-						onSlideChange={handleScroll}>
-						{productsPage.map((page, index) => (
+						onSlideChange={handleScroll}
+						slidesToShow={2}>
+						{productsList.map((product, index) => (
 							<View
-								key={`${page?.[0]?.productId}-${index}`}
-								className='grid grid-cols-2 gap-4 px-4 py-2 justify-items-center'>
-								<ProductCard product={page[0]} />
-
-								{page.length > 1 && <ProductCard product={page[1]} />}
+								key={`${product?.productId ?? index}-${index}`}
+								className='flex justify-center py-2 h-full'>
+								<ProductCard product={product} className='w-full' />
 							</View>
 						))}
 					</CustomCarousel>
 
-					{productsPage.length > 1 && (
+					{productsList.length > 1 && (
 						<View className='flex justify-center gap-1 mt-2'>
-							{productsPage.map((_, index) => (
+							{productsList.map((_, index) => (
 								<View
 									key={index}
 									className={`${currentSlide === index ? 'bg-primary w-7' : 'bg-neutral-400 w-3'} h-3 rounded-lg transition-[width,background-color] duration-300 ease-in-out`}
