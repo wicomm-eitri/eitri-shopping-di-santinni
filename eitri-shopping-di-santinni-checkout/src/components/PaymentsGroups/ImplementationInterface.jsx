@@ -44,5 +44,5 @@ export default function ImplementationInterface(props) {
 	const Implementation = PAYMENT_GROUPS_IMPLEMENTATION[groupName]
 
 	/*prettier-ignore*/
-	return React.createElement(Implementation, { groupName, systemGroup, onSelectPaymentMethod })
+	return React.createElement(Implementation, { groupName, systemGroup, onSelectPaymentMethod, selectedPayment: props.selectedPayment })
 }

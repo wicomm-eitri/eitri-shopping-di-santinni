@@ -19,8 +19,10 @@ export default function OrderCard(props) {
 
 	const loadDetails = async () => {
 		setLoadingDetails(true)
+
 		try {
 			const result = await getOrderById(order?.orderId)
+
 			setOrderDetails(result)
 		} catch (e) {
 			console.error(t('orderCard.loadDetailsError', 'Falha ao carregar detalhes do pedido:'), e)
@@ -39,12 +41,14 @@ export default function OrderCard(props) {
 
 	const formatDateTime = dateString => {
 		if (!dateString) return ''
+
 		const d = new Date(dateString)
 		const day = String(d.getDate()).padStart(2, '0')
 		const month = String(d.getMonth() + 1).padStart(2, '0')
 		const year = d.getFullYear()
 		const hours = String(d.getHours()).padStart(2, '0')
 		const minutes = String(d.getMinutes()).padStart(2, '0')
+
 		return `${day}/${month}/${year} às ${hours}:${minutes}`
 	}
 

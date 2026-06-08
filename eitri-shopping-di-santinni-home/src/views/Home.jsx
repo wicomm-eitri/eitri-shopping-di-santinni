@@ -75,7 +75,6 @@ export default function Home() {
 
 		setCmsContent(sections)
 	}
-	console.log(cmsContent)
 
 	return (
 		<Page

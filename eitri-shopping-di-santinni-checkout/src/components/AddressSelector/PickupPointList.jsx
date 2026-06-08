@@ -77,7 +77,7 @@ function PickupPointCard({ option, isSelected = false, onClick }) {
 	// Exibe um cartão de ponto de retirada, destacando visualmente se está selecionado
 	return (
 		<View
-			className={`rounded-lg shadow-sm transition-all duration-200 border cursor-pointer hover:shadow-md ${
+			className={`rounded-lg shadow-sm transition-all duration-200 border  hover:shadow-md ${
 				isSelected ? 'border-2 border-primary' : 'border-neutral-300 hover:border-primary/30 bg-base-100'
 			}`}
 			onClick={onClick}>

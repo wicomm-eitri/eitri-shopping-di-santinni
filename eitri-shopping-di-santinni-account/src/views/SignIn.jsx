@@ -144,6 +144,7 @@ export default function SignIn(props) {
 				setAlertMessage(t('signIn.verifyAgain', 'Verifique as informaçoes e tente novamente'))
 				setShowLoginErrorAlert(true)
 				setLoading(false)
+
 				return
 			}
 
@@ -152,6 +153,7 @@ export default function SignIn(props) {
 			if (loggedIn === 'Success' || loggedIn?.status === 'Success') {
 				saveUserEmailOnStorage(username)
 				await onLoggedIn()
+
 				return
 			}
 
@@ -174,6 +176,7 @@ export default function SignIn(props) {
 				setAlertMessage(t('signIn.wrongCredentials', 'Token incorreto'))
 				setShowLoginErrorAlert(true)
 				setLoading(false)
+
 				return
 			}
 
@@ -182,6 +185,7 @@ export default function SignIn(props) {
 			if (loggedIn === 'Success' || loggedIn?.status === 'Success') {
 				saveUserEmailOnStorage(username)
 				await onLoggedIn()
+
 				return
 			}
 
@@ -272,6 +276,16 @@ export default function SignIn(props) {
 									navigate(PAGES.SIGNUP)
 								}}
 							/>
+
+							{loginProviders?.accessKeyAuthentication && (
+								<CustomButton
+									width='100%'
+									className='uppercase !h-11 rounded-full'
+									variant='outlined'
+									label={t('signIn.labelAccessWithCode', 'ACESSAR COM CÓDIGO')}
+									onPress={() => setLoginMethod(LOGIN_WITH_EMAIL_AND_ACCESS_KEY)}
+								/>
+							)}
 						</View>
 					</>
 				)}

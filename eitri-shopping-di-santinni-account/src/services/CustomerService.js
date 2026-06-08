@@ -37,9 +37,11 @@ export const getCustomerData = async () => {
 	try {
 		const result = await Vtex.customer.getCustomerProfile()
 		const profile = result?.data?.profile
+
 		return profile
 	} catch (e) {
 		console.log('getCustomerData error', e)
+
 		return null
 	}
 }
@@ -63,6 +65,7 @@ export const setCustomerData = async profileData => {
 		}
 		const result = await Vtex.customer.updateCustomerProfile(payload)
 		const updateProfile = result?.data?.updateProfile
+
 		return updateProfile
 	} catch (e) {
 		console.log('setCustomerData error', e)
@@ -114,6 +117,7 @@ export const getWishlist = async () => {
 		const response = await Eitri.http.post(GRAPHQL_URL, { query, variables: {} }, { headers })
 
 		const wishlists = response.data?.data?.getWishlistsByEmail || []
+
 		if (wishlists.length === 0) return []
 
 		const products = wishlists[0].products || []
@@ -127,6 +131,7 @@ export const getWishlist = async () => {
 		}))
 	} catch (error) {
 		console.error('Erro ao carregar wishlist via bypass:', error)
+
 		return []
 	}
 }
@@ -157,6 +162,7 @@ export const removeFromWishlist = async wishListItemId => {
 
 		const listResponse = await Eitri.http.post(GRAPHQL_URL, { query: queryList, variables: {} }, { headers })
 		const wishlists = listResponse.data?.data?.getWishlistsByEmail || []
+
 		if (wishlists.length === 0) return true
 
 		const targetList = wishlists[0]
@@ -201,6 +207,7 @@ export const removeFromWishlist = async wishListItemId => {
 		return true
 	} catch (error) {
 		console.error('Erro no removeFromWishlist manual:', error)
+
 		return false
 	}
 }
@@ -219,6 +226,7 @@ export async function loginWithFacebook() {
 
 export const listOrders = async page => {
 	const response = await Vtex.customer.listOrders(page)
+
 	return response
 }
 

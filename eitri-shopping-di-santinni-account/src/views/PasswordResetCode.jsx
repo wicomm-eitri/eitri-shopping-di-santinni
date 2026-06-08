@@ -15,9 +15,11 @@ export default function PasswordResetCode(props) {
 		const chars = recoveryCode.split('').slice(0, digitCount)
 
 		while (chars.length < digitCount) chars.push('')
+
 		chars[index] = digit
 
 		const newCode = chars.join('')
+
 		setRecoveryCode(newCode)
 
 		if (digit && index < digitCount - 1) {

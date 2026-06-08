@@ -5,7 +5,7 @@ export default function ProfileCardButton(props) {
 
 	return (
 		<View
-			className='flex justify-between items-center bg-white rounded-full shadow-none border border-gray-200 px-5 py-3 w-full cursor-pointer hover:bg-gray-50 transition-colors'
+			className='flex justify-between items-center bg-white rounded-full shadow-none border border-gray-200 px-5 py-3 w-full  hover:bg-gray-50 transition-colors'
 			onClick={onClick}>
 			{/* Lado Esquerdo: Ícone + Label */}
 			<View className='flex flex-row items-center gap-3.5'>

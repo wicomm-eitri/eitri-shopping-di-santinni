@@ -1,39 +1,46 @@
 import { useTranslation } from 'eitri-i18n'
-import { useLocalShoppingCart } from '../../../providers/LocalCart'
 import Boleto from '../../Icons/MethodIcons/Boleto'
 import GroupsWrapper from './GroupsWrapper'
 
 export default function BankInvoice(props) {
-	const { selectedPaymentData, setSelectedPaymentData } = useLocalShoppingCart()
-	const { paymentSystems, groupName } = props
+	const { groupName, systemGroup, onSelectPaymentMethod, selectedPayment } = props
 	const { t } = useTranslation()
 
-	const onSelectThisGroup = () => {
-		setSelectedPaymentData({
-			groupName: groupName,
-			paymentSystem: paymentSystems[0],
-			payload: {
-				paymentSystem: paymentSystems[0].stringId,
-				bin: paymentSystems[0].bin,
-				hasDefaultBillingAddress: true,
-				isLuhnValid: true,
-				installmentsInterestRate: paymentSystems[0].installments[0]?.interestRate,
-				accountId: null,
-				tokenId: null,
-				installments: `${paymentSystems[0].installments[0]?.count}`, //TODO: NÃO ESTÁ RECEBENDO COMO NUMERO
-				referenceValue: paymentSystems[0].installments[0]?.value,
-				value: paymentSystems[0].installments[0]?.total,
-				isRegexValid: true
-			},
-			isReadyToPay: true
-		})
+	const paymentSystems = systemGroup?.paymentSystems || []
+
+	const isChecked = (() => {
+		if (selectedPayment) {
+			const candidates = paymentSystems.map(ps => ps.id)
+
+			return Array.isArray(selectedPayment)
+				? selectedPayment.some(p => candidates.includes(p.paymentSystem))
+				: candidates.includes(selectedPayment.paymentSystem)
+		}
+
+		return systemGroup?.isCurrentPaymentSystemGroup
+	})()
+
+	const onSelectThisGroup = async () => {
+		if (paymentSystems.length > 0) {
+			await onSelectPaymentMethod([
+				{
+					paymentSystem: paymentSystems[0].id,
+					installmentsInterestRate: paymentSystems[0].installments?.[0]?.interestRate || 0,
+					installments: paymentSystems[0].installments?.[0]?.count || 1,
+					referenceValue: paymentSystems[0].installments?.[0]?.value || cart?.value,
+					value: paymentSystems[0].installments?.[0]?.total || cart?.value,
+					hasDefaultBillingAddress: true
+				}
+			])
+		}
 	}
+
 
 	return (
 		<GroupsWrapper
 			title={t('paymentMethods.bankInvoice.title', 'Boleto Bancário')}
 			icon={<Boleto />}
-			isChecked={groupName === selectedPaymentData?.groupName}
+			selected={isChecked}
 			onPress={onSelectThisGroup}
 		/>
 	)

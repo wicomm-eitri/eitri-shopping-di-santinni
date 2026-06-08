@@ -16,6 +16,7 @@ export default function DeliveryData(props) {
 
 	const getServiceTitle = item => {
 		if (!item) return ''
+
 		const label = (item?.label || '').toLowerCase()
 		const slas = Array.isArray(item?.slas) ? item.slas : []
 

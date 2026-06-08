@@ -31,6 +31,7 @@ export default function AddressSelector(props) {
 
 		try {
 			const currentAddress = cart?.shippingData?.address
+
 			if (currentAddress?.addressId !== address?.addressId) {
 				await setShippingAddress(address)
 			}
@@ -66,6 +67,7 @@ export default function AddressSelector(props) {
 		if (!cart.canEditData) {
 			setModalLogin(true)
 			setCurrentEditingAddress(address)
+
 			return
 		}
 

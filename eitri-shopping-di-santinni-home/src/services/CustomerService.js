@@ -6,6 +6,7 @@ export const requestLogin = () => {
 		;(async () => {
 			if (await isLoggedIn()) {
 				resolve()
+
 				return
 			}
 
@@ -29,6 +30,7 @@ export const isLoggedIn = async () => {
 		return await Vtex.customer.isLoggedIn()
 	} catch (e) {
 		console.error('Erro ao buscar dados do cliente', e)
+
 		return false
 	}
 }
@@ -80,6 +82,7 @@ export const getWishlist = async () => {
 		const response = await Eitri.http.post(GRAPHQL_URL, { query, variables: {} }, { headers })
 
 		const wishlists = response.data?.data?.getWishlistsByEmail || []
+
 		if (wishlists.length === 0) return []
 
 		const products = wishlists[0].products || []
@@ -92,6 +95,7 @@ export const getWishlist = async () => {
 		}))
 	} catch (error) {
 		console.error('Erro ao carregar wishlist via bypass:', error)
+
 		return []
 	}
 }
@@ -100,6 +104,7 @@ export const productOnWishlist = async productId => {
 	try {
 		const products = await getWishlist()
 		const itemExists = products.find(item => String(item.productId) === String(productId))
+
 		return { inList: !!itemExists, listId: itemExists ? true : null }
 	} catch (error) {
 		return { inList: false }
@@ -131,6 +136,7 @@ export const removeItemFromWishlist = async productId => {
         `
 		const listResponse = await Eitri.http.post(GRAPHQL_URL, { query: queryList, variables: {} }, { headers })
 		const wishlists = listResponse.data?.data?.getWishlistsByEmail || []
+
 		if (wishlists.length === 0) return true
 
 		const targetList = wishlists[0]
@@ -164,9 +170,11 @@ export const removeItemFromWishlist = async productId => {
 		}
 
 		await Eitri.http.post(GRAPHQL_URL, { query: mutationUpdate, variables }, { headers })
+
 		return true
 	} catch (error) {
 		console.error('Erro no removeFromWishlist manual:', error)
+
 		return false
 	}
 }
@@ -280,6 +288,7 @@ export const addToWishlist = async (productId, title, sku) => {
 		}
 
 		const result = response.data
+
 		if (result?.errors) {
 			console.error('Detalhes do Erro GraphQL:', JSON.stringify(result.errors))
 			throw new Error('Falha na validação do GraphQL')

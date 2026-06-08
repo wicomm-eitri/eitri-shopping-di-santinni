@@ -29,6 +29,7 @@ export default function BannerList(props) {
 				if (!isNaN(ratio)) {
 					if (!maxWidth && !maxHeight) {
 						const screenWidth = window.innerWidth * 0.8
+
 						finalWidth = screenWidth
 						finalHeight = screenWidth * ratio
 					} else if (maxWidth && !maxHeight) {
@@ -177,18 +178,18 @@ export default function BannerList(props) {
 				{hasMultipleImages && showArrows && (
 					<>
 						<View
-							className='absolute left-3 top-1/2 -translate-y-1/2 z-10'
+							className='absolute left-3 top-1/2 -translate-y-1/2 z-10 '
 							onClick={() => goToSlide('left')}>
-							<View className='w-11 h-11 rounded-full bg-white border border-red-500 shadow-lg flex items-center justify-center'>
-								<LuChevronLeft className='text-red-500 text-2xl' />
+							<View className='w-6 h-6 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-gray-50 transition-colors'>
+								<LuChevronLeft className='text-red-700 text-sm' />
 							</View>
 						</View>
 
 						<View
-							className='absolute right-3 top-1/2 -translate-y-1/2 z-10'
+							className='absolute right-3 top-1/2 -translate-y-1/2 z-10 '
 							onClick={() => goToSlide('right')}>
-							<View className='w-11 h-11 rounded-full bg-white border border-red-500 shadow-lg flex items-center justify-center'>
-								<LuChevronRight className='text-red-500 text-2xl' />
+							<View className='w-6 h-6 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-gray-50 transition-colors'>
+								<LuChevronRight className='text-red-700 text-sm' />
 							</View>
 						</View>
 					</>

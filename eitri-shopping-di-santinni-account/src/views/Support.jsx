@@ -35,7 +35,7 @@ export default function Support() {
 				<View className='bg-white overflow-hidden rounded'>
 					{/* Item: Telefone */}
 					<View
-						className='px-4 py-5 flex flex-row items-center justify-between border-b  active:bg-gray-50 cursor-pointer'
+						className='px-4 py-5 flex flex-row items-center justify-between border-b  active:bg-gray-50 '
 						onClick={openPhone}>
 						<View className='flex flex-row items-center gap-3'>
 							<Image
@@ -63,7 +63,7 @@ export default function Support() {
 
 					{/* Item: E-mail */}
 					<View
-						className='px-4 py-5 flex flex-row items-center justify-between border-b border-neutral active:bg-gray-50 cursor-pointer'
+						className='px-4 py-5 flex flex-row items-center justify-between border-b border-neutral active:bg-gray-50 '
 						onClick={openEmail}>
 						<View className='flex flex-row items-center gap-3'>
 							<svg

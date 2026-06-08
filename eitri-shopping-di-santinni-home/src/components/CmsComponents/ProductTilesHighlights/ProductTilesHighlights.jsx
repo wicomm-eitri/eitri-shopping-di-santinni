@@ -29,6 +29,7 @@ export default function ProductTilesHighlights(props) {
 
 			if (cachedProducts[shelf.title]) {
 				setCurrentProducts(cachedProducts[shelf.title])
+
 				return
 			}
 
@@ -82,6 +83,7 @@ export default function ProductTilesHighlights(props) {
 				<View className='flex overflow-x-auto px-4 gap-6 relative z-10 hide-scrollbar'>
 					{shelves?.map(shelf => {
 						const isActive = shelf.title === currentShelf.title
+
 						return (
 							<View
 								key={shelf.title}

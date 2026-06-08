@@ -30,6 +30,7 @@ export default function ProductTiles(props) {
 
 			if (cachedProducts[shelf.title]) {
 				setCurrentProducts(cachedProducts[shelf.title])
+
 				return
 			}
 
@@ -74,6 +75,7 @@ export default function ProductTiles(props) {
 					<View className='flex flex-row gap-6 border-b-[2px] border-white'>
 						{shelves?.map(shelf => {
 							const isActive = shelf.title === currentShelf.title
+
 							return (
 								<View
 									key={shelf.title}

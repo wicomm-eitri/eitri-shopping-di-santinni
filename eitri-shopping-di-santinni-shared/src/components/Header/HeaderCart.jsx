@@ -9,6 +9,7 @@ export default function HeaderCart(props) {
 	useEffect(() => {
 		if (cart) {
 			const itemsQuantity = cart.items.reduce((acc, item) => acc + item.quantity, 0)
+
 			setQuantityOfItems(itemsQuantity)
 		}
 	}, [cart])
@@ -16,6 +17,7 @@ export default function HeaderCart(props) {
 	const handlePress = () => {
 		if (onClick) {
 			onClick()
+
 			return
 		} else {
 			Eitri.nativeNavigation.open({

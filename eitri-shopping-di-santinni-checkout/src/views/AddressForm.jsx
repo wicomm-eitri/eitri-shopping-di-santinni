@@ -241,6 +241,7 @@ export default function AddressForm(props) {
 
 				if (!_address && cart?.shippingData?.selectedAddresses?.[0]?.addressId) {
 					setAddressId(cart.shippingData.selectedAddresses[0].addressId)
+
 					return
 				}
 
@@ -257,6 +258,7 @@ export default function AddressForm(props) {
 
 	const handleAddressChange = useCallback((key, e) => {
 		const { value } = e.target
+
 		setAddress(prev => ({
 			...prev,
 			[key]: key === 'receiverName' ? value.replace(/[^a-zA-Z\s]/g, '') : value
@@ -265,12 +267,14 @@ export default function AddressForm(props) {
 
 	const onChangePostalCodeInput = async e => {
 		const { value } = e.target
+
 		setAddress({ ...address, postalCode: value })
 	}
 
 	const submitZipCode = async postalCode => {
 		try {
 			if (!postalCode) return
+
 			setIsLoading(true)
 
 			const { street, neighborhood, city, state, country, geoCoordinates } = await resolvePostalCode(postalCode)
@@ -298,6 +302,7 @@ export default function AddressForm(props) {
 
 	const submit = async () => {
 		if (isSubmitting) return
+
 		setIsSubmitting(true)
 		setAddressError('')
 
@@ -343,10 +348,12 @@ export default function AddressForm(props) {
 					}
 
 					const next = Array.isArray(stored) ? [...stored, sessionAddress] : [sessionAddress]
+
 					localStorage.setItem(sessionKey, JSON.stringify(next))
 					console.debug('Saved session address', sessionAddress)
 					// go back to shipping method so user can choose it manually
 					navigate('ShippingMethod', {}, true)
+
 					return
 				} catch (err) {
 					console.error('Error saving session address', err)
@@ -358,6 +365,7 @@ export default function AddressForm(props) {
 			if (e.response?.status === 400) {
 				setAddressError(t('addNewShippingAddress.errorAddress'))
 				console.error('Error on submit', e)
+
 				return
 			}
 

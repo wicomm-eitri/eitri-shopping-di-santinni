@@ -140,6 +140,7 @@ export default function CheckoutReview() {
 					setError({ state: false, message: '' })
 					navigate('PaymentData', true)
 				}, 3000)
+
 				return
 			}
 
