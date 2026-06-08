@@ -67,6 +67,7 @@ export default function ShippingMethod(props) {
 	useEffect(() => {
 		try {
 			const stored = JSON.parse(localStorage.getItem('session_addresses') || '[]')
+
 			setSessionAddresses(Array.isArray(stored) ? stored : [])
 		} catch (e) {
 			setSessionAddresses([])
@@ -78,6 +79,7 @@ export default function ShippingMethod(props) {
 
 		for (let i = 0; i < sessionAddresses.length; i++) {
 			const a = sessionAddresses[i]
+
 			list.push({
 				...a,
 				_source: 'session',
@@ -136,6 +138,7 @@ export default function ShippingMethod(props) {
 			const updatedAddresses = prev.filter((_, i) => i !== index)
 
 			localStorage.setItem('session_addresses', JSON.stringify(updatedAddresses))
+
 			return updatedAddresses
 		})
 	}
@@ -229,6 +232,7 @@ export default function ShippingMethod(props) {
 						label={'CONTINUAR PARA COMPRA'}
 						onPress={() => {
 							if (!selectedAddress) return
+
 							goToFreightSelector()
 						}}
 					/>

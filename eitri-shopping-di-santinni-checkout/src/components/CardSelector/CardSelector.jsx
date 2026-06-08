@@ -19,6 +19,7 @@ export default function CardSelector(props) {
 	const handleClick = () => {
 		if (selectable) {
 			typeof onSelect === 'function' && onSelect()
+
 			return
 		}
 

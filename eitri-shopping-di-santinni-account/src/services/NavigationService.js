@@ -17,7 +17,8 @@ export const PAGES = {
 	SETTINGS: '/Settings',
 	EXCHANGE_POLICY: '/ExchangePolicy',
 	ABOUT_US: '/AboutUs',
-	BECOMEAFRANCHISEE: '/BecomeAFranchisee'
+	BECOMEAFRANCHISEE: '/BecomeAFranchisee',
+	NOSSASLOJAS: '/NossasLojas'
 }
 
 export const openProduct = async product => {

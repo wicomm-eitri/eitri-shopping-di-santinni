@@ -140,9 +140,18 @@ export default function SignIn(props) {
 		setLoading(true)
 
 		try {
-			const loggedIn = await doLogin(username, password)
+			if (!username || !password) {
+				setAlertMessage(t('signIn.verifyAgain', 'Verifique as informaçoes e tente novamente'))
+				setShowLoginErrorAlert(true)
+				setLoading(false)
 
-			if (loggedIn === 'Success') {
+				return
+			}
+
+			const loggedIn = await doLogin(username, password, false)
+
+			if (loggedIn === 'Success' || loggedIn?.status === 'Success') {
+				saveUserEmailOnStorage(username)
 				await onLoggedIn()
 
 				return
@@ -151,22 +160,30 @@ export default function SignIn(props) {
 			setAlertMessage(t('signIn.verifyAgain', 'Verifique as informaçoes e tente novamente'))
 			setShowLoginErrorAlert(true)
 		} catch (e) {
+			console.error('handleLogin error:', e)
 			setAlertMessage(t('signIn.errorInvalidUser', 'Usuário ou senha inválidos'))
 			setShowLoginErrorAlert(true)
 		} finally {
-			saveUserEmailOnStorage(username)
+			setLoading(false)
 		}
-
-		setLoading(false)
 	}
 
 	const loginWithEmailAndAccessKey = async () => {
 		setLoading(true)
 
 		try {
+			if (!username || !verificationCode) {
+				setAlertMessage(t('signIn.wrongCredentials', 'Token incorreto'))
+				setShowLoginErrorAlert(true)
+				setLoading(false)
+
+				return
+			}
+
 			const loggedIn = await loginWithEmailAndKey(username, verificationCode)
 
-			if (loggedIn === 'Success') {
+			if (loggedIn === 'Success' || loggedIn?.status === 'Success') {
+				saveUserEmailOnStorage(username)
 				await onLoggedIn()
 
 				return
@@ -175,30 +192,12 @@ export default function SignIn(props) {
 			setAlertMessage(t('signIn.wrongCredentials', 'Token incorreto'))
 			setShowLoginErrorAlert(true)
 		} catch (e) {
+			console.error('loginWithEmailAndAccessKey error:', e)
 			setAlertMessage(t('signIn.wrongCredentials', 'Token incorreto'))
 			setShowLoginErrorAlert(true)
 		} finally {
-			saveUserEmailOnStorage(username)
+			setLoading(false)
 		}
-
-		setLoading(false)
-
-		// const customerData = await getCustomerData()
-		// if (loggedIn === 'WrongCredentials') {
-		// 	setAlertMessage(t('signIn.wrongCredentials', 'Token incorreto'))
-		// 	setShowLoginErrorAlert(true)
-		// } else if (loggedIn === 'Success') {
-		// 	if (redirectTo) {
-		// 		navigate(redirectTo, { customerData }, true)
-		// 	} else if (closeAppAfterLogin) {
-		// 		Eitri.close()
-		// 	} else {
-		// 		Eitri.navigation.back()
-		// 	}
-		// } else {
-		// 	setAlertMessage(t('signIn.verifyAgain', 'Verifique as informaçoes e tente novamente'))
-		// 	setShowLoginErrorAlert(true)
-		// }
 	}
 
 	const handleSocialLogin = async () => {
@@ -277,6 +276,16 @@ export default function SignIn(props) {
 									navigate(PAGES.SIGNUP)
 								}}
 							/>
+
+							{loginProviders?.accessKeyAuthentication && (
+								<CustomButton
+									width='100%'
+									className='uppercase !h-11 rounded-full'
+									variant='outlined'
+									label={t('signIn.labelAccessWithCode', 'ACESSAR COM CÓDIGO')}
+									onPress={() => setLoginMethod(LOGIN_WITH_EMAIL_AND_ACCESS_KEY)}
+								/>
+							)}
 						</View>
 					</>
 				)}

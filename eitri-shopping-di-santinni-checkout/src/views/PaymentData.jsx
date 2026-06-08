@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useTranslation } from 'eitri-i18n'
 import {
 	BottomInset,
@@ -21,6 +21,23 @@ export default function PaymentData() {
 	const [selectedPayment, setSelectedPayment] = useState(null)
 	const { t } = useTranslation()
 
+	const isButtonDisabled = useMemo(() => {
+		if (!selectedPayment) return true
+
+		const paymentArray = Array.isArray(selectedPayment) ? selectedPayment : [selectedPayment]
+
+		if (paymentArray.length === 0) return true
+		
+		const psId = paymentArray[0].paymentSystem || paymentArray[0].id
+		const ps = cart?.paymentData?.paymentSystems?.find(p => p.id === psId || p.stringId === psId)
+		
+		if (ps?.groupName === 'creditCardPaymentGroup') {
+			return !paymentArray[0].isReadyToPay
+		}
+
+		return false
+	}, [selectedPayment, cart?.paymentData?.paymentSystems])
+
 	useEffect(() => {
 		trackScreenView(`checkout_dados_pagamento`, 'checkout.paymentData')
 	}, [])
@@ -33,8 +50,16 @@ export default function PaymentData() {
 		try {
 			setIsLoading(true)
 
+			const cleanPayments = Array.isArray(selectedPayment)
+				? selectedPayment.map(p => {
+						const { isReadyToPay, ...rest } = p
+
+						return rest
+				  })
+				: [selectedPayment]
+
 			const payload = {
-				payments: Array.isArray(selectedPayment) ? selectedPayment : [selectedPayment],
+				payments: cleanPayments,
 				giftCards: cart.paymentData.giftCards
 			}
 
@@ -82,7 +107,7 @@ export default function PaymentData() {
 			<View className='fixed bottom-0 left-0 w-full z-10 bg-white border-t border-gray-300'>
 				<View className='p-4'>
 					<CustomButton
-						disabled={!selectedPayment}
+						disabled={isButtonDisabled}
 						label={'CONTINUAR PARA COMPRA'}
 						onPress={applySelectedPayment}
 					/>

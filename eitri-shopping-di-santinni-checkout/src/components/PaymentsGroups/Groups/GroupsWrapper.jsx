@@ -5,7 +5,7 @@ export default function GroupsWrapper(props) {
 		<View className={`bg-[#FCFCFC] border-[1.5px] border-red-700 p-4 ${className || ''}`}>
 			<View
 				onClick={onPress}
-				className='w-full flex flex-row items-center justify-between cursor-pointer'>
+				className='w-full flex flex-row items-center justify-between '>
 				<View className='flex flex-row items-center gap-3'>
 					{icon && <View className='text-red-700 flex items-center justify-center'>{icon}</View>}
 

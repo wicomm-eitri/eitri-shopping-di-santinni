@@ -49,20 +49,10 @@ export default function UserData(props) {
 				isFilled={cart?.clientProfileData?.email}
 				onPress={onPressMainAction}
 				icon={personalIcon}>
-				<View className='flex flex-col'>
-					<View className='flex flex-row justify-between'>
-						<Text className='text-xs mb-1'>{cart?.clientProfileData?.email}</Text>
-						{cart?.clientProfileData?.email && !cart.canEditData && (
-							<View onClick={clearClientData}>
-								<Text className='text-xs text-primary-300 underline'>
-									{t('userData.txtMessageLeave', 'Não é você? Sair')}
-								</Text>
-							</View>
-						)}
-					</View>
-					<Text className='text-xs mb-1'>{`${cart?.clientProfileData?.firstName} ${cart?.clientProfileData?.lastName}`}</Text>
-					<Text className='text-xs mb-1'>{cart?.clientProfileData?.document}</Text>
-					<Text className='text-xs mb-1'>{cart?.clientProfileData?.phone}</Text>
+				<View className='flex flex-col gap-2'>
+					<Text className='text-xs text-gray-500 mb-1'>{`${cart?.clientProfileData?.firstName} ${cart?.clientProfileData?.lastName}`}</Text>
+					<Text className='text-xs text-gray-500 mb-1'>Email: {cart?.clientProfileData?.email}</Text>
+					<Text className='text-xs text-gray-500 mb-1'>Telefone: {cart?.clientProfileData?.phone}</Text>
 				</View>
 			</SimpleCard>
 			<OtpLogin

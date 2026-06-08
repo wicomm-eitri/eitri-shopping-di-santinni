@@ -30,7 +30,7 @@ export default function MainHeader(props) {
 		<HeaderContentWrapper
 			isHome
 			scrollEffect
-			className={`${isScrolled || isPLP ? 'relative bg-base-100' : 'bg-transparent absolute'} transition-all duration-500 ease-in-out`}>
+			className={`${isScrolled || isPLP ? 'relative bg-base-100' : 'bg-base-100 absolute'} transition-all duration-500 ease-in-out`}>
 			<View className='relative flex items-center justify-between pt-8 px-4 w-screen'>
 				<View className='flex items-center gap-3'>
 					{isPLP && <HeaderReturn />}

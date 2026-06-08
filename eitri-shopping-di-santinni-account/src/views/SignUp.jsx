@@ -12,11 +12,7 @@ import {
 import Alert from '../components/Alert/Alert'
 import CCheckbox from '../components/CCheckbox/CCheckbox'
 import SocialLogin from '../components/SocialLogin/SocialLogin'
-import {
-	getSavedUser,
-	sendAccessKeyByEmail,
-	saveUserCredentialsOnStorage
-} from '../services/CustomerService'
+import { getSavedUser, setPassword as setPasswordOnVtex, sendAccessKeyByEmail, saveUserCredentialsOnStorage } from '../services/CustomerService'
 import { navigate, PAGES } from '../services/NavigationService'
 import { getStorePreferences, getLoginProviders } from '../services/StoreService'
 import { sendScreenView } from '../services/TrackingService'
@@ -105,6 +101,7 @@ export default function SignUp(props) {
 	}, [timeOutToResentEmail])
 
 	const sendAccessKey = async () => {
+
 		if (!termsChecked) {
 			setAlertMessage(t('signUp.alertMessageAcceptTerms', 'Necessário aceitar os termos'))
 			setShowLoginErrorAlert(true)
@@ -133,7 +130,8 @@ export default function SignUp(props) {
 		setLoading(true)
 
 		try {
-			await setCustomerPassword(email, verificationCode, password)
+			const result = await setPasswordOnVtex(email, verificationCode, password)
+
 			navigate(PAGES.HOME)
 		} catch (e) {
 			const status = e?.response?.status || 400

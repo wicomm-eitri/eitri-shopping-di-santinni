@@ -91,6 +91,7 @@ export default function FreightSelector(props) {
 
 		if (typeof str === 'number') {
 			const d = new Date(str)
+
 			return isNaN(d) ? null : d
 		}
 
@@ -104,15 +105,18 @@ export default function FreightSelector(props) {
 
 		if (/\d{4}-\d{2}-\d{2}T/.test(str)) {
 			const d = new Date(str)
+
 			return isNaN(d) ? null : d
 		}
 
 		const parts = str.split('/').map(p => p.trim())
+
 		if (parts.length === 3) {
 			const day = parseInt(parts[0], 10)
 			const month = parseInt(parts[1], 10) - 1
 			const year = parseInt(parts[2], 10)
 			const d = new Date(year, month, day)
+
 			return isNaN(d) ? null : d
 		}
 
@@ -129,8 +133,10 @@ export default function FreightSelector(props) {
 
 		if (dates.length > 0) {
 			const today = new Date()
+
 			today.setHours(0, 0, 0, 0)
 			const minDate = new Date(Math.min(...dates.map(d => d.getTime())))
+
 			minDate.setHours(0, 0, 0, 0)
 			const diffMs = minDate.getTime() - today.getTime()
 			const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
@@ -141,6 +147,7 @@ export default function FreightSelector(props) {
 		}
 
 		const title = getServiceTitle(item)
+
 		return title.toLowerCase().includes('sedex') ? 'o mais rápido' : 'o mais lerdo'
 	}
 
