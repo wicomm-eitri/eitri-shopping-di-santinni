@@ -45,14 +45,14 @@ export default function NossasLojas() {
 
 			try {
 				let nominatimUrl = `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=br`
-				
+
 				const isCep = /^\d{5}-?\d{3}$/.test(query)
-				
+
 				if (isCep) {
 					// Fetch from ViaCEP first
 					const cleanCep = query.replace(/\D/g, '')
 					const viaCepRes = await Eitri.http.get(`https://viacep.com.br/ws/${cleanCep}/json/`)
-					
+
 					if (viaCepRes.data && !viaCepRes.data.erro) {
 						const { logradouro, localidade, uf } = viaCepRes.data
 						// If ViaCEP found it, we use street and city for Nominatim
@@ -70,7 +70,7 @@ export default function NossasLojas() {
 				const res = await Eitri.http.get(nominatimUrl, {
 					headers: { 'User-Agent': 'EitriApp-DiSantinni/1.0 (dev@wicomm.com)' }
 				})
-				
+
 				if (res.data && res.data.length > 0) {
 					setUserLocation({ lat: parseFloat(res.data[0].lat), lon: parseFloat(res.data[0].lon) })
 				} else {
@@ -206,7 +206,7 @@ export default function NossasLojas() {
 
 		if (userLocation) {
 			result = result.map(s => {
-				const dist = calculateDistance(userLocation.lat, userLocation.lon, parseFloat(s.lat), parseFloat(s.lng))
+				const dist = calculateDistance(userLocation.lat, userLocation.lon, parseFloat(s.latitude), parseFloat(s.longitude))
 
 				return { ...s, distance: dist }
 			})
@@ -378,14 +378,12 @@ export default function NossasLojas() {
 									<View
 										className='bg-[#C8102E] rounded-[30px] py-[14px] items-center h-10 flex justify-center max-w-[200px]'
 										onClick={() => {
-											if (store.lat && store.lng) {
+											console.log("CURRENT GOOGLE MAPS LINK ", store.googleMaps);
+											if (store.googleMaps) {
 												try {
-													Eitri.navigation.openExternalLink(
-														//`https://www.google.com/maps/search/?api=1&query=${store.lat},${store.lng}`
-														store.googleMaps
-													)
+													Eitri.navigation.openExternalLink(store.googleMaps)
 												} catch (e) {
-													console.log('Error opening map')
+													console.log('Error opening map', e)
 												}
 											}
 										}}>

@@ -48,8 +48,9 @@ export const getStores = async () => {
 			phone: item.phone,
 			whatsapp: null,
 			hours: item.horarioFuncionamento,
-			lat: item.latitude,
-			lng: item.longitude,
+			latitude: item.latitude,
+			longitude: item.longitude,
+			googleMaps: item.googleMaps,
 			region: item.region
 		}))
 
