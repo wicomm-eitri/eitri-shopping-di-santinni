@@ -381,7 +381,7 @@ export default function NossasLojas() {
 											console.log("CURRENT GOOGLE MAPS LINK ", store.googleMaps);
 											if (store.googleMaps) {
 												try {
-													Eitri.navigation.openExternalLink(store.googleMaps)
+													Eitri.openBrowser({ url: store.googleMaps, inApp: false })
 												} catch (e) {
 													console.log('Error opening map', e)
 												}
