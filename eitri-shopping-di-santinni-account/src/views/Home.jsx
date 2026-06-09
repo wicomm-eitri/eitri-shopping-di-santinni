@@ -69,7 +69,7 @@ export default function Home(props) {
 			label: t('home.labelStores', 'Nossas lojas'),
 			icon: nossasLojasIcon,
 			isVisible: true,
-			onClick: () => navigate(PAGES.ABOUT_US)
+			onClick: () => navigate(PAGES.NOSSASLOJAS)
 		}
 	]
 

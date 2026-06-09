@@ -45,14 +45,14 @@ export default function NossasLojas() {
 
 			try {
 				let nominatimUrl = `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=br`
-				
+
 				const isCep = /^\d{5}-?\d{3}$/.test(query)
-				
+
 				if (isCep) {
 					// Fetch from ViaCEP first
 					const cleanCep = query.replace(/\D/g, '')
 					const viaCepRes = await Eitri.http.get(`https://viacep.com.br/ws/${cleanCep}/json/`)
-					
+
 					if (viaCepRes.data && !viaCepRes.data.erro) {
 						const { logradouro, localidade, uf } = viaCepRes.data
 						// If ViaCEP found it, we use street and city for Nominatim
@@ -70,7 +70,7 @@ export default function NossasLojas() {
 				const res = await Eitri.http.get(nominatimUrl, {
 					headers: { 'User-Agent': 'EitriApp-DiSantinni/1.0 (dev@wicomm.com)' }
 				})
-				
+
 				if (res.data && res.data.length > 0) {
 					setUserLocation({ lat: parseFloat(res.data[0].lat), lon: parseFloat(res.data[0].lon) })
 				} else {
@@ -206,7 +206,7 @@ export default function NossasLojas() {
 
 		if (userLocation) {
 			result = result.map(s => {
-				const dist = calculateDistance(userLocation.lat, userLocation.lon, parseFloat(s.lat), parseFloat(s.lng))
+				const dist = calculateDistance(userLocation.lat, userLocation.lon, parseFloat(s.latitude), parseFloat(s.longitude))
 
 				return { ...s, distance: dist }
 			})
@@ -257,8 +257,8 @@ export default function NossasLojas() {
 			</View>
 
 			{/* Main Card (Overlaps the image) */}
-			<View className='bg-[#f8f8f8] rounded-t-[32px] -mt-6'>
-				<View className='p-6 bg-white rounded-[32px] m-4 mt-0 shadow-sm relative -top-12'>
+			<View className='bg-white rounded-t-[32px] -mt-6 px-4'>
+				<View className='p-6 bg-white rounded-[32px] shadow-[0_4px_6px_0_rgba(0,0,0,0.10)] relative -top-12'>
 					<Text className='text-[#C8102E] font-bold text-lg mb-4 uppercase tracking-wide'>
 						Encontre Nossas Lojas
 					</Text>
@@ -338,7 +338,7 @@ export default function NossasLojas() {
 				</View>
 
 				{/* Store Cards */}
-				<View className='px-6 pb-6 -mt-8'>
+				<View className='pb-24 flex flex-col gap-6 -mt-7'>
 					{(filtered || stores || []).length === 0 ? (
 						<Text className='text-gray-500 p-4'>Nenhuma loja encontrada.</Text>
 					) : (
@@ -348,13 +348,13 @@ export default function NossasLojas() {
 							return (
 								<View
 									key={idx}
-									className='flex flex-col mb-8'>
-									<Text className='text-[15px] font-bold text-black mb-5 tracking-tight'>
+									className='flex flex-col bg-[#fafaf8] px-6 py-8 rounded-lg shadow-[0_4px_6px_0_rgba(0,0,0,0.10)]'>
+									<Text className='text-lg font-bold text-black mb-8 tracking-tight'>
 										{store.name}
 									</Text>
 
 									{store.city && store.state && (
-										<Text className='text-[11px] font-medium text-black mb-3 uppercase tracking-wide'>
+										<Text className='text-xs font-medium text-black mb-3 uppercase tracking-wide'>
 											{store.city}/{store.state}
 										</Text>
 									)}
@@ -371,24 +371,23 @@ export default function NossasLojas() {
 										<Text className='text-[11px] font-medium text-black mb-3'>{store.phone}</Text>
 									) : null}
 
-									<Text className='text-[11px] font-medium text-black mb-5'>
+									<Text className='text-[11px] font-medium text-black mb-8'>
 										Entre em contato com a loja
 									</Text>
 
 									<View
-										className='bg-[#C8102E] rounded-[30px] py-[14px] items-center justify-center max-w-[200px]'
+										className='bg-[#C8102E] rounded-[30px] py-[14px] items-center h-10 flex justify-center max-w-[200px]'
 										onClick={() => {
-											if (store.lat && store.lng) {
+											console.log("CURRENT GOOGLE MAPS LINK ", store.googleMaps);
+											if (store.googleMaps) {
 												try {
-													Eitri.navigation.openExternalLink(
-														`https://www.google.com/maps/search/?api=1&query=${store.lat},${store.lng}`
-													)
+													Eitri.openBrowser({ url: store.googleMaps, inApp: false })
 												} catch (e) {
-													console.log('Error opening map')
+													console.log('Error opening map', e)
 												}
 											}
 										}}>
-										<Text className='text-white font-bold text-[12px] tracking-wide'>
+										<Text className='text-white font-bold text-sm tracking-wide'>
 											VER NO MAPA
 										</Text>
 									</View>

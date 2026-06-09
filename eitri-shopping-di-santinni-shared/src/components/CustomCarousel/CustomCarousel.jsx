@@ -8,7 +8,8 @@ export default function CustomCarousel({
 	autoPlay = false,
 	interval = 3000,
 	loop = true,
-	onSlideChange = () => {}
+	onSlideChange = () => {},
+	slidesToShow = 1
 }) {
 	const [currentSlide, setCurrentSlide] = useState(0)
 	const [isDragging, setIsDragging] = useState(false)
@@ -19,6 +20,7 @@ export default function CustomCarousel({
 
 	const slides = React.Children.toArray(children)
 	const totalSlides = slides.length
+	const slideWidthPercent = 100 / slidesToShow
 
 	// Função para ir para o próximo slide
 	const nextSlide = useCallback(() => {
@@ -120,21 +122,22 @@ export default function CustomCarousel({
 
 	// Calcular transform
 	const getTransform = () => {
-		const slideOffset = -currentSlide * 100
+		const slideOffset = -currentSlide * slideWidthPercent
 		const dragOffsetPercent = dragOffset ? (dragOffset / window.innerWidth) * 100 : 0
 
 		return `translateX(${slideOffset + dragOffsetPercent}%)`
 	}
 
 	return (
-		<View className='relative w-full overflow-hidden'>
+		<View className='relative w-full overflow-hidden' style={{ paddingLeft: '16px' }}> 
 			{/* Container dos slides */}
 			<View
 				id={`${carouselId}-container`}
 				className='flex transition-transform duration-300 ease-out'
 				style={{
 					transform: getTransform(),
-					transitionDuration: isDragging ? '0ms' : '300ms'
+					transitionDuration: isDragging ? '0ms' : '300ms',
+					gap: '8px'
 				}}
 				onTouchStart={handleTouchStart}
 				onTouchMove={handleTouchMove}
@@ -147,7 +150,8 @@ export default function CustomCarousel({
 					<View
 						key={index}
 						id={`${carouselId}-slide-${index}`}
-						className='flex-shrink-0 w-full'>
+						className='flex-shrink-0'
+					style={{ width: `${slideWidthPercent}vw` }}>
 						{slide}
 					</View>
 				))}

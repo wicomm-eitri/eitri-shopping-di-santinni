@@ -27,29 +27,31 @@ export const getLoginProviders = async () => {
 
 export const getStores = async () => {
 	try {
-		// Busca direto no MasterData VTEX da entidade de lojas (LN)
+		// Busca direto no MasterData VTEX da entidade de lojas (OS)
 		const data =
 			(await vtexMasterData.getDataOfEntity(
-				'LN',
-				'?_fields=uf,cidade,info_nome,info_endereco,info_telefone,info_whatsapp,info_funcionamento,info_lat,info_lng',
+				'OS',
+				'?_fields=state,city,nomeDaLoja,phone,horarioFuncionamento,latitude,longitude,googleMaps,region',
 				{
 					headers: {
 						'REST-Range': 'resources=0-500'
 					}
 				}
 			)) || []
-
+		console.log("DATA STORES: ", data);
 		const stores = (Array.isArray(data) ? data : []).map(item => ({
 			country: 'BRASIL',
-			state: item.uf,
-			city: item.cidade,
-			name: item.info_nome,
-			address: item.info_endereco,
-			phone: item.info_telefone,
-			whatsapp: item.info_whatsapp,
-			hours: item.info_funcionamento,
-			lat: item.info_lat,
-			lng: item.info_lng
+			state: item.state,
+			city: item.city,
+			name: item.nomeDaLoja,
+			address: item.googleMaps,
+			phone: item.phone,
+			whatsapp: null,
+			hours: item.horarioFuncionamento,
+			latitude: item.latitude,
+			longitude: item.longitude,
+			googleMaps: item.googleMaps,
+			region: item.region
 		}))
 
 		return stores
