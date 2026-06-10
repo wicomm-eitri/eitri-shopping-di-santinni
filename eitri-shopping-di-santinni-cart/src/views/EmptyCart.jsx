@@ -26,8 +26,18 @@ export default function EmptyCart(props) {
 		})
 	}, [])
 
-	const closeEitriApp = () => {
-		Eitri.navigation.close()
+	const goToBestsellers = () => {
+		Eitri.nativeNavigation.open({
+			slug: 'home',
+			initParams: {
+				route: 'ProductCatalog',
+				params: {
+					facets: [],
+					sort: 'OrderByTopSaleDESC'
+				},
+				title: t('emptyCart.bestsellersTitle', 'Mais Vendidos')
+			}
+		})
 	}
 
 	return (
@@ -56,8 +66,8 @@ export default function EmptyCart(props) {
 						{!openWithBottomBar && (
 							<View className='w-full mt-2'>
 								<CustomButton
-									label={t('emptyCart.labelButton', 'Comprar Agora')}
-									onPress={closeEitriApp}
+									label={t('emptyCart.labelButton', 'Ver mais produtos')}
+									onPress={goToBestsellers}
 									className='btn-primary w-full'
 								/>
 							</View>

@@ -7,6 +7,7 @@ export default function RoundedBannerList(props) {
 	const { size } = data
 
 	const imagesList = data.images || []
+	console.log("IMAGES LIST: ", imagesList);
 	const scrollRef = useRef(null)
 
 	const paramsObject = Object.fromEntries((data?.params || []).map(item => [item.key, item.value]))
@@ -14,10 +15,12 @@ export default function RoundedBannerList(props) {
 	const showArrows = paramsObject?.arrow === 'on'
 
 	const scroll = direction => {
-		if (scrollRef.current) {
+		const element = scrollRef.current?.getViewElement?.()
+
+		if (element) {
 			const scrollAmount = window.innerWidth * 0.5 || 200
 
-			scrollRef.current.scrollBy({
+			element.scrollBy({
 				left: direction === 'left' ? -scrollAmount : scrollAmount,
 				behavior: 'smooth'
 			})
@@ -52,7 +55,7 @@ export default function RoundedBannerList(props) {
 			<View className='relative'>
 				<View
 					ref={scrollRef}
-					className='flex overflow-x-auto px-4 gap-4 justify-center w-full hide-scrollbar'
+					className='flex overflow-x-auto px-4 gap-4 w-full hide-scrollbar'
 					style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
 					title={data.mainTitle}>
 					{imagesList.map((slider, index) => {
