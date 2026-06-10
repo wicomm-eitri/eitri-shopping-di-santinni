@@ -31,7 +31,7 @@
 	"emptyCart": {
 		"txtEmptyCart": "Your cart is empty",
 		"txtMessageList": "Add products to your cart and they will be listed here.",
-		"labelButton": "Shop Now"
+		"labelButton": "See more products"
 	},
 	"freight": {
 		"errorCep": "Enter a valid ZIP code",
