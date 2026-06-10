@@ -1,10 +1,5 @@
 import Eitri from 'eitri-bifrost'
-import {
-	HeaderCart,
-	HeaderContentWrapper,
-	HeaderReturn,
-	HeaderSearchIcon
-} from 'eitri-shopping-di-santinni-shared'
+import { HeaderCart, HeaderContentWrapper, HeaderReturn, HeaderSearchIcon } from 'eitri-shopping-di-santinni-shared'
 import { Vtex } from 'eitri-shopping-vtex-shared'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { addToWishlist, productOnWishlist, removeItemFromWishlist } from '../../services/customerService'
@@ -21,6 +16,12 @@ export default function Header(props) {
 		if (product && configLoaded) {
 			checkIfIsFavorite(product?.productId)
 		}
+
+		Eitri.navigation.addOnResumeListener(() => {
+			if (product && configLoaded) {
+				checkIfIsFavorite(product?.productId)
+			}
+		})
 	}, [product, configLoaded])
 
 	const shareLink = () => {
@@ -32,7 +33,7 @@ export default function Header(props) {
 	}
 
 	const handleSaveFavorite = async () => {
-		if (itemWishlistId === -1) {
+		if (!itemOnWishlist) {
 			try {
 				setItemOnWishlist(true)
 				const result = await addToWishlist(product?.productId, product?.productName, product?.items[0]?.itemId)
@@ -45,7 +46,7 @@ export default function Header(props) {
 		} else {
 			try {
 				setItemOnWishlist(false)
-				await removeItemFromWishlist(itemWishlistId)
+				await removeItemFromWishlist(product?.productId)
 				setItemWishlistId(-1)
 			} catch (e) {
 				console.error('handleSaveFavorite: Error', e)
@@ -54,13 +55,20 @@ export default function Header(props) {
 		}
 	}
 
-	const checkIfIsFavorite = async productId => {
+	const checkIfIsFavorite = async (productId, isRetry = false) => {
 		setLoadingWishlist(true)
 		const { inList, listId } = await productOnWishlist(productId)
 
 		if (inList) {
-			setItemWishlistId(listId)
 			setItemOnWishlist(true)
+			setItemWishlistId(listId)
+		} else {
+			if (!isRetry) {
+				setTimeout(() => checkIfIsFavorite(productId, true), 1000)
+			} else {
+				setItemOnWishlist(false)
+				setItemWishlistId(-1)
+			}
 		}
 
 		setLoadingWishlist(false)
@@ -76,7 +84,9 @@ export default function Header(props) {
 	}, [])
 
 	return (
-		<HeaderContentWrapper containerClassName='bg-white'  className='bg-white justify-between'>
+		<HeaderContentWrapper
+			containerClassName='bg-white'
+			className='bg-white justify-between'>
 			<View className='flex gap-3'>
 				<HeaderReturn />
 			</View>

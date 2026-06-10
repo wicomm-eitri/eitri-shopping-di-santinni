@@ -1,5 +1,5 @@
 import Eitri from 'eitri-bifrost'
-import { Vtex } from 'eitri-shopping-vtex-shared'
+import { Vtex, EventBus } from 'eitri-shopping-vtex-shared'
 
 export const requestLogin = () => {
 	return new Promise((resolve, reject) => {
@@ -168,7 +168,20 @@ export const removeItemFromWishlist = async productId => {
 			}
 		}
 
-		await Eitri.http.post(GRAPHQL_URL, { query: mutationUpdate, variables }, { headers })
+		const response = await Eitri.http.post(GRAPHQL_URL, { query: mutationUpdate, variables }, { headers })
+
+		EventBus.publish({
+			channel: 'removeFromWishlist',
+			broadcast: true,
+			data: { 
+				id: targetList.id, 
+				response: { 
+					data: { 
+						removeFromList: true 
+					} 
+				} 
+			}
+		})
 
 		return true
 	} catch (error) {
@@ -292,6 +305,19 @@ export const addToWishlist = async (productId, title, sku) => {
 			console.error('Detalhes do Erro GraphQL:', JSON.stringify(result.errors))
 			throw new Error('Falha na validação do GraphQL')
 		}
+
+		EventBus.publish({
+			channel: 'addToWishlist',
+			broadcast: true,
+			data: { 
+				productId, 
+				response: { 
+					data: { 
+						addToList: result?.data?.updateWishlist?.id || result?.data?.createWishlist?.Id || -1
+					} 
+				} 
+			}
+		})
 
 		return result
 	} catch (error) {

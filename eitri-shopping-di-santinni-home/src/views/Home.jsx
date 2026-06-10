@@ -73,7 +73,7 @@ export default function Home() {
 	const loadCms = async () => {
 		const { sections } = await getCmsContent('home', 'Home')
 
-		console.log("SECTIONS ", sections);
+		console.log('SECTIONS ', sections)
 		setCmsContent(sections)
 	}
 
