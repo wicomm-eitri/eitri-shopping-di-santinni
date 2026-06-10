@@ -33,6 +33,12 @@ export default function MainDescription(props) {
 		if (product?.productId) {
 			checkIfIsFavorite(product.productId)
 		}
+
+		Eitri.navigation.addOnResumeListener(() => {
+			if (product?.productId) {
+				checkIfIsFavorite(product.productId)
+			}
+		})
 	}, [product?.productId])
 
 	const count = useRef(5)
@@ -102,13 +108,20 @@ export default function MainDescription(props) {
 		})
 	}
 
-	const checkIfIsFavorite = async productId => {
+	const checkIfIsFavorite = async (productId, isRetry = false) => {
 		setLoadingWishlist(true)
 		const { inList, listId } = await productOnWishlist(productId)
 
 		if (inList) {
-			setItemWishlistId(listId)
 			setItemOnWishlist(true)
+			setItemWishlistId(listId)
+		} else {
+			if (!isRetry) {
+				setTimeout(() => checkIfIsFavorite(productId, true), 1000)
+			} else {
+				setItemOnWishlist(false)
+				setItemWishlistId(-1)
+			}
 		}
 
 		setLoadingWishlist(false)

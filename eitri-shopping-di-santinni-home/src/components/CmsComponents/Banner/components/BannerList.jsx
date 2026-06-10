@@ -72,12 +72,16 @@ export default function BannerList(props) {
 		setDragOffset(0)
 		setIsDragging(false)
 
+		const containerWidth = typeof window !== 'undefined' ? window.innerWidth : 400
+		const itemsVisible = Math.max(1, Math.floor(containerWidth / bannerStep))
+		const maxIndex = Math.max(0, imagesList.length - itemsVisible)
+
 		setCurrentIndex(current => {
 			if (direction === 'right') {
-				return (current + 1) % imagesList.length
+				return current >= maxIndex ? 0 : current + 1
 			}
 
-			return (current - 1 + imagesList.length) % imagesList.length
+			return current <= 0 ? maxIndex : current - 1
 		})
 	}
 
