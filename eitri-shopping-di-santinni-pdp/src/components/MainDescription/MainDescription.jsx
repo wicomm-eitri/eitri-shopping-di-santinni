@@ -4,10 +4,10 @@ import { Vtex } from 'eitri-shopping-vtex-shared'
 import share from '../../assets/images/share-red.svg'
 import star from '../../assets/images/star.svg'
 import starFilled from '../../assets/images/starFilled.svg'
-import wishlist from '../../assets/images/wishlist-heart.svg'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { addToWishlist, productOnWishlist, removeItemFromWishlist } from '../../services/customerService'
 import { formatAmount, formatPrice } from '../../utils/utils'
+import WishlistIcon from '../WishlistIcon/WishlistIcon'
 
 const Star = ({ filled }) => (
 	<View>
@@ -28,6 +28,12 @@ export default function MainDescription(props) {
 	const [loadingWishlist, setLoadingWishlist] = useState(true)
 	const [itemWishlistId, setItemWishlistId] = useState(-1)
 	const [itemOnWishlist, setItemOnWishlist] = useState(false)
+
+	useEffect(() => {
+		if (product?.productId) {
+			checkIfIsFavorite(product.productId)
+		}
+	}, [product?.productId])
 
 	const count = useRef(5)
 
@@ -90,7 +96,6 @@ export default function MainDescription(props) {
 	const handleShare = () => {
 		// TODO Anthonius: Vtex.configs.domain não funciona, pegar domain de outra forma
 		const url = `${Vtex?.configs?.domain}/${product?.linkText}/p?utm_source=eitri-shop-source`
-		
 
 		Eitri.share.link({
 			url: url
@@ -110,12 +115,10 @@ export default function MainDescription(props) {
 	}
 
 	const handleWishlist = async () => {
-		if (itemWishlistId === -1) {
+		if (!itemOnWishlist) {
 			try {
 				setItemOnWishlist(true)
-				const result = await addToWishlist(product?.productId, product?.productName, product?.items[0]?.itemId)
-
-				setItemWishlistId(result?.data?.addToList)
+				await addToWishlist(product?.productId, product?.productName, product?.items[0]?.itemId)
 			} catch (e) {
 				console.error('handleSaveFavorite: Error', e)
 				setItemOnWishlist(false)
@@ -123,8 +126,7 @@ export default function MainDescription(props) {
 		} else {
 			try {
 				setItemOnWishlist(false)
-				await removeItemFromWishlist(itemWishlistId)
-				setItemWishlistId(-1)
+				await removeItemFromWishlist(product?.productId)
 			} catch (e) {
 				console.error('handleSaveFavorite: Error', e)
 				setItemOnWishlist(true)
@@ -170,7 +172,7 @@ export default function MainDescription(props) {
 						<Image src={share} />
 					</View>
 					<View onClick={handleWishlist}>
-						<Image src={wishlist} />
+						<WishlistIcon filled={itemOnWishlist} />
 					</View>
 				</View>
 			</View>

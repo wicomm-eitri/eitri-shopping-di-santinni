@@ -8,7 +8,7 @@ import {
 	HeaderText
 } from 'eitri-shopping-di-santinni-shared'
 import { useLocalShoppingCart } from '../providers/LocalCart'
-import iconCart from '../assets/images/cart-01.svg'
+import iconCart from '../assets/icons/EmpytCart.svg'
 
 export default function EmptyCart(props) {
 	const openWithBottomBar = props?.location?.state?.openWithBottomBar
@@ -39,15 +39,15 @@ export default function EmptyCart(props) {
 				</HeaderContentWrapper>
 
 				<View className='flex flex-1 flex-col justify-center items-center'>
-					<View className='flex flex-col items-center gap-6 w-full max-w-xs'>
+					<View className='flex flex-col items-center gap-4 w-full max-w-xs'>
 						<Image
 							src={iconCart}
 							className='w-16 mb-2'
 						/>
-						<Text className='font-bold text-primary-base text-2xl text-center mb-2'>
+						<Text className='font-bold text-primary-base text-2xl text-center'>
 							{t('emptyCart.txtEmptyCart', 'Seu carrinho está vazio')}
 						</Text>
-						<Text className='text-neutral-700 text-base text-center mb-6'>
+						<Text className='text-neutral-700 text-base text-center '>
 							{t(
 								'emptyCart.txtMessageList',
 								'Adicione produtos no seu carrinho e eles serão listados aqui.'

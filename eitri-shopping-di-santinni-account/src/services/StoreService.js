@@ -38,6 +38,7 @@ export const getStores = async () => {
 					}
 				}
 			)) || []
+
 		console.log("DATA STORES: ", data);
 		const stores = (Array.isArray(data) ? data : []).map(item => ({
 			country: 'BRASIL',

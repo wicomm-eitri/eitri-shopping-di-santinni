@@ -15,11 +15,11 @@ module.exports = {
 	'eitri-app-dependencies': {
 		'eitri-shopping-di-santinni-shared': {
 			isEitriAppShared: true,
-			version: '0.1.3'
+			version: '0.1.5'
 		},
 		'eitri-shopping-vtex-shared': {
 			isEitriAppShared: true,
-			version: '1.11.0'
+			version: '1.12.6'
 		},
 		'i18n': {
 			version: '14.1.2'
