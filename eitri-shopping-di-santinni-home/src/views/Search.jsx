@@ -97,33 +97,23 @@ export default function Search(props) {
 						className='mb-4 text-primary'
 						width='80'
 						height='80'
-						viewBox='0 0 80 80'
+						viewBox='0 0 20 20'
+						stroke='currentColor'
 						fill='none'
 						xmlns='http://www.w3.org/2000/svg'>
-						<circle
-							cx='36'
-							cy='36'
-							r='28'
+						<path
+							d='M8.33333 14.1667C9.09938 14.1667 9.85792 14.0158 10.5657 13.7226C11.2734 13.4295 11.9164 12.9998 12.4581 12.4581C12.9998 11.9164 13.4295 11.2734 13.7226 10.5657C14.0158 9.85792 14.1667 9.09938 14.1667 8.33333C14.1667 7.56729 14.0158 6.80875 13.7226 6.10101C13.4295 5.39328 12.9998 4.75022 12.4581 4.20854C11.9164 3.66687 11.2734 3.23719 10.5657 2.94404C9.85792 2.65088 9.09938 2.5 8.33333 2.5C6.78624 2.5 5.30251 3.11458 4.20854 4.20854C3.11458 5.30251 2.5 6.78624 2.5 8.33333C2.5 9.88043 3.11458 11.3642 4.20854 12.4581C5.30251 13.5521 6.78624 14.1667 8.33333 14.1667Z'
 							stroke='currentColor'
-							strokeWidth='6'
-							fill='#EEF2FF'
+							strokeWidth='1.5'
+							strokeLinecap='round'
+							strokeLinejoin='round'
 						/>
-						<rect
-							x='56'
-							y='56'
-							width='16'
-							height='6'
-							rx='3'
-							transform='rotate(45 56 56)'
-							fill='currentColor'
-						/>
-						<circle
-							cx='36'
-							cy='36'
-							r='16'
+						<path
+							d='M17.5 17.5L12.5 12.5'
 							stroke='currentColor'
-							strokeWidth='3'
-							fill='white'
+							strokeWidth='1.5'
+							strokeLinecap='round'
+							strokeLinejoin='round'
 						/>
 					</svg>
 					<Text className='text-primary text-2xl font-bold text-center mb-2'>

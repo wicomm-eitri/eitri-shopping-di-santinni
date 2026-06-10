@@ -12,7 +12,13 @@ import {
 import Alert from '../components/Alert/Alert'
 import CCheckbox from '../components/CCheckbox/CCheckbox'
 import SocialLogin from '../components/SocialLogin/SocialLogin'
-import { getSavedUser, setPassword as setPasswordOnVtex, sendAccessKeyByEmail, saveUserCredentialsOnStorage } from '../services/CustomerService'
+import {
+	getSavedUser,
+	setPassword as setPasswordOnVtex,
+	sendAccessKeyByEmail,
+	saveUserCredentialsOnStorage,
+	doLogin
+} from '../services/CustomerService'
 import { navigate, PAGES } from '../services/NavigationService'
 import { getStorePreferences, getLoginProviders } from '../services/StoreService'
 import { sendScreenView } from '../services/TrackingService'
@@ -100,8 +106,17 @@ export default function SignUp(props) {
 		}
 	}, [timeOutToResentEmail])
 
-	const sendAccessKey = async () => {
+	useEffect(() => {
+		if (showLoginErrorAlert) {
+			const timer = setTimeout(() => {
+				setShowLoginErrorAlert(false)
+			}, 3000)
 
+			return () => clearTimeout(timer)
+		}
+	}, [showLoginErrorAlert])
+
+	const sendAccessKey = async () => {
 		if (!termsChecked) {
 			setAlertMessage(t('signUp.alertMessageAcceptTerms', 'Necessário aceitar os termos'))
 			setShowLoginErrorAlert(true)
@@ -132,7 +147,15 @@ export default function SignUp(props) {
 		try {
 			const result = await setPasswordOnVtex(email, verificationCode, password)
 
-			navigate(PAGES.HOME)
+			// Fazer o login real após definir a senha para estabelecer a sessão
+			const loggedIn = await doLogin(email, password, false)
+
+			if (loggedIn === 'Success' || loggedIn?.status === 'Success') {
+				navigate(PAGES.HOME)
+			} else {
+				setAlertMessage(t('signUp.alertMessageVerify', 'Verifique as informaçoes e tente novamente'))
+				setShowLoginErrorAlert(true)
+			}
 		} catch (e) {
 			const status = e?.response?.status || 400
 
@@ -217,6 +240,10 @@ export default function SignUp(props) {
 								onChange={e => setVerificationCode(e.target.value)}
 								height='45px'
 							/>
+
+							<Text className='w-full text-xs font-normal'>
+								{t('signUp.textCodeSentToEmail', 'O código de acesso será enviado para o seu e-mail')}
+							</Text>
 
 							<CustomButton
 								className='uppercase !h-11 rounded-full'

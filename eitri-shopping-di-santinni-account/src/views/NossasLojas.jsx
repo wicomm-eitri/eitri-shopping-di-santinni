@@ -379,6 +379,7 @@ export default function NossasLojas() {
 										className='bg-[#C8102E] rounded-[30px] py-[14px] items-center h-10 flex justify-center max-w-[200px]'
 										onClick={() => {
 											console.log("CURRENT GOOGLE MAPS LINK ", store.googleMaps);
+
 											if (store.googleMaps) {
 												try {
 													Eitri.openBrowser({ url: store.googleMaps, inApp: false })

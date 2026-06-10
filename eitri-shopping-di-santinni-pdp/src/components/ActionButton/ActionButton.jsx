@@ -45,7 +45,7 @@ export default function ActionButton(props) {
 		})
 	}
 
-	const handleButtonClick = () => {
+	const handleButtonClick = async () => {
 		if (!isAvailable) return
 
 		setLoading(true)
@@ -53,7 +53,7 @@ export default function ActionButton(props) {
 		if (isItemOnCart()) {
 			openCart()
 		} else {
-			addItem(currentSku)
+			await addItem(currentSku)
 			openCart()
 		}
 

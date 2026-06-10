@@ -98,8 +98,8 @@ export default function CartItem(props) {
 
 				<View className='flex flex-col gap-2 w-full'>
 					{item.availability !== 'available' && (
-						<View className='mb-2 p-2 bg-red-50 border border-red-200 rounded'>
-							<Text className='text-sm text-red-600 font-medium'>
+						<View className='mb-2 p-2 bg-red-50 border border-red-200 rounded flex items-center justify-center'>
+							<Text className='w-full text-sm text-red-600 font-medium text-center'>
 								{item.availability === 'cannotBeDelivered'
 									? t('cartItem.cannotBeDelivered', 'Este item não pode ser entregue')
 									: t('cartItem.notAvailable', 'Este item não está disponível')}
@@ -176,13 +176,13 @@ export default function CartItem(props) {
 				</View>
 			)}
 
-			{message && (
+			{/* {message && (
 				<View className='flex flex-col justify-center items-center my-2'>
 					<Text className='text-sm text-center text-warning'>
 						{message.text || t('cartItem.txtMessageUnavailable', 'Este produto não está disponível!')}
 					</Text>
 				</View>
-			)}
+			)} */}
 
 			<ModalConfirm
 				text={modalRemoveItemText}

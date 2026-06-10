@@ -89,11 +89,7 @@ export default function Wishlist(props) {
 			{wishlistItems.length === 0 && !isLoading && (
 				<NoItem
 					icon={heartIcon}
-					title={
-						t('wishlist.noFavoritesLine1', 'Você não possui') +
-						'\n' +
-						t('wishlist.noFavoritesLine2', 'nenhum item salvo')
-					}
+					title={t('wishlist.noItems', 'Você não possui itens salvos')}
 					subtitle={t(
 						'wishlist.noFavoritesSubtitle',
 						'Quando você favoritar um produto, ele será listado aqui.'

@@ -13,7 +13,7 @@ export default function NoItem(props) {
 					className='object-contain'
 				/>
 			)}
-			<Text className='w-full max-w-[200px] text-center font-semibold text-red-700 text-xl leading-tight'>
+			<Text className='w-full whitespace-nowrap text-center font-semibold text-red-700 text-xl leading-tight'>
 				{title}
 			</Text>
 			<Text className='w-full text-center text-gray-500 text-sm'>{subtitle}</Text>

@@ -3,8 +3,7 @@ import {
 	HeaderCart,
 	HeaderContentWrapper,
 	HeaderReturn,
-	HeaderSearchIcon,
-	HeaderText
+	HeaderSearchIcon
 } from 'eitri-shopping-di-santinni-shared'
 import { Vtex } from 'eitri-shopping-vtex-shared'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
@@ -80,7 +79,6 @@ export default function Header(props) {
 		<HeaderContentWrapper containerClassName='bg-white'  className='bg-white justify-between'>
 			<View className='flex gap-3'>
 				<HeaderReturn />
-				<HeaderText text={product?.productName} />
 			</View>
 			<View className='flex gap-4'>
 				{/* <HeaderWishList

@@ -4,18 +4,19 @@ export default function Quantity(props) {
 	const { quantity, handleItemQuantity, disable, loadingQuantity } = props
 
 	return (
-		<View className='flex items-center border border-gray-300 px-2.5 w-20'>
-			<View className='w-1/3 flex items-center justify-center'>
+		<View className='flex items-center justify-between border border-[#CACACA] rounded-full w-[98px] h-[32px] px-2'>
+			<View className='w-[24px] h-[24px] flex items-center justify-center cursor-pointer'>
 				{quantity === 1 || disable ? (
 					<svg
-						xmlns='http://www.w3.org/2000/svg'
-						width='11'
-						height='1'
-						viewBox='0 0 11 1'
-						fill='none'>
+						width='16px'
+						height='16px'
+						viewBox='0 0 24 24'
+						fill='none'
+						xmlns='http://www.w3.org/2000/svg'>
 						<path
-							d='M0.5 0.5H9.83333'
+							d='M6 12L18 12'
 							stroke='#CCCCCC'
+							strokeWidth='2'
 							strokeLinecap='round'
 							strokeLinejoin='round'
 						/>
@@ -23,14 +24,15 @@ export default function Quantity(props) {
 				) : (
 					<View onClick={() => handleItemQuantity(-1)}>
 						<svg
-							xmlns='http://www.w3.org/2000/svg'
-							width='11'
-							height='1'
-							viewBox='0 0 11 1'
-							fill='none'>
+							width='16px'
+							height='16px'
+							viewBox='0 0 24 24'
+							fill='none'
+							xmlns='http://www.w3.org/2000/svg'>
 							<path
-								d='M0.5 0.5H9.83333'
-								stroke='black'
+								d='M6 12L18 12'
+								stroke='#000000'
+								strokeWidth='2'
 								strokeLinecap='round'
 								strokeLinejoin='round'
 							/>
@@ -40,25 +42,26 @@ export default function Quantity(props) {
 			</View>
 
 			{loadingQuantity ? (
-				<View className='flex items-center justify-center h-[30px] px-1'>
+				<View className='flex items-center justify-center h-[30px] px-1 flex-1'>
 					<Loading className='!w-4 !h-4 text-gray-900' />
 				</View>
 			) : (
-				<Text className='px-1 py-[7px] text-xs font-medium min-w-[23px] text-center'>{quantity}</Text>
+				<Text className='px-1 py-1 text-sm font-medium text-center flex-1'>{quantity}</Text>
 			)}
 
-			<View className='w-1/3 items-center justify-center pl-1'>
+			<View className='w-[24px] h-[24px] flex items-center justify-center cursor-pointer'>
 				{disable ? (
 					<View className='w-[16px] h-[16px]'>
 						<svg
-							xmlns='http://www.w3.org/2000/svg'
-							width='11'
-							height='11'
-							viewBox='0 0 11 11'
-							fill='none'>
+							width='16px'
+							height='16px'
+							viewBox='0 0 24 24'
+							fill='none'
+							xmlns='http://www.w3.org/2000/svg'>
 							<path
-								d='M5.16667 0.5V9.83333M0.5 5.16667H9.83333'
+								d='M6 12H18M12 6V18'
 								stroke='#CCCCCC'
+								strokeWidth='2'
 								strokeLinecap='round'
 								strokeLinejoin='round'
 							/>
@@ -67,14 +70,15 @@ export default function Quantity(props) {
 				) : (
 					<View onClick={() => handleItemQuantity(1)}>
 						<svg
-							xmlns='http://www.w3.org/2000/svg'
-							width='11'
-							height='11'
-							viewBox='0 0 11 11'
-							fill='none'>
+							width='16px'
+							height='16px'
+							viewBox='0 0 24 24'
+							fill='none'
+							xmlns='http://www.w3.org/2000/svg'>
 							<path
-								d='M5.16667 0.5V9.83333M0.5 5.16667H9.83333'
-								stroke='black'
+								d='M6 12H18M12 6V18'
+								stroke='#000000'
+								strokeWidth='2'
 								strokeLinecap='round'
 								strokeLinejoin='round'
 							/>

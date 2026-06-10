@@ -48,7 +48,7 @@ const COR_MAP = {
 	amarela: '#f59f00',
 	rosa: '#e64980',
 	cinza: '#868e96',
-	marrom: '#6f4e37',
+	marrom: '#6f4e37'
 }
 
 function ColorSwatch({ color, selected, status, onClick }) {
@@ -109,9 +109,6 @@ export default function SkuSelector(props) {
 	const { product, currentSku, onSkuChange } = props
 
 	const [selections, setSelections] = useState({})
-
-	console.log('product', product)
-	console.log('currentSku', currentSku)
 
 	useEffect(() => {
 		if (!currentSku?.variations?.length) {
