@@ -108,11 +108,12 @@ export default function CartItem(props) {
 					)}
 
 					<View className='flex justify-between gap-2'>
-						<Text className='text-xs pr-2'>{item.name}</Text>
+						<Text className='text-sm pr-2'>{item.name}</Text>
 
 						<View onClick={handleRemoveCartItemIntention}>
 							<Image
 								src={TrashIcon}
+								className='min-w-[13px]'
 								alt='Ícone de lixeira'
 							/>
 						</View>
@@ -120,12 +121,12 @@ export default function CartItem(props) {
 
 					<View className='flex flex-col gap-1'>
 						{size && (
-							<Text className='text-[10px]'>
+							<Text className='text-sm'>
 								Tamanho:<Text className='text-gray-500 font-light'> {size}</Text>
 							</Text>
 						)}
 						{color && (
-							<Text className='text-[10px]'>
+							<Text className='text-sm'>
 								Cor:<Text className='text-gray-500 font-light'> {color}</Text>
 							</Text>
 						)}
@@ -136,7 +137,7 @@ export default function CartItem(props) {
 						<Text className='text-xs font-medium'>{formatAmountInCents(item.price)}</Text>
 
 						{item?.listPrice && item.price !== item.listPrice && (
-							<Text className='line-through font-light text-gray-500 text-[10px]'>
+							<Text className='line-through font-light text-gray-500 text-sm'>
 								{formatAmountInCents(item.listPrice)}
 							</Text>
 						)}

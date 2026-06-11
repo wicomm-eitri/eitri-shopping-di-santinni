@@ -170,7 +170,8 @@ export default function MainDescription(props) {
 			</Text>
 			<View className='flex justify-between'>
 				<View className='flex gap-2 items-center'>
-					<View className='flex items-center gap-0.5'>
+					{/* avaliações ocultadas por enquanto */}
+					{/* <View className='flex items-center gap-0.5'>
 						{[1, 2, 3, 4, 5].map(star => (
 							<Star
 								key={star}
@@ -178,7 +179,7 @@ export default function MainDescription(props) {
 							/>
 						))}
 					</View>
-					<Text className='text-xs underline tracking-[0.24px] text-red-700'>123</Text>
+					<Text className='text-xs underline tracking-[0.24px] text-red-700'>123</Text> */}
 				</View>
 				<View className='flex gap-2 items-center'>
 					<View onClick={handleShare}>

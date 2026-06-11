@@ -157,7 +157,7 @@ export default function ModalImagesPDP(props) {
 											<Image
 												src={item.imageUrl?.replace(/\?.*/, '')}
 												alt={`Imagem ${getOriginalIndex(index) + 1}`}
-												className='block max-w-[90%] max-h-[90%] object-contain select-none'
+												className='block max-h-[90%] object-contain select-none'
 												draggable={false}
 											/>
 										</View>
