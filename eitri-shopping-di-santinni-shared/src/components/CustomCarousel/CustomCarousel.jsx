@@ -9,7 +9,7 @@ export default function CustomCarousel({
 	interval = 3000,
 	loop = true,
 	onSlideChange = () => {},
-	slidesToShow = 1
+	slidesToShow = 1,
 }) {
 	const [currentSlide, setCurrentSlide] = useState(0)
 	const [isDragging, setIsDragging] = useState(false)
@@ -129,7 +129,7 @@ export default function CustomCarousel({
 	}
 
 	return (
-		<View className='relative w-full overflow-hidden' style={{ paddingLeft: '16px' }}> 
+		<View className='relative w-full overflow-hidden'> 
 			{/* Container dos slides */}
 			<View
 				id={`${carouselId}-container`}
