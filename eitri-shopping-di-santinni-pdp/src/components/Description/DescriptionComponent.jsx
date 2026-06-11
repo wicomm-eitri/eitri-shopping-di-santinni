@@ -10,7 +10,7 @@ export default function DescriptionComponent(props) {
 		{ id: 'description', label: 'Descrição' },
 		{ id: 'especifications', label: 'Especificações' },
 		{ id: 'care', label: 'Cuidados' },
-		{ id: 'reviews', label: 'Avaliações' }
+		//{ id: 'reviews', label: 'Avaliações' }
 	]
 
 	useEffect(() => {
