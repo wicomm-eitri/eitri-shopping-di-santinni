@@ -5,8 +5,8 @@ module.exports = {
 	'eitri-luminus': '2.22.6',
 	'eitri-bifrost': '5.1.0',
 	'eitri-commons': '2.2.1',
-	'version': '0.1.3',
-	'versionMessage': 'Atualizei/refatorei componentes',
+	'version': '0.1.4',
+	'versionMessage': 'link do settings atualizado',
 	'public-key': '8498f97f-268f-4854-b2b9-85bb800f0e1e',
 	'applicationId': 'f0301a60-5a72-487b-8855-a4fbd21d1f39',
 	'id': '40039977-cd04-4866-8822-bdab452d0f71',
@@ -15,7 +15,7 @@ module.exports = {
 	'eitri-app-dependencies': {
 		'eitri-shopping-di-santinni-shared': {
 			isEitriAppShared: true,
-			version: '0.1.6'
+			version: '0.1.8'
 		},
 		'eitri-shopping-vtex-shared': {
 			isEitriAppShared: true,

@@ -41,19 +41,19 @@ export default function CartSummary(props) {
 				</View>
 			)}
 
-			{!!discounts && typeof discounts === 'number' && discounts !== 0 && (
+			{discounts ? (
 				<View className='flex justify-between py-2'>
 					<Text className='text-sm'>{t('cartSummary.txtDiscount', 'Desconto')}</Text>
 					<Text className='text-sm'>{formatAmountInCents(discounts)}</Text>
 				</View>
-			)}
+			) : null}
 
-			{shipping && (
+			{shipping ? (
 				<View className='flex justify-between py-2'>
 					<Text className='text-sm'>{t('cartSummary.txtDelivery', 'Entrega')}</Text>
 					<Text className='text-sm'>{formatAmountInCents(shipping)}</Text>
 				</View>
-			)}
+			) : null}
 		</View>
 	)
 }

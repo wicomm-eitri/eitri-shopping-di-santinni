@@ -137,7 +137,7 @@ export default function Settings() {
 					{/* Item: Sobre nós */}
 					<View
 						className='p-4 flex items-center justify-between border-b border-neutral-300  hover:bg-gray-50'
-						onClick={() => navigate(PAGES.SUPPORT)}>
+						onClick={() => navigate(PAGES.ABOUT_US)}>
 						<Text className='text-base text-gray-500'>{t('settings.aboutUs', 'Sobre nós')}</Text>
 						<svg
 							xmlns='http://www.w3.org/2000/svg'
@@ -154,9 +154,9 @@ export default function Settings() {
 					</View>
 
 					{/* Item: Política de privacidade */}
-					<View
+					{/* <View
 						className='p-4 flex items-center justify-between border-b border-neutral-300  hover:bg-gray-50'
-						onClick={() => navigate(PAGES.SUPPORT)}>
+						onClick={openPrivacyPolicy}>
 						<Text className='text-base text-gray-500'>
 							{t('settings.privacyPolicy', 'Políticas de Privacidade')}
 						</Text>
@@ -172,7 +172,7 @@ export default function Settings() {
 							strokeLinejoin='round'>
 							<polyline points='9 18 15 12 9 6'></polyline>
 						</svg>
-					</View>
+					</View> */}
 
 					{/* Item: Trocas e devoluções */}
 					<View
@@ -217,7 +217,7 @@ export default function Settings() {
 					{/* Item: Perguntas frequentes */}
 					<View
 						className='p-4 flex items-center justify-between border-b border-neutral-300  hover:bg-gray-50'
-						onClick={() => navigate('FrequentlyAskedQuestions')}>
+						onClick={() => navigate(PAGES.FREQUENTLY_ASKED_QUESTIONS)}>
 						<Text className='text-base text-gray-500'>Dúvidas frequentes</Text>
 						<svg
 							xmlns='http://www.w3.org/2000/svg'

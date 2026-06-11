@@ -295,7 +295,7 @@ export default function PersonalData() {
 
 			{isLoading && <LoadingComponent fullScreen />}
 
-			<View className='m-4 p-4 flex flex-col justify-between flex-grow bg-white rounded shadow-sm border border-gray-300'>
+			<View className='flex flex-col text-gray-700 gap-2 p-4 m-4 bg-white border border-white'>
 				<View className='mb-2'>
 					<Text className='block text-lg font-bold text-center'>
 						{t('personalData.enterEmailTitle', 'Informe seu e-mail para continuar')}
@@ -308,9 +308,9 @@ export default function PersonalData() {
 					</Text>
 				</View>
 
-				<View className='flex flex-col gap-2'>
+				<>
 					<View className='flex justify-between gap-2 items-end w-full'>
-						<View className='w-3/4'>
+						<View className={userDataVerified ? 'w-full' : 'w-3/4'}>
 							<CustomInput
 								autoFocus={true}
 								label={t('personalData.frmEmail', 'Email')}
@@ -320,15 +320,18 @@ export default function PersonalData() {
 								}}
 								placeholder={t('personalData.placeholderEmail', 'Digite seu email')}
 								inputMode={'email'}
+								disabled={userDataVerified}
 							/>
 						</View>
-						<View className='w-1/4'>
-							<CustomButton
-								disabled={!isValidEmail}
-								label={t('personalData.ok', 'OK')}
-								onPress={findUserByEmail}
-							/>
-						</View>
+						{!userDataVerified && (
+							<View className='w-1/4'>
+								<CustomButton
+									disabled={!isValidEmail}
+									label={t('personalData.ok', 'OK')}
+									onPress={findUserByEmail}
+								/>
+							</View>
+						)}
 					</View>
 
 					{userDataVerified && (
@@ -336,22 +339,23 @@ export default function PersonalData() {
 							{inputOptions
 								.filter(input => (isLegalPerson ? true : !input.corporateField))
 								.map(inputOption => (
-									<CustomInput
-										key={inputOption.label}
-										label={inputOption.title}
-										value={personalData[inputOption.label] || ''}
-										placeholder={inputOption.placeholder}
-										inputMode={inputOption.inputMode}
-										mask={inputOption.mask}
-										variant={inputOption.mask ? 'mask' : ''}
-										error={inputOption.error}
-										onChange={e => {
-											handleFormDataChange(inputOption.label, e.target.value)
-										}}
-										onBlur={e => {
-											handleFormBlur(inputOption)
-										}}
-									/>
+									<View key={inputOption.label}>
+										<CustomInput
+											label={inputOption.title}
+											value={personalData[inputOption.label] || ''}
+											placeholder={inputOption.placeholder}
+											inputMode={inputOption.inputMode}
+											mask={inputOption.mask}
+											variant={inputOption.mask ? 'mask' : ''}
+											error={inputOption.error}
+											onChange={e => {
+												handleFormDataChange(inputOption.label, e.target.value)
+											}}
+											onBlur={e => {
+												handleFormBlur(inputOption)
+											}}
+										/>
+									</View>
 								))}
 
 							<View
@@ -365,7 +369,7 @@ export default function PersonalData() {
 							</View>
 						</>
 					)}
-				</View>
+				</>
 			</View>
 
 			{userDataVerified && (
@@ -373,6 +377,9 @@ export default function PersonalData() {
 					className='flex flex-col align-center gap-4'
 					offSetHeight={77}>
 					<CustomButton
+						width='100%'
+						marginTop='large'
+						fontSize='medium'
 						disabled={!handleDataFilled()}
 						label={t('personalData.labelButton', 'Continuar')}
 						onPress={setUserData}
