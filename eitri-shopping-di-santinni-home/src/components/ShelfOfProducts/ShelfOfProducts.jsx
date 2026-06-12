@@ -5,7 +5,7 @@ import ShelfOfProductsCarousel from './components/ShelfOfProductsCarousel'
 import ShelfOfProductsSlider from './components/ShelfOfProductsSlider'
 
 export default function ShelfOfProducts(props) {
-	const { products, title, isLoading, mode, searchParams, params, ...rest } = props
+	const { products, title, isLoading, mode, searchParams, paddingLeft, params, ...rest } = props
 	const { t } = useTranslation()
 
 	const seeMore = () => {
@@ -20,7 +20,6 @@ export default function ShelfOfProducts(props) {
 
 	const marginTop = getSpacingValue(params?.marginTop)
 	const marginBottom = getSpacingValue(params?.marginBottom)
-
 	return (
 		<View
 			className='mb-[37px]'
@@ -48,6 +47,7 @@ export default function ShelfOfProducts(props) {
 				<ShelfOfProductsCarousel
 					isLoading={isLoading}
 					products={products}
+					paddingLeft={paddingLeft}
 				/>
 			)}
 

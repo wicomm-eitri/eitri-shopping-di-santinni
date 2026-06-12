@@ -6,7 +6,7 @@ module.exports = {
 	'eitri-bifrost': '5.1.0',
 	'eitri-commons': '2.2.1',
 	'version': '0.1.8',
-	'versionMessage': 'float notification',
+	'versionMessage': 'correção de QA no custom carrousel',
 	'public-key': 'dc1f3bd6-04a5-4967-8322-82f611bf156d',
 	'applicationId': 'f0301a60-5a72-487b-8855-a4fbd21d1f39',
 	'id': '48aeeb93-e24b-493a-98f2-f786f27de3e4',

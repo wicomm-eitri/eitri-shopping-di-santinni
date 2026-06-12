@@ -122,6 +122,7 @@ export default function ProductTilesHighlights(props) {
 					isLoading={isLoadingProducts}
 					products={currentProducts}
 					params={paramsObject}
+					paddingLeft="16px"
 				/>
 			) : (
 				<View className='flex overflow-x-auto gap-2 px-4 py-2 mt-2'>
