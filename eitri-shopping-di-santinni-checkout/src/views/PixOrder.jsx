@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
 import { Page, View, Text, Image } from 'eitri-luminus'
@@ -93,21 +93,27 @@ export default function PixOrder(props) {
 		}
 	}
 
-	if (!pixPayload) return null
-
-	const expiryDate = new Date()
-
-	expiryDate.setMinutes(expiryDate.getMinutes() + 10)
 	const format2Digits = n => n.toString().padStart(2, '0')
-	const expiryFormatted = `${format2Digits(expiryDate.getDate())}/${format2Digits(
-		expiryDate.getMonth() + 1
-	)}/${expiryDate.getFullYear()} ${format2Digits(expiryDate.getHours())}:${format2Digits(
-		expiryDate.getMinutes()
-	)}:${format2Digits(expiryDate.getSeconds())}`
 
-	const orderDateFormatted = `${format2Digits(new Date().getDate())}/${format2Digits(
-		new Date().getMonth() + 1
-	)}/${new Date().getFullYear()}`
+	const expiryFormatted = useMemo(() => {
+		const expiryDate = new Date()
+
+		expiryDate.setMinutes(expiryDate.getMinutes() + 10)
+
+		return `${format2Digits(expiryDate.getDate())}/${format2Digits(
+			expiryDate.getMonth() + 1
+		)}/${expiryDate.getFullYear()} ${format2Digits(expiryDate.getHours())}:${format2Digits(
+			expiryDate.getMinutes()
+		)}:${format2Digits(expiryDate.getSeconds())}`
+	}, [])
+
+	const orderDateFormatted = useMemo(() => {
+		return `${format2Digits(new Date().getDate())}/${format2Digits(
+			new Date().getMonth() + 1
+		)}/${new Date().getFullYear()}`
+	}, [])
+
+	if (!pixPayload) return null
 
 	const customerName = cart?.clientProfileData?.firstName
 		? `${cart.clientProfileData.firstName} ${cart.clientProfileData.lastName}`
@@ -138,8 +144,13 @@ export default function PixOrder(props) {
 					/>
 
 					{/* Input do código PIX */}
-					<View className='w-full border border-gray-300 p-2 mb-2'>
-						<Text className='text-xs text-center text-gray-400 truncate w-full'>{pixPayload.code}</Text>
+					<View className='w-full border border-gray-300 p-3 mb-2 flex items-center justify-center overflow-hidden'>
+						<Text
+							className='text-xs text-center text-gray-400 w-full truncate'
+							numberOfLines={1}
+							ellipsizeMode='tail'>
+							{pixPayload.code}
+						</Text>
 					</View>
 
 					{/* Botão Copiar */}
@@ -162,35 +173,36 @@ export default function PixOrder(props) {
 
 				{/* Informações do pedido */}
 				<View className='flex flex-col gap-2 mb-8'>
-					<Text className='font-bold text-xs text-gray-900 mb-1'>
-						{t('pixOrder.orderInfo', 'Informações do pedido')}
-					</Text>
-
-					<Text className='text-xs text-gray-700'>
-						Status:{' '}
-						<Text className='text-red-700 font-bold text-xs'>
-							{t('pixOrder.waitingPayment', 'Esperando pagamento')}
+					<View className='flex flex-col gap-2 '>
+						<Text className='font-bold text-xs text-gray-900 mb-1'>
+							{t('pixOrder.orderInfo', 'Informações do pedido')}
 						</Text>
-					</Text>
 
-					<Text className='text-xs text-gray-700'>
+						<Text className='text-xs text-gray-700'>
+							Status:{' '}
+							<Text className='text-red-700 font-bold text-xs'>
+								{t('pixOrder.waitingPayment', 'Esperando pagamento')}
+							</Text>
+						</Text>
+					</View>
+					<Text className='text-sm text-gray-700'>
 						Valor total:{' '}
-						<Text className='font-bold text-gray-900 text-xs'>{formatAmountInCents(cart?.value || 0)}</Text>
+						<Text className='font-bold text-gray-900 text-sm'>{formatAmountInCents(cart?.value || 0)}</Text>
 					</Text>
 
-					<Text className='text-xs text-gray-700'>
-						Data do pedido: <Text className='font-bold text-gray-900 text-xs'>{orderDateFormatted}</Text>
+					<Text className='text-sm text-gray-700'>
+						Data do pedido: <Text className='font-bold text-gray-900 text-sm'>{orderDateFormatted}</Text>
 					</Text>
 
-					<Text className='text-xs text-gray-700'>
-						Comprado por: <Text className='font-bold text-gray-900 text-xs'>{customerName}</Text>
+					<Text className='text-sm text-gray-700'>
+						Comprado por: <Text className='font-bold text-gray-900 text-sm'>{customerName}</Text>
 					</Text>
 
-					<Text className='text-xs text-gray-700'>
-						Forma de pagamento: <Text className='font-bold text-gray-900 text-xs'>Pix</Text>
+					<Text className='text-sm text-gray-700'>
+						Forma de pagamento: <Text className='font-bold text-gray-900 text-sm'>Pix</Text>
 					</Text>
 
-					<Text className='text-xs text-gray-600 mt-2 leading-tight pr-4'>
+					<Text className='text-sm text-gray-600 mt-2 leading-tight pr-4'>
 						{t(
 							'pixOrder.trackOrder',
 							'Você pode acompanhar o status do seu pedido em Minha Conta > Meus Pedidos'
@@ -200,7 +212,7 @@ export default function PixOrder(props) {
 					<View
 						className='flex items-center justify-center mt-2'
 						onClick={() => navigate('Profile')}>
-						<Text className='text-red-700 text-xs  font-bold uppercase'>
+						<Text className='text-red-700 text-xs  uppercase'>
 							{t('pixOrder.viewOrders', 'VER MEUS PEDIDOS')}
 						</Text>
 					</View>
@@ -208,7 +220,7 @@ export default function PixOrder(props) {
 
 				{/* Resumo do pedido */}
 				<View className='flex flex-col mt-2 pb-10'>
-					<Text className='font-bold text-xs text-gray-900 mb-4'>
+					<Text className='font-bold  text-gray-900 mb-4'>
 						{t('pixOrder.orderSummary', 'Resumo do pedido')}
 					</Text>
 

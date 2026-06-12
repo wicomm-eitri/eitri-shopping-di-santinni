@@ -74,7 +74,7 @@ export default function OrderCard(props) {
 						<View className='w-full h-full bg-gray-50' />
 					)}
 				</View>
-				<View className='flex flex-col flex-1 justify-center'>
+				<View className='flex flex-col flex-1 gap-2 justify-center'>
 					<Text className='text-sm font-semibold text-red-700'>
 						{t('orderCard.orderLabel', 'Nº do pedido:')} {order?.orderId}
 					</Text>

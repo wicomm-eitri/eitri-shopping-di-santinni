@@ -33,7 +33,7 @@ export default function Wishlist(props) {
 
 			setWishlistItems(result)
 		} catch (e) {
-			console.error('ERROR AO CARREGAR WISHLIST', err)
+			console.error('ERROR AO CARREGAR WISHLIST', e)
 			setWishlistItems([])
 		} finally {
 			setIsLoading(false)
@@ -79,7 +79,7 @@ export default function Wishlist(props) {
 					? wishlistItems.map(item => (
 							<WishlistItem
 								key={item.id}
-								productId={item.productId}
+								productId={item.skuId}
 								onRemoveFromWishList={() => onRemoveFromWishList(item.id)}
 							/>
 						))
