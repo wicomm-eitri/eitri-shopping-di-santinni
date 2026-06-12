@@ -78,7 +78,9 @@ export default function ActionButton(props) {
 						<Loading size={20} />
 					</View>
 				) : (
-					<View onClick={handleClickAddToCart} className='rounded-full border w-[52px] h-[43px] border-red-700 flex items-center justify-center'>
+					<View
+						onClick={handleClickAddToCart}
+						className='rounded-full border w-[52px] h-[43px] border-red-700 flex items-center justify-center'>
 						<Image
 							src={cartRed}
 							className='w-5 h-5'

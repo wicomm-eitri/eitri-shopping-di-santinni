@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
 import { Page, View, Text, Image } from 'eitri-luminus'
@@ -8,6 +8,41 @@ import { useLocalShoppingCart } from '../providers/LocalCart'
 import { trackScreenView } from '../services/Tracking'
 import { clearCart, getPixStatus } from '../services/cartService'
 import { formatAmountInCents } from '../utils/utils'
+
+const parseItemName = name => {
+	const raw = (name || '').trim()
+	if (!raw) return { baseName: '', size: '', color: '' }
+
+	const words = raw.split(/\s+/)
+	const sizeRegex = /^(PP|P|M|G|GG|XS|S|L|XL|XXL|XXXL|U|[0-9]{1,3})$/i
+
+	let detectedSize = ''
+	let detectedColor = ''
+	let nameParts = [...words]
+	const last = words[words.length - 1]
+
+	if (sizeRegex.test(last)) {
+		detectedSize = last.toUpperCase()
+		nameParts.pop()
+	}
+
+	if (nameParts.length > 0) {
+		const lastPart = nameParts[nameParts.length - 1]
+		const secondLastPart = nameParts.length > 1 ? nameParts[nameParts.length - 2] : null
+		const isUpper = s => /^[A-ZÀ-Ÿ0-9-]+$/.test(s.replace(/\W+/g, ''))
+
+		if (secondLastPart && isUpper(secondLastPart) && isUpper(lastPart)) {
+			detectedColor = `${secondLastPart} ${lastPart}`
+			nameParts.splice(-2, 2)
+		} else {
+			detectedColor = lastPart
+			nameParts.pop()
+		}
+	}
+
+	const base = nameParts.join(' ').trim()
+	return { baseName: base || raw, size: detectedSize, color: detectedColor }
+}
 
 export default function PixOrder(props) {
 	const { t } = useTranslation()
@@ -93,21 +128,27 @@ export default function PixOrder(props) {
 		}
 	}
 
-	if (!pixPayload) return null
-
-	const expiryDate = new Date()
-
-	expiryDate.setMinutes(expiryDate.getMinutes() + 10)
 	const format2Digits = n => n.toString().padStart(2, '0')
-	const expiryFormatted = `${format2Digits(expiryDate.getDate())}/${format2Digits(
-		expiryDate.getMonth() + 1
-	)}/${expiryDate.getFullYear()} ${format2Digits(expiryDate.getHours())}:${format2Digits(
-		expiryDate.getMinutes()
-	)}:${format2Digits(expiryDate.getSeconds())}`
 
-	const orderDateFormatted = `${format2Digits(new Date().getDate())}/${format2Digits(
-		new Date().getMonth() + 1
-	)}/${new Date().getFullYear()}`
+	const expiryFormatted = useMemo(() => {
+		const expiryDate = new Date()
+
+		expiryDate.setMinutes(expiryDate.getMinutes() + 10)
+
+		return `${format2Digits(expiryDate.getDate())}/${format2Digits(
+			expiryDate.getMonth() + 1
+		)}/${expiryDate.getFullYear()} ${format2Digits(expiryDate.getHours())}:${format2Digits(
+			expiryDate.getMinutes()
+		)}:${format2Digits(expiryDate.getSeconds())}`
+	}, [])
+
+	const orderDateFormatted = useMemo(() => {
+		return `${format2Digits(new Date().getDate())}/${format2Digits(
+			new Date().getMonth() + 1
+		)}/${new Date().getFullYear()}`
+	}, [])
+
+	if (!pixPayload) return null
 
 	const customerName = cart?.clientProfileData?.firstName
 		? `${cart.clientProfileData.firstName} ${cart.clientProfileData.lastName}`
@@ -138,8 +179,13 @@ export default function PixOrder(props) {
 					/>
 
 					{/* Input do código PIX */}
-					<View className='w-full border border-gray-300 p-2 mb-2'>
-						<Text className='text-xs text-center text-gray-400 truncate w-full'>{pixPayload.code}</Text>
+					<View className='w-full border border-gray-300 p-3 mb-2 flex items-center justify-center overflow-hidden'>
+						<Text
+							className='text-xs text-center text-gray-400 w-full truncate'
+							numberOfLines={1}
+							ellipsizeMode='tail'>
+							{pixPayload.code}
+						</Text>
 					</View>
 
 					{/* Botão Copiar */}
@@ -162,35 +208,36 @@ export default function PixOrder(props) {
 
 				{/* Informações do pedido */}
 				<View className='flex flex-col gap-2 mb-8'>
-					<Text className='font-bold text-xs text-gray-900 mb-1'>
-						{t('pixOrder.orderInfo', 'Informações do pedido')}
-					</Text>
-
-					<Text className='text-xs text-gray-700'>
-						Status:{' '}
-						<Text className='text-red-700 font-bold text-xs'>
-							{t('pixOrder.waitingPayment', 'Esperando pagamento')}
+					<View className='flex flex-col gap-2 '>
+						<Text className='font-bold text-xs text-gray-900 mb-1'>
+							{t('pixOrder.orderInfo', 'Informações do pedido')}
 						</Text>
-					</Text>
 
-					<Text className='text-xs text-gray-700'>
+						<Text className='text-xs text-gray-700'>
+							Status:{' '}
+							<Text className='text-red-700 font-bold text-xs'>
+								{t('pixOrder.waitingPayment', 'Esperando pagamento')}
+							</Text>
+						</Text>
+					</View>
+					<Text className='text-sm text-gray-700'>
 						Valor total:{' '}
-						<Text className='font-bold text-gray-900 text-xs'>{formatAmountInCents(cart?.value || 0)}</Text>
+						<Text className='font-bold text-gray-900 text-sm'>{formatAmountInCents(cart?.value || 0)}</Text>
 					</Text>
 
-					<Text className='text-xs text-gray-700'>
-						Data do pedido: <Text className='font-bold text-gray-900 text-xs'>{orderDateFormatted}</Text>
+					<Text className='text-sm text-gray-700'>
+						Data do pedido: <Text className='font-bold text-gray-900 text-sm'>{orderDateFormatted}</Text>
 					</Text>
 
-					<Text className='text-xs text-gray-700'>
-						Comprado por: <Text className='font-bold text-gray-900 text-xs'>{customerName}</Text>
+					<Text className='text-sm text-gray-700'>
+						Comprado por: <Text className='font-bold text-gray-900 text-sm'>{customerName}</Text>
 					</Text>
 
-					<Text className='text-xs text-gray-700'>
-						Forma de pagamento: <Text className='font-bold text-gray-900 text-xs'>Pix</Text>
+					<Text className='text-sm text-gray-700'>
+						Forma de pagamento: <Text className='font-bold text-gray-900 text-sm'>Pix</Text>
 					</Text>
 
-					<Text className='text-xs text-gray-600 mt-2 leading-tight pr-4'>
+					<Text className='text-sm text-gray-600 mt-2 leading-tight pr-4'>
 						{t(
 							'pixOrder.trackOrder',
 							'Você pode acompanhar o status do seu pedido em Minha Conta > Meus Pedidos'
@@ -200,7 +247,7 @@ export default function PixOrder(props) {
 					<View
 						className='flex items-center justify-center mt-2'
 						onClick={() => navigate('Profile')}>
-						<Text className='text-red-700 text-xs  font-bold uppercase'>
+						<Text className='text-red-700 text-xs  uppercase'>
 							{t('pixOrder.viewOrders', 'VER MEUS PEDIDOS')}
 						</Text>
 					</View>
@@ -208,56 +255,79 @@ export default function PixOrder(props) {
 
 				{/* Resumo do pedido */}
 				<View className='flex flex-col mt-2 pb-10'>
-					<Text className='font-bold text-xs text-gray-900 mb-4'>
+					<Text className='font-bold  text-gray-900 mb-4'>
 						{t('pixOrder.orderSummary', 'Resumo do pedido')}
 					</Text>
 
 					{/* Itens */}
 					<View className='flex flex-col gap-4 mb-6'>
-						{cart?.items?.map(item => (
-							<View
-								key={item.uniqueId}
-								className='flex flex-row gap-3'>
-								<View className='w-16 h-16 rounded-md overflow-hidden'>
-									<Image
-										src={item.imageUrl}
-										className='w-full h-full object-contain'
-									/>
+						{cart?.items?.map(item => {
+							const { baseName, size, color } = parseItemName(item.name)
+							return (
+								<View
+									key={item.uniqueId}
+									className='flex flex-row gap-4 mb-2'>
+									<View className='w-[80px] h-[100px] rounded-md overflow-hidden bg-white flex items-center justify-center'>
+										<Image
+											src={item.imageUrl}
+											className='w-full h-full object-contain'
+										/>
+									</View>
+									<View className='flex flex-col flex-1 justify-center gap-1.5'>
+										<Text
+											className='text-sm font-bold text-gray-900 leading-tight'
+											numberOfLines={2}
+											ellipsizeMode='tail'>
+											{baseName}
+										</Text>
+
+										<View className='flex flex-col gap-0.5 mt-1'>
+											{size && (
+												<Text className='text-[10px] text-gray-500'>
+													Tamanho:{' '}
+													<Text className='font-bold text-[10px] text-gray-900'>{size}</Text>
+												</Text>
+											)}
+											{color && (
+												<Text className='text-[10px] text-gray-500'>
+													Cor:{' '}
+													<Text className='font-bold text-[10px] text-gray-900'>{color}</Text>
+												</Text>
+											)}
+										</View>
+
+										<Text className='text-red-700 font-bold text-lg mt-1'>
+											{formatAmountInCents(item.price)}
+										</Text>
+									</View>
 								</View>
-								<View className='flex flex-col flex-1 justify-center gap-1'>
-									<Text className='text-xs font-bold text-gray-900 leading-tight'>{item.name}</Text>
-									<Text className='text-[9px] text-gray-600'>{item.id}</Text>
-									<Text className='text-red-700 font-bold text-xs mt-1'>
-										{formatAmountInCents(item.price)}
-									</Text>
-								</View>
-							</View>
-						))}
+							)
+						})}
 					</View>
 
 					{/* Totais */}
 					<View className='flex flex-col gap-2'>
 						<View className='flex justify-between'>
-							<Text className='text-xs text-gray-600'>{t('pixOrder.subtotal', 'Subtotal')}</Text>
-							<Text className='text-xs text-gray-600'>{formatAmountInCents(getSubtotal())}</Text>
+							<Text className='text-sm text-gray-600'>{t('pixOrder.subtotal', 'Subtotal')}</Text>
+							<Text className='text-sm text-gray-600'>{formatAmountInCents(getSubtotal())}</Text>
 						</View>
 						<View className='flex justify-between'>
-							<Text className='text-xs text-gray-600'>{t('pixOrder.discount', 'Desconto')}</Text>
-							<Text className='text-xs text-gray-600'>
+							<Text className='text-sm text-gray-600'>{t('pixOrder.discount', 'Desconto')}</Text>
+							<Text className='text-sm text-gray-600'>
 								{getDiscount() < 0
 									? `- ${formatAmountInCents(Math.abs(getDiscount()))}`
 									: formatAmountInCents(0)}
 							</Text>
 						</View>
 						<View className='flex justify-between'>
-							<Text className='text-xs text-gray-600'>{t('pixOrder.shipping', 'Frete')}</Text>
-							<Text className='text-xs text-gray-600'>
+							<Text className='text-sm text-gray-600'>{t('pixOrder.shipping', 'Frete')}</Text>
+							<Text className='text-sm text-gray-600'>
 								{getShipping() === 0 ? 'Grátis' : formatAmountInCents(getShipping())}
 							</Text>
 						</View>
 						<View className='flex justify-between mt-1'>
-							<Text className='text-[11px] font-bold text-gray-900'>{t('pixOrder.total', 'Total')}</Text>
-							<Text className='text-[11px] font-bold text-gray-900'>
+							<Text className='text-sm font-bold text-gray-900'>{t('pixOrder.total', 'Total')}</Text>
+							<Text className='text-sm font-bold text-gray-900'>
 								{formatAmountInCents(cart?.value || 0)}
 							</Text>
 						</View>

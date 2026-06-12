@@ -100,8 +100,8 @@ export default function FloatNotification(props) {
 		return (
 			showNotification && (
 				<View
-					className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-[99999] shadow-lg transition-transform duration-800 ease-in-out rounded px-3 py-2 ${translate} ${bgColor}`}>
-					<Text className='text-base-100 font-semibold text-center text-sm'>{title}</Text>
+					className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-[99999] w-max max-w-[95vw] shadow-lg transition-transform duration-800 ease-in-out rounded px-3 py-2 ${translate} ${bgColor}`}>
+					<Text className='text-base-100 font-semibold text-center text-sm whitespace-nowrap'>{title}</Text>
 				</View>
 			)
 		)

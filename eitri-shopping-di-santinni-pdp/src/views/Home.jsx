@@ -15,6 +15,7 @@ import { useLocalShoppingCart } from '../providers/LocalCart'
 import { startConfigure } from '../services/AppService'
 import { saveCartIdOnStorage } from '../services/cartService'
 import { getProductById, getProductBySlug, markLastViewedProduct } from '../services/productService'
+import { productOnWishlist } from '../services/customerService'
 import { crashLog, sendScreenView, sendViewItem } from '../services/trackingService'
 
 export default function Home() {
@@ -25,6 +26,7 @@ export default function Home() {
 	const [isLoading, setIsLoading] = useState(null)
 	const [configLoaded, setConfigLoaded] = useState(false)
 	const [currentSku, setCurrentSku] = useState(null)
+	const [wishlistInfo, setWishlistInfo] = useState(null)
 
 	useEffect(() => {
 		window.scroll(0, 0)
@@ -43,12 +45,6 @@ export default function Home() {
 
 		let product = await startParams.product
 
-		if (product) {
-			setProduct(product)
-			setCurrentSku(findAvailableSKU(product))
-			setIsLoading(false)
-		}
-
 		await loadConfigs()
 
 		if (!product) {
@@ -58,6 +54,11 @@ export default function Home() {
 		if (product) {
 			setProduct(product)
 			setCurrentSku(findAvailableSKU(product))
+			
+			const wlInfo = await productOnWishlist(product.productId)
+
+			setWishlistInfo(wlInfo)
+
 			setIsLoading(false)
 		}
 
@@ -183,6 +184,7 @@ export default function Home() {
 			<Header
 				product={product}
 				configLoaded={configLoaded}
+				initialWishlistInfo={wishlistInfo}
 			/>
 
 			<Loading
@@ -200,6 +202,7 @@ export default function Home() {
 								<MainDescription
 									product={product}
 									currentSku={currentSku}
+									initialWishlistInfo={wishlistInfo}
 								/>
 
 								<SkuSelector

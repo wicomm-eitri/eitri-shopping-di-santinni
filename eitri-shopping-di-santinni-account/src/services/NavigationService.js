@@ -18,7 +18,8 @@ export const PAGES = {
 	EXCHANGE_POLICY: '/ExchangePolicy',
 	ABOUT_US: '/AboutUs',
 	BECOMEAFRANCHISEE: '/BecomeAFranchisee',
-	NOSSASLOJAS: '/NossasLojas'
+	NOSSASLOJAS: '/NossasLojas',
+	FREQUENTLY_ASKED_QUESTIONS: '/FrequentlyAskedQuestions'
 }
 
 export const openProduct = async product => {

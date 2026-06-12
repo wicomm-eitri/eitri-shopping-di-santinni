@@ -19,18 +19,22 @@ const Star = ({ filled }) => (
 )
 
 export default function MainDescription(props) {
-	const { product, currentSku, locale, currency } = props
+	const { product, currentSku, locale, currency, initialWishlistInfo } = props
 
 	const { t } = useTranslation()
 	const { cart } = useLocalShoppingCart()
 
 	const [averageRating, setAverageRating] = useState(3)
-	const [loadingWishlist, setLoadingWishlist] = useState(true)
-	const [itemWishlistId, setItemWishlistId] = useState(-1)
-	const [itemOnWishlist, setItemOnWishlist] = useState(false)
+	const [loadingWishlist, setLoadingWishlist] = useState(!initialWishlistInfo)
+	const [itemWishlistId, setItemWishlistId] = useState(initialWishlistInfo?.listId || -1)
+	const [itemOnWishlist, setItemOnWishlist] = useState(initialWishlistInfo?.inList || false)
 
 	useEffect(() => {
-		if (product?.productId) {
+		if (initialWishlistInfo) {
+			setItemOnWishlist(initialWishlistInfo.inList)
+			setItemWishlistId(initialWishlistInfo.listId || -1)
+			setLoadingWishlist(false)
+		} else if (product?.productId) {
 			checkIfIsFavorite(product.productId)
 		}
 
@@ -39,7 +43,7 @@ export default function MainDescription(props) {
 				checkIfIsFavorite(product.productId)
 			}
 		})
-	}, [product?.productId])
+	}, [product?.productId, initialWishlistInfo])
 
 	const count = useRef(5)
 

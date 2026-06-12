@@ -1,5 +1,5 @@
 import Eitri from 'eitri-bifrost'
-import { Vtex } from 'eitri-shopping-vtex-shared'
+import { Vtex, EventBus } from 'eitri-shopping-vtex-shared'
 
 export const requestLogin = () => {
 	return new Promise((resolve, reject) => {
@@ -74,6 +74,9 @@ export const getWishlist = async () => {
                         skuCodeReference
                         nameProduct
                         quantityProduct
+                        notes
+                        linkProduct
+                        department
                     }
                 }
             }
@@ -87,11 +90,22 @@ export const getWishlist = async () => {
 
 		const products = wishlists[0].products || []
 
-		return products.map(p => ({
-			id: p.ID,
-			productId: String(p.ID),
+		const uniqueProducts = []
+		const seenIds = new Set()
+
+		for (const p of products) {
+			if (!seenIds.has(p.ID)) {
+				seenIds.add(p.ID)
+				uniqueProducts.push(p)
+			}
+		}
+
+		return uniqueProducts.map(p => ({
+			id: String(p.ID),
+			skuId: String(p.ID),
+			productId: p.notes || p.linkProduct || p.skuCodeReference || String(p.ID),
 			name: p.nameProduct,
-			sku: p.skuCodeReference
+			sku: p.skuCodeReference || String(p.ID)
 		}))
 	} catch (error) {
 		console.error('Erro ao carregar wishlist via bypass:', error)
@@ -100,10 +114,12 @@ export const getWishlist = async () => {
 	}
 }
 
-export const productOnWishlist = async productId => {
+export const productOnWishlist = async identifier => {
 	try {
 		const products = await getWishlist()
-		const itemExists = products.find(item => String(item.productId) === String(productId))
+		const itemExists = products.find(item => 
+			String(item.productId) === String(identifier) || String(item.id) === String(identifier)
+		)
 
 		return { inList: !!itemExists, listId: itemExists ? true : null }
 	} catch (error) {
@@ -111,7 +127,7 @@ export const productOnWishlist = async productId => {
 	}
 }
 
-export const removeItemFromWishlist = async productId => {
+export const removeItemFromWishlist = async identifier => {
 	try {
 		const headers = await getAuthHeaders()
 		const queryList = `
@@ -140,7 +156,7 @@ export const removeItemFromWishlist = async productId => {
 		if (wishlists.length === 0) return true
 
 		const targetList = wishlists[0]
-		const updatedProducts = (targetList.products || []).filter(item => String(item.ID) !== String(productId))
+		const updatedProducts = (targetList.products || []).filter(item => String(item.ID) !== String(identifier) && String(item.notes) !== String(identifier))
 
 		const mutationUpdate = `
             mutation UpdateWishlist($wishlist: WishlistInput!) {
@@ -170,6 +186,19 @@ export const removeItemFromWishlist = async productId => {
 		}
 
 		await Eitri.http.post(GRAPHQL_URL, { query: mutationUpdate, variables }, { headers })
+
+		EventBus.publish({
+			channel: 'removeFromWishlist',
+			broadcast: true,
+			data: { 
+				id: targetList.id, 
+				response: { 
+					data: { 
+						removeFromList: true 
+					} 
+				} 
+			}
+		})
 
 		return true
 	} catch (error) {
@@ -210,7 +239,7 @@ export const addToWishlist = async (productId, title, sku) => {
 		let wishlists = listResponse.data?.data?.getWishlistsByEmail || []
 
 		const newProduct = {
-			ID: Number(productId),
+			ID: Number(sku || productId),
 			Image: '',
 			linkProduct: '',
 			nameProduct: String(title || 'Favorito'),
@@ -218,7 +247,7 @@ export const addToWishlist = async (productId, title, sku) => {
 			skuCodeReference: String(sku || productId),
 			department: '',
 			bundle: 1,
-			notes: ''
+			notes: String(productId)
 		}
 
 		let response = null
@@ -226,7 +255,7 @@ export const addToWishlist = async (productId, title, sku) => {
 		if (wishlists.length > 0) {
 			const targetList = wishlists[0]
 			const currentProducts = targetList.products || []
-			const hasProduct = currentProducts.find(p => String(p.ID) === String(productId))
+			const hasProduct = currentProducts.find(p => String(p.ID) === String(sku || productId))
 			const updatedProducts = hasProduct ? currentProducts : [...currentProducts, newProduct]
 
 			const mutationUpdate = `
@@ -293,6 +322,19 @@ export const addToWishlist = async (productId, title, sku) => {
 			console.error('Detalhes do Erro GraphQL:', JSON.stringify(result.errors))
 			throw new Error('Falha na validação do GraphQL')
 		}
+
+		EventBus.publish({
+			channel: 'addToWishlist',
+			broadcast: true,
+			data: { 
+				productId, 
+				response: { 
+					data: { 
+						addToList: result?.data?.updateWishlist?.id || result?.data?.createWishlist?.Id || -1
+					} 
+				} 
+			}
+		})
 
 		return result
 	} catch (error) {

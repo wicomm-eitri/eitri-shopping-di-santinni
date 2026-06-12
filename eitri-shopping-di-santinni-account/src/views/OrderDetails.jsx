@@ -1,28 +1,27 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { BottomInset, HeaderContentWrapper, HeaderReturn, HeaderText, Loading } from 'eitri-shopping-di-santinni-shared'
-import { Vtex } from 'eitri-shopping-vtex-shared'
+import {
+	BottomInset,
+	CustomButton,
+	HeaderContentWrapper,
+	HeaderReturn,
+	HeaderText,
+	Loading
+} from 'eitri-shopping-di-santinni-shared'
 import ImageCard from '../components/Image/ImageCard'
-import OrderStatusBadge from '../components/OrderStatusBadge/OrderStatusBadge'
 import ProtectedView from '../components/ProtectedView/ProtectedView'
 import { getOrderById } from '../services/CustomerService'
 import { sendScreenView } from '../services/TrackingService'
+import iconeEntrega from '../assets/icons/Entrega.svg'
+import iconePagamentoAprovado from '../assets/icons/PagamentoAprovado.svg'
+import iconeEntregue from '../assets/icons/entregue.svg'
 import { addonUserTappedActiveTabListener } from '../utils/backToTopListener'
-import { formatDate, formatDateDaysMonthYear, formatPriceInCents } from '../utils/utils'
-
-// Componente auxiliar para padronizar as seções de detalhes
-const DetailSection = ({ title, children }) => (
-	<View className='flex flex-col gap-1'>
-		<Text className='text-sm font-semibold text-gray-800'>{title}</Text>
-		<View>{children}</View>
-	</View>
-)
+import { formatPriceInCents } from '../utils/utils'
 
 export default function OrderDetails(props) {
 	const [order, setOrder] = useState(null)
 	const [isLoading, setIsLoading] = useState(false)
-	const [cancelConfirmation, setCancelConfirmation] = useState(false)
-	const [cancelReason, setCancelReason] = useState('')
+	const [showAllItems, setShowAllItems] = useState(false)
 
 	const { t } = useTranslation()
 
@@ -58,53 +57,56 @@ export default function OrderDetails(props) {
 		}
 	}
 
-	const cancelOrder = async () => {
-		if (!cancelReason) return
+	const formatOrderDateTime = isoString => {
+		if (!isoString) return ''
 
-		setIsLoading(true)
+		const date = new Date(isoString)
+		const day = String(date.getDate()).padStart(2, '0')
+		const month = String(date.getMonth() + 1).padStart(2, '0')
+		const year = date.getFullYear()
+		const hours = String(date.getHours()).padStart(2, '0')
+		const minutes = String(date.getMinutes()).padStart(2, '0')
 
-		try {
-			await Vtex.customer.cancelOrder(order?.orderId, { reason: cancelReason })
-			Eitri.navigation.back()
-		} catch (e) {
-			console.error(t('orderDetails.errors.cancelOrder', 'Erro ao cancelar pedido'), e)
-			setIsLoading(false) // Garante que o loading para em caso de erro
-		}
+		return `${day}/${month}/${year} às ${hours}:${minutes}`
 	}
 
-	const getFormattedPaymentSystem = payment => {
+	const getDeliveryDateText = () => {
+		const info = order?.shippingData?.logisticsInfo?.[0]
+
+		if (!info) return ''
+
+		if (info.shippingEstimateDate) {
+			const date = new Date(info.shippingEstimateDate)
+			const day = String(date.getDate()).padStart(2, '0')
+			const month = date.toLocaleString('pt-BR', { month: 'short' }).replace('.', '')
+
+			return `${day} ${month}`
+		} else if (info.shippingEstimate) {
+			return info.shippingEstimate.replace(/[a-zA-Z]/g, '') + ' dias úteis'
+		}
+
+		return ''
+	}
+
+	const getPaymentDetails = () => {
+		const payment = order?.paymentData?.transactions?.[0]?.payments?.[0]
+
 		if (!payment) return null
 
-		// Boleto
-		if (payment.paymentSystem === '6') {
-			return (
-				<View className='flex w-full items-center justify-between'>
-					<Text className='text-sm text-gray-700'>{payment.paymentSystemName}</Text>
-					{order?.status === 'payment-pending' && (
-						<View
-							className=''
-							onClick={() => Eitri.openBrowser({ url: payment.url })}>
-							<Text className='text-sm font-bold text-blue-600 hover:underline'>
-								{t('orderDetails.lbSeeBilling', 'Ver boleto')}
-							</Text>
-						</View>
-					)}
-				</View>
-			)
+		return {
+			name: payment.paymentSystemName,
+			installments: payment.installments > 1 ? `em ${payment.installments}x sem juros` : 'à vista',
+			value: payment.value,
+			isCreditCard: payment.paymentSystem !== '6'
 		}
-
-		// Outros (Cartão, etc)
-		return (
-			<Text className='text-sm text-gray-700'>
-				{`${payment.paymentSystemName} ${formatPriceInCents(payment.value)} (${payment.installments}x)`}
-			</Text>
-		)
 	}
 
-	const handleShippingEstimate = shippingEstimate => {
-		if (!shippingEstimate) return ''
+	const getTotalValue = () => {
+		if (order?.totals) {
+			return order.totals.map(item => item.value).reduce((acc, curr) => acc + curr, 0)
+		}
 
-		return shippingEstimate.replace(/[a-zA-Z]/g, '')
+		return order?.value || 0
 	}
 
 	if (isLoading) {
@@ -112,7 +114,7 @@ export default function OrderDetails(props) {
 			<Page>
 				<HeaderContentWrapper>
 					<HeaderReturn />
-					<HeaderText text={t('orderDetails.title', 'Meus Pedidos')} />
+					<HeaderText text={t('orderDetails.title', 'Meus pedidos')} />
 				</HeaderContentWrapper>
 				<Loading fullScreen />
 			</Page>
@@ -120,184 +122,130 @@ export default function OrderDetails(props) {
 	}
 
 	if (!order) {
-		return
+		return null
 	}
+
+	const payInfo = getPaymentDetails()
+	const itemsToShow = showAllItems ? order.items : order.items.slice(0, 2)
 
 	return (
 		<ProtectedView
 			afterLoginRedirectTo={'OrderDetails'}
 			redirectState={{ orderId: order?.orderId }}>
-			<Page title={'Detalhes do pedido'}>
+			<Page className='bg-gray-50'>
 				<HeaderContentWrapper>
 					<HeaderReturn />
-					<HeaderText text={t('orderDetails.title', 'Meus Pedidos')} />
+					<HeaderText text={t('orderDetails.title', 'Meus pedidos')} />
 				</HeaderContentWrapper>
 
-				<View className='p-4'>
-					<View className='rounded-lg border border-gray-200 bg-white shadow-sm'>
-						{/* Bloco principal de informações */}
-						<View className='flex flex-col gap-6 p-4'>
-							<View className='flex flex-row items-start justify-between'>
-								<View className='flex flex-col gap-1'>
-									<Text className='text-xs font-semibold uppercase text-gray-500'>
-										{t('orderDetails.lbOrder', 'Pedido')}
-									</Text>
-									<Text className='text-sm font-medium text-gray-900'>{order?.orderId}</Text>
-								</View>
-								<OrderStatusBadge
-									statusId={order?.status}
-									statusDescription={order?.statusDescription}
-								/>
-							</View>
+				<View className='p-4 bg-gray-50 flex-1 flex flex-col w-full'>
+					{/* Header infos */}
+					<View className='flex flex-col items-center justify-center gap-2 pt-2'>
+						<Text className='text-red-700 font-bold text-sm mb-1'>{`Nº do pedido: ${order?.orderId}`}</Text>
+						<Text className='text-gray-500 text-xs mb-3'>
+							{`Realizado em: ${formatOrderDateTime(order?.creationDate)}`}
+						</Text>
+						<Text className='text-gray-500 text-sm'>
+							{`Data prevista para a entrega: `}
+							<Text className='font-semibold text-gray-700'>{getDeliveryDateText()}</Text>
+						</Text>
+					</View>
 
-							<DetailSection title={t('orderDetails.lbOrderDate', 'Data do pedido')}>
-								<Text className='text-sm text-gray-700'>
-									{formatDateDaysMonthYear(order?.creationDate)}
-								</Text>
-							</DetailSection>
-
-							<DetailSection title={t('orderDetails.lbAddress', 'Endereço')}>
-								<View className='flex flex-col'>
-									<Text className='text-sm text-gray-700'>
-										{`${order?.shippingData?.address.street}, ${order?.shippingData?.address?.number}${
-											order?.shippingData?.address.complement
-												? ` - ${order?.shippingData?.address?.complement}`
-												: ''
-										}`}
-									</Text>
-									<Text className='text-sm text-gray-700'>
-										{`${order?.shippingData?.address?.neighborhood}, ${order?.shippingData?.address?.city} - ${order?.shippingData?.address?.state}, ${order?.shippingData.address.postalCode}`}
-									</Text>
-								</View>
-							</DetailSection>
-
-							<DetailSection title={t('orderDetails.lbPayment', 'Forma de pagamento')}>
-								{order?.paymentData?.transactions[0]?.payments?.map((payment, index) => (
-									<View key={index}>{getFormattedPaymentSystem(payment)}</View>
-								))}
-							</DetailSection>
-
-							<DetailSection title={t('orderDetails.lbDelivery', 'Entrega')}>
-								{order?.shippingData?.logisticsInfo[0]?.shippingEstimateDate ? (
-									<Text className='text-sm text-gray-700'>{`${t('orderDetails.lbShippingUntil', 'Entrega até')} ${formatDate(
-										order?.shippingData?.logisticsInfo[0]?.shippingEstimateDate
-									)}`}</Text>
-								) : (
-									<Text className='text-sm text-gray-700'>{`${t(
-										'orderDetails.lbShippingDeadline',
-										'Prazo de'
-									)} ${handleShippingEstimate(order?.shippingData?.logisticsInfo[0]?.shippingEstimate)} ${t(
-										'orderDetails.lbShippingDeadlineInfo',
-										'dias úteis após aprovação do pagamento'
-									)}`}</Text>
-								)}
-							</DetailSection>
-
-							<DetailSection title={t('orderDetails.lbSumary', 'Resumo')}>
-								<View className='flex flex-col text-sm text-gray-700'>
-									{order?.totals?.map(
-										total =>
-											total.value > 0 && (
-												<View
-													key={total.id}
-													className='flex justify-between'>
-													<Text>{total?.name}:</Text>
-													<Text>{formatPriceInCents(total.value)}</Text>
-												</View>
-											)
-									)}
-									<View className='mt-2 flex justify-between border-t border-gray-200 pt-2'>
-										<Text className='font-bold text-gray-900'>{`${t('orderDetails.lbTotal', 'Total')}:`}</Text>
-										<Text className='font-bold text-gray-900'>
-											{formatPriceInCents(
-												order?.totals
-													?.map(item => item.value)
-													?.reduce((acc, curr) => acc + curr, 0)
-											)}
-										</Text>
-									</View>
-								</View>
-							</DetailSection>
-
-							{/* Seção de Cancelamento */}
-							{order?.allowCancellation && (
-								<View className='mt-2 flex w-full items-center justify-center border-t border-gray-200 pt-4'>
-									{cancelConfirmation ? (
-										<View className='w-full'>
-											<Text className='mb-2 block text-sm font-bold text-gray-800'>
-												{t(
-													'orderDetails.lbCancelReason',
-													'Selecione o motivo para o cancelamento'
-												)}
-											</Text>
-											<Dropdown
-												value={cancelReason}
-												placeholder={t(
-													'orderDetails.lbSelectCancelReason',
-													'Selecione o motivo'
-												)}
-												onChange={value => setCancelReason(value)}>
-												{/* Adicione os Dropdown.Item aqui */}
-											</Dropdown>
-											<View className='mt-4 flex justify-between'>
-												<View
-													className=''
-													onClick={() => setCancelConfirmation(false)}>
-													<Text className='text-sm font-bold text-gray-700 hover:underline'>
-														{t('orderDetails.lbBack', 'Voltar')}
-													</Text>
-												</View>
-												<View
-													className={` ${!cancelReason && 'opacity-50 cursor-not-allowed'}`}
-													onClick={cancelOrder}>
-													<Text
-														className={`text-sm font-bold ${
-															cancelReason
-																? 'text-red-600 hover:underline'
-																: 'text-gray-400'
-														}`}>
-														{t('orderDetails.lbContinueCancel', 'Continuar cancelamento')}
-													</Text>
-												</View>
-											</View>
-										</View>
-									) : (
-										<View
-											className=''
-											onClick={() => setCancelConfirmation(true)}>
-											<Text className='font-bold text-red-600 hover:underline'>
-												{t('orderDetails.lbCancel', 'Cancelar pedido')}
-											</Text>
-										</View>
-									)}
-								</View>
-							)}
+					{/* Timeline / Status */}
+					<View className='flex flex-row items-start justify-center w-full mb-8 mt-6'>
+						<View className='flex flex-col items-center w-[85px]'>
+							<Image
+								src={iconePagamentoAprovado}
+								width={28}
+								height={28}
+								className='mb-2 object-contain'
+							/>
+							<Text className='text-[10px] text-black text-center leading-tight'>Enviado</Text>
 						</View>
 
-						{/* Bloco da lista de produtos */}
-						<View className='p-4 rounded-b-lg border-t border-gray-200 bg-white'>
-							{order.items.map(item => (
-								<View
-									key={item.uniqueId}
-									className='flex items-center gap-x-3'>
-									<ImageCard
-										imageUrl={item.imageUrl}
-										className='w-16 h-16 rounded-md object-cover'
-									/>
-									<View className='flex flex-1 flex-col justify-center'>
-										<Text className='text-sm text-gray-800 font-medium line-clamp-2 mb-1'>
-											{item.name}
-										</Text>
-										<Text className='text-xs text-gray-600'>
-											{`${item.quantity} ${t('orderDetails.unit', 'un.')} • ${formatPriceInCents(
-												item.price
-											)}`}
-										</Text>
-									</View>
-								</View>
-							))}
+						<View className='h-[2px] w-[50px] bg-[#E2002B] mt-3 -mx-4 z-0' />
+
+						<View className='flex flex-col items-center w-[85px]'>
+							<Image
+								src={iconeEntrega}
+								width={28}
+								height={28}
+								className='mb-2 object-contain'
+							/>
+							<Text className='text-[10px] text-gray-500 font-medium text-center leading-tight'>
+								Saiu para entrega
+							</Text>
+						</View>
+
+						<View className='h-[2px] w-[50px] bg-gray-300 mt-3 -mx-4 z-0' />
+
+						<View className='flex flex-col items-center w-[85px]'>
+							<Image
+								src={iconeEntregue}
+								width={28}
+								height={28}
+								className='mb-2 object-contain'
+							/>
+							<Text className='text-[10px] text-gray-500 font-medium text-center leading-tight'>
+								Entregue
+							</Text>
 						</View>
 					</View>
+
+					{/* Items */}
+					<View className='flex flex-col gap-4 mb-6'>
+						{itemsToShow.map(item => (
+							<View
+								key={item.uniqueId}
+								className='bg-white p-3 flex flex-row gap-4 items-center rounded-lg shadow-sm border border-transparent'>
+								<View className='bg-[#F4F4F4] p-2 rounded-md h-[90px] w-[90px] flex items-center justify-center'>
+									<ImageCard
+										imageUrl={item.imageUrl}
+										className='w-[80px] h-[80px] object-contain mix-blend-multiply'
+									/>
+								</View>
+								<View className='flex flex-col flex-1 justify-center'>
+									<Text className='text-xs text-black mb-2 leading-tight'>{item.name}</Text>
+									<Text className='text-xs text-gray-500'>{`Valor: ${formatPriceInCents(item.price)}`}</Text>
+								</View>
+							</View>
+						))}
+
+						{order.items.length > 2 && !showAllItems && (
+							<View className='mt-2'>
+								<CustomButton
+									label='VER MAIS'
+									variant='outlined'
+									className='uppercase !h-[42px] rounded-full border border-red-700 w-full bg-white'
+									textClassName='font-bold text-red-700 text-[11px]'
+									onPress={() => setShowAllItems(true)}
+								/>
+							</View>
+						)}
+					</View>
+
+					{/* Payment Info */}
+					{payInfo && (
+						<View className='bg-white p-4 rounded-lg shadow-sm mb-6 border border-transparent'>
+							<View className='flex flex-row justify-between items-center mb-4'>
+								<Text className='text-red-700 font-semibold'>{payInfo.name}</Text>
+							</View>
+							<Text className='text-gray-500 text-sm mb-4 leading-relaxed'>
+								{order?.status === 'payment-pending'
+									? 'O pagamento do seu pedido está em análise. Aguarde a confirmação para darmos sequência ao envio.'
+									: order?.status === 'canceled' || order?.status === 'request-cancel'
+										? 'O pedido e o seu pagamento foram cancelados.'
+										: payInfo.isCreditCard
+											? 'O pagamento via cartão de crédito foi aprovado e já foi processado com sucesso. Sua compra está confirmada e será concluída em ambiente seguro.'
+											: 'O seu pedido está confirmado. Acompanhe o status do pagamento e a entrega.'}
+							</Text>
+							<View className='flex flex-row justify-between items-center mt-4'>
+								<Text className='text-red-700 font-medium text-sm'>
+									{`Valor total pago: ${formatPriceInCents(getTotalValue())} ${payInfo.installments}`}
+								</Text>
+							</View>
+						</View>
+					)}
 				</View>
 
 				<BottomInset />

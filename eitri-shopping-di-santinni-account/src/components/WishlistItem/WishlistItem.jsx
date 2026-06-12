@@ -1,5 +1,5 @@
 import { useTranslation } from 'eitri-i18n'
-import { getProductById } from '../../services/ProductService'
+import { getProductBySku } from '../../services/ProductService'
 import ProductCard from '../ProductCard/ProductCard'
 
 export default function WishlistItem(props) {
@@ -14,7 +14,7 @@ export default function WishlistItem(props) {
 
 	const init = async () => {
 		try {
-			const product = await getProductById(productId)
+			const product = await getProductBySku(productId)
 
 			setProduct(product)
 		} catch (e) {

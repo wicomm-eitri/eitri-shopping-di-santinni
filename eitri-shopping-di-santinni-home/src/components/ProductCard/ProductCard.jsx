@@ -184,7 +184,15 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 	const [loadingCartOp, setLoadingCartOp] = useState(false)
 
 	// Extrai dados do produto
-	const item = useMemo(() => product?.items?.[0], [product])
+	const item = useMemo(() => {
+		if (!product?.items?.length) return null
+
+		const availableItem = product.items.find(i =>
+			i.sellers?.some(seller => seller.commertialOffer?.AvailableQuantity > 0)
+		)
+
+		return availableItem || product.items[0]
+	}, [product])
 
 	const sellerDefault = useMemo(() => {
 		if (!item?.sellers?.length) return null
