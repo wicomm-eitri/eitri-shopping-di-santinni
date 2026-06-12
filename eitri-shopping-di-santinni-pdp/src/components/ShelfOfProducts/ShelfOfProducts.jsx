@@ -4,7 +4,7 @@ import ProductCard from '../ProductCard/ProductCard'
 import ShelfOfProductsCarousel from './components/ShelfOfProductsCarousel'
 
 export default function ShelfOfProducts(props) {
-	const { products, title, gap, paddingHorizontal, isLoading, mode, searchParams, ...rest } = props
+	const { products, title, gap, paddingHorizontal, isLoading, mode, searchParams, paddingLeft, ...rest } = props
 
 	const { t } = useTranslation()
 
@@ -46,6 +46,7 @@ export default function ShelfOfProducts(props) {
 					paddingHorizontal={paddingHorizontal}
 					isLoading={isLoading}
 					products={products}
+					paddingLeft
 					gap={gap}
 				/>
 			)}
