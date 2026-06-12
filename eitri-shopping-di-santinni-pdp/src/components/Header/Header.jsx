@@ -5,15 +5,19 @@ import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { addToWishlist, productOnWishlist, removeItemFromWishlist } from '../../services/customerService'
 
 export default function Header(props) {
-	const { product, configLoaded } = props
+	const { product, configLoaded, initialWishlistInfo } = props
 	const { cart } = useLocalShoppingCart()
 
-	const [loadingWishlist, setLoadingWishlist] = useState(true)
-	const [itemWishlistId, setItemWishlistId] = useState(-1)
-	const [itemOnWishlist, setItemOnWishlist] = useState(false)
+	const [loadingWishlist, setLoadingWishlist] = useState(!initialWishlistInfo)
+	const [itemWishlistId, setItemWishlistId] = useState(initialWishlistInfo?.listId || -1)
+	const [itemOnWishlist, setItemOnWishlist] = useState(initialWishlistInfo?.inList || false)
 
 	useEffect(() => {
-		if (product && configLoaded) {
+		if (initialWishlistInfo) {
+			setItemOnWishlist(initialWishlistInfo.inList)
+			setItemWishlistId(initialWishlistInfo.listId || -1)
+			setLoadingWishlist(false)
+		} else if (product && configLoaded) {
 			checkIfIsFavorite(product?.productId)
 		}
 
@@ -22,7 +26,7 @@ export default function Header(props) {
 				checkIfIsFavorite(product?.productId)
 			}
 		})
-	}, [product, configLoaded])
+	}, [product, configLoaded, initialWishlistInfo])
 
 	const shareLink = () => {
 		const url = `${Vtex?.configs?.domain}/${product?.linkText}/p?utm_source=eitri-shop-source`

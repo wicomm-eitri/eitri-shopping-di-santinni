@@ -1,5 +1,5 @@
 import Eitri from 'eitri-bifrost'
-import { Vtex } from 'eitri-shopping-vtex-shared'
+import { Vtex, EventBus } from 'eitri-shopping-vtex-shared'
 
 export const doLogin = async (email, password, rememberMe) => {
 	return await Vtex.customer.loginWithEmailAndPassword(email, password, rememberMe)
@@ -109,6 +109,9 @@ export const getWishlist = async () => {
                         skuCodeReference
                         nameProduct
                         quantityProduct
+                        notes
+                        linkProduct
+                        department
                     }
                 }
             }
@@ -122,12 +125,23 @@ export const getWishlist = async () => {
 
 		const products = wishlists[0].products || []
 
+		const uniqueProducts = []
+		const seenIds = new Set()
+
+		for (const p of products) {
+			if (!seenIds.has(p.ID)) {
+				seenIds.add(p.ID)
+				uniqueProducts.push(p)
+			}
+		}
+
 		// Mapeamos para que o componente Wishlist.jsx consiga ler o item.id e item.productId corretamente
-		return products.map(p => ({
+		return uniqueProducts.map(p => ({
 			id: String(p.ID),
-			productId: String(p.ID),
+			skuId: String(p.ID), // FastStore saves SKU ID in p.ID
+			productId: p.notes || p.linkProduct || p.skuCodeReference || String(p.ID),
 			name: p.nameProduct,
-			sku: p.skuCodeReference
+			sku: p.skuCodeReference || String(p.ID)
 		}))
 	} catch (error) {
 		console.error('Erro ao carregar wishlist via bypass:', error)
@@ -168,7 +182,7 @@ export const removeFromWishlist = async wishListItemId => {
 		const targetList = wishlists[0]
 
 		// Remove o produto da lista baseando-se no ID retornado para a tela
-		const updatedProducts = (targetList.products || []).filter(item => String(item.ID) !== String(wishListItemId))
+		const updatedProducts = (targetList.products || []).filter(item => String(item.ID) !== String(wishListItemId) && String(item.notes) !== String(wishListItemId))
 
 		const mutationUpdate = `
             mutation UpdateWishlist($wishlist: WishlistInput!) {
@@ -203,6 +217,19 @@ export const removeFromWishlist = async wishListItemId => {
 			console.error('Detalhes do erro na remoção', JSON.stringify(response.data.errors))
 			throw new Error('Falha ao remover item da wishlist')
 		}
+
+		EventBus.publish({
+			channel: 'removeFromWishlist',
+			broadcast: true,
+			data: { 
+				id: targetList.id, 
+				response: { 
+					data: { 
+						removeFromList: true 
+					} 
+				} 
+			}
+		})
 
 		return true
 	} catch (error) {

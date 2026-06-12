@@ -9,6 +9,41 @@ import { trackScreenView } from '../services/Tracking'
 import { clearCart, getPixStatus } from '../services/cartService'
 import { formatAmountInCents } from '../utils/utils'
 
+const parseItemName = name => {
+	const raw = (name || '').trim()
+	if (!raw) return { baseName: '', size: '', color: '' }
+
+	const words = raw.split(/\s+/)
+	const sizeRegex = /^(PP|P|M|G|GG|XS|S|L|XL|XXL|XXXL|U|[0-9]{1,3})$/i
+
+	let detectedSize = ''
+	let detectedColor = ''
+	let nameParts = [...words]
+	const last = words[words.length - 1]
+
+	if (sizeRegex.test(last)) {
+		detectedSize = last.toUpperCase()
+		nameParts.pop()
+	}
+
+	if (nameParts.length > 0) {
+		const lastPart = nameParts[nameParts.length - 1]
+		const secondLastPart = nameParts.length > 1 ? nameParts[nameParts.length - 2] : null
+		const isUpper = s => /^[A-ZÀ-Ÿ0-9-]+$/.test(s.replace(/\W+/g, ''))
+
+		if (secondLastPart && isUpper(secondLastPart) && isUpper(lastPart)) {
+			detectedColor = `${secondLastPart} ${lastPart}`
+			nameParts.splice(-2, 2)
+		} else {
+			detectedColor = lastPart
+			nameParts.pop()
+		}
+	}
+
+	const base = nameParts.join(' ').trim()
+	return { baseName: base || raw, size: detectedSize, color: detectedColor }
+}
+
 export default function PixOrder(props) {
 	const { t } = useTranslation()
 	const [timeOut, setTimeOut] = useState(10 * 60)
@@ -226,50 +261,73 @@ export default function PixOrder(props) {
 
 					{/* Itens */}
 					<View className='flex flex-col gap-4 mb-6'>
-						{cart?.items?.map(item => (
-							<View
-								key={item.uniqueId}
-								className='flex flex-row gap-3'>
-								<View className='w-16 h-16 rounded-md overflow-hidden'>
-									<Image
-										src={item.imageUrl}
-										className='w-full h-full object-contain'
-									/>
+						{cart?.items?.map(item => {
+							const { baseName, size, color } = parseItemName(item.name)
+							return (
+								<View
+									key={item.uniqueId}
+									className='flex flex-row gap-4 mb-2'>
+									<View className='w-[80px] h-[100px] rounded-md overflow-hidden bg-white flex items-center justify-center'>
+										<Image
+											src={item.imageUrl}
+											className='w-full h-full object-contain'
+										/>
+									</View>
+									<View className='flex flex-col flex-1 justify-center gap-1.5'>
+										<Text
+											className='text-sm font-bold text-gray-900 leading-tight'
+											numberOfLines={2}
+											ellipsizeMode='tail'>
+											{baseName}
+										</Text>
+
+										<View className='flex flex-col gap-0.5 mt-1'>
+											{size && (
+												<Text className='text-[10px] text-gray-500'>
+													Tamanho:{' '}
+													<Text className='font-bold text-[10px] text-gray-900'>{size}</Text>
+												</Text>
+											)}
+											{color && (
+												<Text className='text-[10px] text-gray-500'>
+													Cor:{' '}
+													<Text className='font-bold text-[10px] text-gray-900'>{color}</Text>
+												</Text>
+											)}
+										</View>
+
+										<Text className='text-red-700 font-bold text-lg mt-1'>
+											{formatAmountInCents(item.price)}
+										</Text>
+									</View>
 								</View>
-								<View className='flex flex-col flex-1 justify-center gap-1'>
-									<Text className='text-xs font-bold text-gray-900 leading-tight'>{item.name}</Text>
-									<Text className='text-[9px] text-gray-600'>{item.id}</Text>
-									<Text className='text-red-700 font-bold text-xs mt-1'>
-										{formatAmountInCents(item.price)}
-									</Text>
-								</View>
-							</View>
-						))}
+							)
+						})}
 					</View>
 
 					{/* Totais */}
 					<View className='flex flex-col gap-2'>
 						<View className='flex justify-between'>
-							<Text className='text-xs text-gray-600'>{t('pixOrder.subtotal', 'Subtotal')}</Text>
-							<Text className='text-xs text-gray-600'>{formatAmountInCents(getSubtotal())}</Text>
+							<Text className='text-sm text-gray-600'>{t('pixOrder.subtotal', 'Subtotal')}</Text>
+							<Text className='text-sm text-gray-600'>{formatAmountInCents(getSubtotal())}</Text>
 						</View>
 						<View className='flex justify-between'>
-							<Text className='text-xs text-gray-600'>{t('pixOrder.discount', 'Desconto')}</Text>
-							<Text className='text-xs text-gray-600'>
+							<Text className='text-sm text-gray-600'>{t('pixOrder.discount', 'Desconto')}</Text>
+							<Text className='text-sm text-gray-600'>
 								{getDiscount() < 0
 									? `- ${formatAmountInCents(Math.abs(getDiscount()))}`
 									: formatAmountInCents(0)}
 							</Text>
 						</View>
 						<View className='flex justify-between'>
-							<Text className='text-xs text-gray-600'>{t('pixOrder.shipping', 'Frete')}</Text>
-							<Text className='text-xs text-gray-600'>
+							<Text className='text-sm text-gray-600'>{t('pixOrder.shipping', 'Frete')}</Text>
+							<Text className='text-sm text-gray-600'>
 								{getShipping() === 0 ? 'Grátis' : formatAmountInCents(getShipping())}
 							</Text>
 						</View>
 						<View className='flex justify-between mt-1'>
-							<Text className='text-[11px] font-bold text-gray-900'>{t('pixOrder.total', 'Total')}</Text>
-							<Text className='text-[11px] font-bold text-gray-900'>
+							<Text className='text-sm font-bold text-gray-900'>{t('pixOrder.total', 'Total')}</Text>
+							<Text className='text-sm font-bold text-gray-900'>
 								{formatAmountInCents(cart?.value || 0)}
 							</Text>
 						</View>

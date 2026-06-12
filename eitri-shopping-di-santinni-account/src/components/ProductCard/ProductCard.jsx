@@ -85,10 +85,10 @@ export default function ProductCard(props) {
 		const price = sellerDefault?.commertialOffer?.Price
 		const listPrice = sellerDefault?.commertialOffer?.ListPrice
 
-		if (price !== listPrice) {
+		if (price !== listPrice && listPrice) {
 			const discount = ((listPrice - price) / listPrice) * 100
 
-			return `${discount.toFixed(0)}% ${t('productCard.off', 'OFF')}`
+			return `-${discount.toFixed(0)}%`
 		} else {
 			return ''
 		}
