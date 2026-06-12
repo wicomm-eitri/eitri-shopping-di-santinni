@@ -5,7 +5,7 @@ module.exports = {
 	'eitri-luminus': '2.22.6',
 	'eitri-bifrost': '5.1.0',
 	'eitri-commons': '2.2.1',
-	'version': '0.1.7',
+	'version': '0.1.8',
 	'versionMessage': 'correção de QA no custom carrousel',
 	'public-key': 'dc1f3bd6-04a5-4967-8322-82f611bf156d',
 	'applicationId': 'f0301a60-5a72-487b-8855-a4fbd21d1f39',
