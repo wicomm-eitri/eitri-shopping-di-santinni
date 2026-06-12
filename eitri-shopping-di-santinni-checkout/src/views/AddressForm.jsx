@@ -175,7 +175,7 @@ function validateAddress(address, t) {
 export default function AddressForm(props) {
 	const PAGE_NAME = 'Checkout - Cadastro de Endereço'
 
-	const { cart, cartIsLoading, setLogisticInfo, setShippingAddress, startCart } = useLocalShoppingCart()
+	const { cart, cartIsLoading, setLogisticInfo, setShippingAddress, setNewAddress, startCart } = useLocalShoppingCart()
 	const { t } = useTranslation()
 
 	const [addressId, setAddressId] = useState(props.location?.state?.addressId)
@@ -324,40 +324,8 @@ export default function AddressForm(props) {
 
 				await setLogisticInfo(payload)
 			} else {
-				// For adding a new address without selecting it, persist locally in session_addresses
-				try {
-					const sessionKey = 'session_addresses'
-					const stored = JSON.parse(localStorage.getItem(sessionKey) || '[]')
-					const normalizedGeo = Array.isArray(address.geoCoordinates)
-						? address.geoCoordinates.map(c => c)
-						: []
-					const sessionAddress = {
-						addressType: address.addressType || 'residential',
-						receiverName: address.receiverName,
-						isDisposable: !!address.isDisposable,
-						postalCode: address.postalCode,
-						city: address.city,
-						state: address.state,
-						country: address.country,
-						street: address.street,
-						number: address.number,
-						neighborhood: address.neighborhood,
-						complement: address.complement,
-						reference: address.reference,
-						geoCoordinates: normalizedGeo
-					}
-
-					const next = Array.isArray(stored) ? [...stored, sessionAddress] : [sessionAddress]
-
-					localStorage.setItem(sessionKey, JSON.stringify(next))
-					console.debug('Saved session address', sessionAddress)
-					// go back to shipping method so user can choose it manually
-					navigate('ShippingMethod', {}, true)
-
-					return
-				} catch (err) {
-					console.error('Error saving session address', err)
-				}
+				// New address: persist in the VTEX orderForm via setNewAddress
+				await setNewAddress(address)
 			}
 
 			navigate('FreightResolver', {}, true)
@@ -370,7 +338,7 @@ export default function AddressForm(props) {
 			}
 
 			setAddressError(t('addNewShippingAddress.errorDefault'))
-			setTimeout(() => setAddressError(''), 8000)
+			setTimeout(() => setAddressError(''), 8000) 
 		} finally {
 			setIsSubmitting(false)
 		}

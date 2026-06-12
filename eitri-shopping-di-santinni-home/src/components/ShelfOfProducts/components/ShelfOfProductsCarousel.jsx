@@ -4,7 +4,7 @@ import { CustomCarousel } from 'eitri-shopping-di-santinni-shared'
 import ProductCard from '../../ProductCard/ProductCard'
 
 export default function ShelfOfProductsCarousel(props) {
-	const { isLoading, products } = props
+	const { isLoading, products, paddingLeft } = props
 
 	const [currentSlide, setCurrentSlide] = useState(0)
 	const productsList = Array.isArray(products) ? products : []
@@ -25,6 +25,7 @@ export default function ShelfOfProductsCarousel(props) {
 						autoPlay={false}
 						loop={true}
 						onSlideChange={handleScroll}
+						paddingLeft={paddingLeft}
 						slidesToShow={2}>
 						{productsList.map((product, index) => (
 							<View
