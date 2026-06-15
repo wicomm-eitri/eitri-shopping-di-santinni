@@ -1,10 +1,9 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { BottomInset, CustomButton, HeaderContentWrapper, HeaderText, Loading } from 'eitri-shopping-di-santinni-shared'
+import { BottomInset, HeaderContentWrapper, HeaderText, Loading } from 'eitri-shopping-di-santinni-shared'
 import PoweredBy from '../components/PoweredBy/PoweredBy'
-import ProfileCardButton from '../components/ProfileCardButton/ProfileCardButton'
 import { startConfigure } from '../services/AppService'
-import { doLogout, getCustomerData, isLoggedIn } from '../services/CustomerService'
+import { getCustomerData, isLoggedIn } from '../services/CustomerService'
 import { navigate, PAGES } from '../services/NavigationService'
 import { sendScreenView } from '../services/TrackingService'
 import suporteIcon from '../assets/icons/Suporte.svg'
@@ -119,12 +118,6 @@ export default function Home(props) {
 		setCustomerData(customerData)
 	}
 
-	const _doLogout = async () => {
-		setIsLoading(true)
-		await doLogout()
-		init()
-	}
-
 	const processDeepLink = startParams => {
 		if (startParams?.route) {
 			let { route, ...rest } = startParams
@@ -171,34 +164,6 @@ export default function Home(props) {
 						))}
 				</View>
 			</View>
-
-			{isLogged ? (
-				<View className='px-4 py-6 mt-4'>
-					<CustomButton
-						variant='outlined'
-						className='uppercase !h-11 rounded-full'
-						textClassName='font-semibold text-red-700'
-						label={t('home.labelLeave', 'Sair')}
-						onPress={_doLogout}
-					/>
-				</View>
-			) : (
-				<View className='px-4 flex flex-col gap-2 mt-4'>
-					<CustomButton
-						label={t('home.labelEnter', 'ENTRAR')}
-						className='uppercase !h-11 rounded-full'
-						textClassName='font-semibold'
-						onPress={() => navigate(PAGES.SIGNIN)}
-					/>
-					<CustomButton
-						variant='outlined'
-						label={t('home.labelCreateAccount', 'CRIAR CONTA')}
-						className='uppercase !h-11 rounded-full'
-						textClassName='font-semibold'
-						onPress={() => navigate(PAGES.SIGNUP)}
-					/>
-				</View>
-			)}
 
 			<View className='flex justify-center w-full items-center mt-8 mb-4'>
 				<PoweredBy />

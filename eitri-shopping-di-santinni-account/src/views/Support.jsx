@@ -8,7 +8,7 @@ export default function Support() {
 
 	const openEmail = () => {
 		try {
-			Eitri.deeplink.open({ url: 'mailto:faleconosco@disantinni.com.br' })
+			Eitri.deeplink.open({ url: 'mailto:atendimento@disantinni.com.br' })
 		} catch (error) {
 			console.error('error [openEmail]', error)
 		}
@@ -16,7 +16,7 @@ export default function Support() {
 
 	const openPhone = () => {
 		try {
-			Eitri.deeplink.open({ url: 'tel:+5511000000000' })
+			Eitri.deeplink.open({ url: 'https://api.whatsapp.com/send/?phone=+5521972866986' })
 		} catch (error) {
 			console.error('error [openPhone]', error)
 		}
@@ -33,7 +33,7 @@ export default function Support() {
 
 			<View className='mt-4 px-4'>
 				<View className='bg-white overflow-hidden rounded'>
-					{/* Item: Telefone */}
+					{/* Item: WhatsApp */}
 					<View
 						className='px-4 py-5 flex flex-row items-center justify-between border-b  active:bg-gray-50 '
 						onClick={openPhone}>
@@ -42,7 +42,7 @@ export default function Support() {
 								src={telefoneIcon}
 								className='w-4 h-4'
 							/>
-							<Text className='text-sm text-gray-700'>(11) 0000 0000</Text>
+							<Text className='text-sm text-gray-700'>(21) 97286-6986</Text>
 						</View>
 
 						<svg
@@ -81,7 +81,7 @@ export default function Support() {
 								/>
 							</svg>
 
-							<Text className='text-sm text-gray-700'>faleconosco@disantinni.com.br</Text>
+							<Text className='text-sm text-gray-700'>atendimento@disantinni.com.br</Text>
 						</View>
 
 						<svg
