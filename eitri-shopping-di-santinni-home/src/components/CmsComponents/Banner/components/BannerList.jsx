@@ -21,6 +21,32 @@ export default function BannerList(props) {
 		let finalWidth = maxWidth ? Number(maxWidth) : 300
 		let finalHeight = maxHeight ? Number(maxHeight) : 400
 
+		if (imagesList?.length === 1) {
+			const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 400
+			finalWidth = screenWidth - 32
+
+			if (aspectRatio) {
+				try {
+					const [aspectW, aspectH] = aspectRatio.split(':').map(Number)
+					const ratio = aspectH / aspectW
+					if (!isNaN(ratio)) {
+						finalHeight = finalWidth * ratio
+					}
+				} catch (e) {
+					// ignore
+				}
+			} else if (maxWidth && maxHeight) {
+				const ratio = Number(maxHeight) / Number(maxWidth)
+				finalHeight = finalWidth * ratio
+			}
+
+			return {
+				width: `${Math.round(finalWidth)}px`,
+				height: `${Math.round(finalHeight)}px`,
+				...(aspectRatio ? { aspectRatio: aspectRatio.replace(':', '/') } : {})
+			}
+		}
+
 		if (aspectRatio) {
 			try {
 				const [aspectW, aspectH] = aspectRatio.split(':').map(Number)
