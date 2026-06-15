@@ -8,7 +8,6 @@ export default function RoundedBannerList(props) {
 
 	const imagesList = data.images || []
 
-	console.log('IMAGES LIST: ', imagesList)
 	const [currentIndex, setCurrentIndex] = useState(0)
 	const [dragOffset, setDragOffset] = useState(0)
 	const [isDragging, setIsDragging] = useState(false)
