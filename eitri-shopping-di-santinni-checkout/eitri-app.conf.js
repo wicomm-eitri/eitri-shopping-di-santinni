@@ -15,7 +15,7 @@ module.exports = {
 	'eitri-app-dependencies': {
 		'eitri-shopping-di-santinni-shared': {
 			isEitriAppShared: true,
-			version: '0.1.8'
+			version: '0.1.9'
 		},
 		'eitri-shopping-vtex-shared': {
 			isEitriAppShared: true,
