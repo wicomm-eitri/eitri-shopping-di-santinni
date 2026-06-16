@@ -1,7 +1,8 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { BottomInset, HeaderContentWrapper, HeaderText, Loading } from 'eitri-shopping-di-santinni-shared'
+import { BottomInset, CustomButton, HeaderContentWrapper, HeaderText, Loading } from 'eitri-shopping-di-santinni-shared'
 import PoweredBy from '../components/PoweredBy/PoweredBy'
+import ProfileCardButton from '../components/ProfileCardButton/ProfileCardButton'
 import { startConfigure } from '../services/AppService'
 import { getCustomerData, isLoggedIn } from '../services/CustomerService'
 import { navigate, PAGES } from '../services/NavigationService'
@@ -164,6 +165,24 @@ export default function Home(props) {
 						))}
 				</View>
 			</View>
+
+			{!isLogged && (
+				<View className='px-4 flex flex-col gap-2 mt-4'>
+					<CustomButton
+						label={t('home.labelEnter', 'ENTRAR')}
+						className='uppercase !h-11 rounded-full'
+						textClassName='font-semibold'
+						onPress={() => navigate(PAGES.SIGNIN)}
+					/>
+					<CustomButton
+						variant='outlined'
+						label={t('home.labelCreateAccount', 'CRIAR CONTA')}
+						className='uppercase !h-11 rounded-full'
+						textClassName='font-semibold'
+						onPress={() => navigate(PAGES.SIGNUP)}
+					/>
+				</View>
+			)}
 
 			<View className='flex justify-center w-full items-center mt-8 mb-4'>
 				<PoweredBy />

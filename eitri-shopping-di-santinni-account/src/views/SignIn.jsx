@@ -141,7 +141,7 @@ export default function SignIn(props) {
 
 		try {
 			if (!username || !password) {
-				setAlertMessage(t('signIn.verifyAgain', 'Verifique as informaçoes e tente novamente'))
+				setAlertMessage(t('signIn.verifyAgain', 'Verifique as informações e tente novamente'))
 				setShowLoginErrorAlert(true)
 				setLoading(false)
 
@@ -157,7 +157,7 @@ export default function SignIn(props) {
 				return
 			}
 
-			setAlertMessage(t('signIn.verifyAgain', 'Verifique as informaçoes e tente novamente'))
+			setAlertMessage(t('signIn.verifyAgain', 'Verifique as informações e tente novamente'))
 			setShowLoginErrorAlert(true)
 		} catch (e) {
 			console.error('handleLogin error:', e)
