@@ -240,7 +240,7 @@ export default function Settings() {
 				</View>
 			</View>
 
-			{isLogged ? (
+			{isLogged && (
 				<View className='px-4 py-6 mt-4'>
 					<CustomButton
 						variant='outlined'
@@ -248,22 +248,6 @@ export default function Settings() {
 						textClassName='font-semibold text-red-700'
 						label={t('home.labelLeave', 'Sair')}
 						onPress={_doLogout}
-					/>
-				</View>
-			) : (
-				<View className='px-4 flex flex-col gap-2 mt-4'>
-					<CustomButton
-						label={t('home.labelEnter', 'ENTRAR')}
-						className='uppercase !h-11 rounded-full'
-						textClassName='font-semibold'
-						onPress={() => navigate(PAGES.SIGNIN)}
-					/>
-					<CustomButton
-						variant='outlined'
-						label={t('home.labelCreateAccount', 'CRIAR CONTA')}
-						className='uppercase !h-11 rounded-full'
-						textClassName='font-semibold'
-						onPress={() => navigate(PAGES.SIGNUP)}
 					/>
 				</View>
 			)}

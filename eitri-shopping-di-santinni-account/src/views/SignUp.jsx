@@ -153,7 +153,7 @@ export default function SignUp(props) {
 			if (loggedIn === 'Success' || loggedIn?.status === 'Success') {
 				navigate(PAGES.HOME)
 			} else {
-				setAlertMessage(t('signUp.alertMessageVerify', 'Verifique as informaçoes e tente novamente'))
+				setAlertMessage(t('signUp.alertMessageVerify', 'Verifique as informações e tente novamente'))
 				setShowLoginErrorAlert(true)
 			}
 		} catch (e) {
@@ -162,7 +162,7 @@ export default function SignUp(props) {
 			if (status >= 500) {
 				setAlertMessage(t('signUp.alertMessageServiceError', 'Ocorreu uma falha no serviço, tente novamente'))
 			} else {
-				setAlertMessage(t('signUp.alertMessageVerify', 'Verifique as informaçoes e tente novamente'))
+				setAlertMessage(t('signUp.alertMessageVerify', 'Verifique as informações e tente novamente'))
 			}
 
 			setShowLoginErrorAlert(true)
