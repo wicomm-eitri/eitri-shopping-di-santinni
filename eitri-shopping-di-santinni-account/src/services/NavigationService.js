@@ -19,7 +19,8 @@ export const PAGES = {
 	ABOUT_US: '/AboutUs',
 	BECOMEAFRANCHISEE: '/BecomeAFranchisee',
 	NOSSASLOJAS: '/NossasLojas',
-	FREQUENTLY_ASKED_QUESTIONS: '/FrequentlyAskedQuestions'
+	FREQUENTLY_ASKED_QUESTIONS: '/FrequentlyAskedQuestions',
+	SOCIAL_NETWORKS: '/SocialNetworks'
 }
 
 export const openProduct = async product => {

@@ -91,7 +91,7 @@ export default function PaymentData() {
 				isLoading={isLoading}
 			/>
 
-			<View className='flex flex-col gap-4 px-2.5 pb-8 overflow-auto max-h-[70vh]'>
+			<View className='flex flex-col gap-4 px-2.5 pb-[140px]'>
 				<CartItemsContent />
 
 				<Text className='text-sm  font-medium text-black'>

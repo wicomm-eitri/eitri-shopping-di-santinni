@@ -76,7 +76,83 @@ export default function CatalogFilter(props) {
 			}
 
 			const priceFacet = result.facets.find(f => f.type === 'PRICERANGE')
-			const filteredFacets = result.facets.filter(f => f.type !== 'PRICERANGE' && !f.hidden)
+			let filteredFacets = result.facets.filter(f => f.type !== 'PRICERANGE' && !f.hidden)
+
+			// Remove duplicidades de Facetas (Cor, Marca, etc.)
+			const uniqueFacetsMap = new Map()
+
+			filteredFacets.forEach(facet => {
+				const name = facet.name?.trim().toLowerCase()
+				if (!name) return
+
+				// Forçar capitalização correta para o título do filtro
+				if (name === 'cor') facet.name = 'Cor'
+				if (name === 'marca' || name === 'brand') facet.name = 'Marca'
+
+				// Deduplicar os VALUES de cada faceta
+				if (facet.values && Array.isArray(facet.values)) {
+					const uniqueValuesMap = new Map()
+					facet.values.forEach(v => {
+						const vName = v.name?.trim().toLowerCase()
+						if (!vName) return
+
+						if (!uniqueValuesMap.has(vName)) {
+							uniqueValuesMap.set(vName, v)
+						} else {
+							const existing = uniqueValuesMap.get(vName)
+							// Preferir a opção que NÃO está toda em maiúscula (ex: prefere "Cor" a "COR")
+							const isExistingUpper = existing.name === existing.name?.toUpperCase()
+							const isNewUpper = v.name === v.name?.toUpperCase()
+
+							if (isExistingUpper && !isNewUpper) {
+								v.quantity = Math.max(v.quantity || 0, existing.quantity || 0)
+								uniqueValuesMap.set(vName, v)
+							} else if ((v.quantity || 0) > (existing.quantity || 0) && !(isNewUpper && !isExistingUpper)) {
+								uniqueValuesMap.set(vName, v)
+							}
+						}
+					})
+					facet.values = Array.from(uniqueValuesMap.values())
+				}
+
+				if (uniqueFacetsMap.has(name)) {
+					const existingFacet = uniqueFacetsMap.get(name)
+
+					if (name === 'marca' || name === 'brand') {
+						if (existingFacet.key === 'brand' && facet.key !== 'brand') {
+							uniqueFacetsMap.set(name, facet)
+						} else if (existingFacet.key !== 'brand' && facet.key !== 'brand') {
+							const mergedValuesMap = new Map()
+							;[...existingFacet.values, ...facet.values].forEach(v => {
+								const vName = v.name?.trim().toLowerCase()
+								if (vName && !mergedValuesMap.has(vName)) mergedValuesMap.set(vName, v)
+							})
+							existingFacet.values = Array.from(mergedValuesMap.values())
+						}
+					} else {
+						const mergedValuesMap = new Map()
+						;[...existingFacet.values, ...facet.values].forEach(v => {
+							const vName = v.name?.trim().toLowerCase()
+							// Prioriza não-maiúsculo na mesclagem final também
+							if (!mergedValuesMap.has(vName)) {
+								mergedValuesMap.set(vName, v)
+							} else {
+								const existing = mergedValuesMap.get(vName)
+								const isExistingUpper = existing.name === existing.name?.toUpperCase()
+								const isNewUpper = v.name === v.name?.toUpperCase()
+								if (isExistingUpper && !isNewUpper) {
+									mergedValuesMap.set(vName, v)
+								}
+							}
+						})
+						existingFacet.values = Array.from(mergedValuesMap.values())
+					}
+				} else {
+					uniqueFacetsMap.set(name, facet)
+				}
+			})
+
+			filteredFacets = Array.from(uniqueFacetsMap.values())
 
 			resolvePriceRangeReceivedFacet(priceFacet)
 

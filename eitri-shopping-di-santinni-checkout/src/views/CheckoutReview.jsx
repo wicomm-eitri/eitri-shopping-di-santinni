@@ -1,6 +1,13 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { HeaderContentWrapper, HeaderReturn, BottomInset, CustomButton, Steps, HeaderText } from 'eitri-shopping-di-santinni-shared'
+import {
+	HeaderContentWrapper,
+	HeaderReturn,
+	BottomInset,
+	CustomButton,
+	Steps,
+	HeaderText
+} from 'eitri-shopping-di-santinni-shared'
 import CartSummary from '../components/CartSummary/CartSummary'
 import AddressData from '../components/FinishCart/AddressData'
 import DeliveryData from '../components/FinishCart/DeliveryData'
@@ -19,7 +26,8 @@ let selectedShipping = null
 let selectedPayment = null
 
 export default function CheckoutReview() {
-	const { cart, cardInfo, selectedPaymentData, cartIsLoading, removeCartItem, setPaymentOption } = useLocalShoppingCart()
+	const { cart, cardInfo, selectedPaymentData, cartIsLoading, removeCartItem, setPaymentOption } =
+		useLocalShoppingCart()
 	const { t } = useTranslation()
 
 	const [isLoading, setIsLoading] = useState(false)
@@ -129,11 +137,14 @@ export default function CheckoutReview() {
 
 				return
 			}
-			
+
 			if (errorCode === 'CHK0016') {
 				setError({
 					state: true,
-					message: t('checkoutReview.errorValueMismatch', 'O valor do carrinho foi alterado. Por favor, re-selecione a forma de pagamento.')
+					message: t(
+						'checkoutReview.errorValueMismatch',
+						'O valor do carrinho foi alterado. Por favor, re-selecione a forma de pagamento.'
+					)
 				})
 				setIsLoading(false)
 				setTimeout(() => {
@@ -204,8 +215,6 @@ export default function CheckoutReview() {
 			/>
 
 			<View className='p-4'>
-
-
 				{/* Adiciona padding-bottom para não sobrepor o botão */}
 				<>
 					{unavailableItems.length > 0 && (

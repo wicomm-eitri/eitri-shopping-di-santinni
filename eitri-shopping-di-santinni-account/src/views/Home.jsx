@@ -13,6 +13,7 @@ import meusFavoritosIcon from '../assets/icons/meus_favoritos.svg'
 import meusPedidosIcon from '../assets/icons/meus_pedidos.svg'
 import minhaContaIcon from '../assets/icons/minha_conta.svg'
 import nossasLojasIcon from '../assets/icons/nossas_lojas.svg'
+import redesSociaisIcon from '../assets/icons/redes_sociais.svg'
 import trocasDevolucoesIcon from '../assets/icons/trocas_devoluções.svg'
 
 export default function Home(props) {
@@ -70,6 +71,12 @@ export default function Home(props) {
 			icon: nossasLojasIcon,
 			isVisible: true,
 			onClick: () => navigate(PAGES.NOSSASLOJAS)
+		},
+		{
+			label: t('home.labelSocialNetworks', 'Redes Sociais'),
+			icon: redesSociaisIcon,
+			isVisible: true,
+			onClick: () => Eitri.openBrowser({ url: 'https://www.instagram.com/disantinni/?hl=pt-br', inApp: false })
 		}
 	]
 

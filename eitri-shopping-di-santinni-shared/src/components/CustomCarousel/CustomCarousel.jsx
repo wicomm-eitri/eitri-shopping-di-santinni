@@ -11,6 +11,7 @@ export default function CustomCarousel({
 	onSlideChange = () => {},
 	paddingLeft,
 	slidesToShow = 1,
+	gap = 8
 }) {
 	const [currentSlide, setCurrentSlide] = useState(0)
 	const [isDragging, setIsDragging] = useState(false)
@@ -138,7 +139,7 @@ export default function CustomCarousel({
 				style={{
 					transform: getTransform(),
 					transitionDuration: isDragging ? '0ms' : '300ms',
-					gap: '8px'
+					gap: `${gap}px`
 				}}
 				onTouchStart={handleTouchStart}
 				onTouchMove={handleTouchMove}
