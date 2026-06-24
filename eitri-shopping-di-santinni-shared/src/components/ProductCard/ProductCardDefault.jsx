@@ -42,7 +42,7 @@ export default function ProductCardDefault(props) {
 					</View>
 
 					<Image
-						className='object-contain h-[130px] w-full'
+						className='object-contain h-[130px] w-full mix-blend-multiply'
 						src={image}
 					/>
 				</View>

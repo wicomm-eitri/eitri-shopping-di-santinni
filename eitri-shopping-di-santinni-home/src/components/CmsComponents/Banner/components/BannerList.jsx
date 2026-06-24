@@ -11,8 +11,10 @@ export default function BannerList(props) {
 	const imagesList = data.images
 	const { size, aspectRatio } = data
 	const paramsObject = Object.fromEntries((data?.params || []).map(item => [item.key, item.value]))
+	const isBannerTrio =
+		Object.values(paramsObject).includes('BannerTrio') || Object.keys(paramsObject).includes('BannerTrio')
 	const hasMultipleImages = imagesList?.length > 1
-	const showArrows = paramsObject?.arrow === 'on'
+	const showArrows = paramsObject?.arrow === 'on' || isBannerTrio
 
 	const getBannerDimensions = () => {
 		const maxWidth = size?.maxWidth
@@ -20,6 +22,32 @@ export default function BannerList(props) {
 
 		let finalWidth = maxWidth ? Number(maxWidth) : 300
 		let finalHeight = maxHeight ? Number(maxHeight) : 400
+
+		if (isBannerTrio) {
+			const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 400
+			finalWidth = screenWidth
+
+			if (aspectRatio) {
+				try {
+					const [aspectW, aspectH] = aspectRatio.split(':').map(Number)
+					const ratio = aspectH / aspectW
+					if (!isNaN(ratio)) {
+						finalHeight = finalWidth * ratio
+					}
+				} catch (e) {
+					// ignore
+				}
+			} else if (maxWidth && maxHeight) {
+				const ratio = Number(maxHeight) / Number(maxWidth)
+				finalHeight = finalWidth * ratio
+			}
+
+			return {
+				width: `${Math.round(finalWidth)}px`,
+				height: `${Math.round(finalHeight)}px`,
+				...(aspectRatio ? { aspectRatio: aspectRatio.replace(':', '/') } : {})
+			}
+		}
 
 		if (imagesList?.length === 1) {
 			const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 400
@@ -90,7 +118,7 @@ export default function BannerList(props) {
 
 	const bannerDimensions = getBannerDimensions()
 	const bannerWidth = Number.parseInt(bannerDimensions.width, 10) || 300
-	const bannerStep = bannerWidth + 12
+	const bannerStep = isBannerTrio ? bannerWidth : bannerWidth + 12
 
 	const goToSlide = direction => {
 		if (!imagesList?.length) return
@@ -143,7 +171,8 @@ export default function BannerList(props) {
 	}
 
 	return (
-		<View className={`flex flex-col gap-2 ${data?.isHideBanner ? 'hidden' : 'block'}`}>
+		<View
+			className={`flex flex-col gap-2 ${data?.isHideBanner ? 'hidden' : 'block'} ${isBannerTrio ? 'mb-[20px]' : ''}`}>
 			{data?.mainTitle && (
 				<View className='px-4 mb-8'>
 					<Text className='font-semibold text-2xl text-[#0C0C0C]'>{data.mainTitle}</Text>
@@ -151,9 +180,9 @@ export default function BannerList(props) {
 			)}
 
 			<View className='relative'>
-				<View className='overflow-hidden px-4 pb-2'>
+				<View className={`overflow-hidden pb-2 ${isBannerTrio ? '' : 'px-4'}`}>
 					<View
-						className='flex gap-3 transition-transform duration-300 ease-out touch-pan-y'
+						className={`flex transition-transform duration-300 ease-out touch-pan-y ${isBannerTrio ? '' : 'gap-3'}`}
 						onTouchStart={e => handleDragStart(e.touches[0].clientX)}
 						onTouchMove={e => handleDragMove(e.touches[0].clientX)}
 						onTouchEnd={handleDragEnd}
@@ -175,7 +204,7 @@ export default function BannerList(props) {
 											backgroundImage: `url(${slider.imageUrl})`,
 											...bannerDimensions,
 											backgroundSize: 'cover',
-											borderRadius: '12px'
+											borderRadius: isBannerTrio ? '0px' : '12px'
 										}}
 										className='relative'
 										onClick={() => onClick(slider)}>

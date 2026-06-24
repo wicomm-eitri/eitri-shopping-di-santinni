@@ -4,6 +4,7 @@ import BankInvoice from './Groups/BankInvoice'
 import CreditCard from './Groups/CreditCard'
 import GiftCard from './Groups/GiftCard'
 import InstantPayment from './Groups/InstantPayment'
+import StoreCard from './Groups/StoreCard'
 
 export default function ImplementationInterface(props) {
 	const { groupName, systemGroup, onSelectPaymentMethod } = props
@@ -13,7 +14,8 @@ export default function ImplementationInterface(props) {
 		'bankInvoicePaymentGroup': BankInvoice,
 		'instantPaymentPaymentGroup': InstantPayment,
 		'giftCardPaymentGroup': GiftCard,
-		'WH Google PayPaymentGroup': GooglePay
+		'WH Google PayPaymentGroup': GooglePay,
+		'customPrivate_402PaymentGroup': StoreCard
 	}
 
 	const externalPaymentsImplementation = App.configs.appConfigs?.externalPayments ?? []
@@ -21,10 +23,6 @@ export default function ImplementationInterface(props) {
 	const externalPaymentRc = externalPaymentsImplementation.find(
 		externalPayment => externalPayment.externalGroupName === groupName
 	)
-
-	if ((!groupName || !PAYMENT_GROUPS_IMPLEMENTATION[groupName]) && !externalPaymentRc) {
-		return null
-	}
 
 	if (externalPaymentRc) {
 		return (
@@ -38,7 +36,20 @@ export default function ImplementationInterface(props) {
 	}
 
 	if (!groupName || !PAYMENT_GROUPS_IMPLEMENTATION[groupName]) {
-		return null
+		if (
+			groupName?.toLowerCase().includes('custom') || 
+			groupName?.toLowerCase().includes('promissory') || 
+			groupName?.toLowerCase().includes('storecard') || 
+			groupName?.toLowerCase().includes('cobranded')
+		) {
+			const Implementation = StoreCard
+			/*prettier-ignore*/
+			return React.createElement(Implementation, { groupName, systemGroup, onSelectPaymentMethod, selectedPayment: props.selectedPayment })
+		}
+
+		// Para ajudar a descobrir o ID correto se for diferente:
+		return <Text className='text-red-500'>Não mapeado: {groupName}</Text>
+		// return null
 	}
 
 	const Implementation = PAYMENT_GROUPS_IMPLEMENTATION[groupName]

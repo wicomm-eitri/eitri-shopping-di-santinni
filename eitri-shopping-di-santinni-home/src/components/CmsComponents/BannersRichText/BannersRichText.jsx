@@ -54,6 +54,7 @@ export default function BannersRichText(props) {
 				<CustomCarousel
 					autoPlay
 					loop
+					gap={0}
 					interval={6000}>
 					{contentList.map(renderBanner)}
 				</CustomCarousel>

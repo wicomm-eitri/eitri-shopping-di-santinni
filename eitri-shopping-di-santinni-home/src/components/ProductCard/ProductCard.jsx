@@ -263,6 +263,10 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 				handleQuantityChange(itemQuantity + 1)
 			} else if (item) {
 				const cartUpdate = await addItem({ ...item, quantity: itemQuantity })
+				
+				if (cartUpdate) {
+					openCart()
+				}
 
 				// if (cartUpdate?.items?.length >= 0) {
 				// 	const totalQuantity = cartUpdate?.items?.reduce((acc, item) => acc + item.quantity, 0) ?? 0
