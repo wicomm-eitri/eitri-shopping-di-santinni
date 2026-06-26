@@ -25,12 +25,14 @@ export default function BannerList(props) {
 
 		if (isBannerTrio) {
 			const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 400
+
 			finalWidth = screenWidth
 
 			if (aspectRatio) {
 				try {
 					const [aspectW, aspectH] = aspectRatio.split(':').map(Number)
 					const ratio = aspectH / aspectW
+
 					if (!isNaN(ratio)) {
 						finalHeight = finalWidth * ratio
 					}
@@ -39,6 +41,7 @@ export default function BannerList(props) {
 				}
 			} else if (maxWidth && maxHeight) {
 				const ratio = Number(maxHeight) / Number(maxWidth)
+
 				finalHeight = finalWidth * ratio
 			}
 
@@ -51,12 +54,14 @@ export default function BannerList(props) {
 
 		if (imagesList?.length === 1) {
 			const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 400
+
 			finalWidth = screenWidth - 32
 
 			if (aspectRatio) {
 				try {
 					const [aspectW, aspectH] = aspectRatio.split(':').map(Number)
 					const ratio = aspectH / aspectW
+
 					if (!isNaN(ratio)) {
 						finalHeight = finalWidth * ratio
 					}
@@ -65,6 +70,7 @@ export default function BannerList(props) {
 				}
 			} else if (maxWidth && maxHeight) {
 				const ratio = Number(maxHeight) / Number(maxWidth)
+
 				finalHeight = finalWidth * ratio
 			}
 
@@ -105,7 +111,7 @@ export default function BannerList(props) {
 					}
 				}
 			} catch (e) {
-				// ignore malformed aspectRatio from CMS
+				console.error(e)
 			}
 		}
 

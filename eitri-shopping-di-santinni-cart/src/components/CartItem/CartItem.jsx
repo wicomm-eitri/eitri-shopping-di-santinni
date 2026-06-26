@@ -48,6 +48,11 @@ export default function CartItem(props) {
 			}
 		}
 
+		if (detectedColor && /^[0-9./\s-]+$/.test(detectedColor.trim())) {
+			detectedSize = detectedColor
+			detectedColor = ''
+		}
+
 		const base = nameParts.join(' ').trim()
 
 		return { baseName: base || raw, size: detectedSize, color: detectedColor }
