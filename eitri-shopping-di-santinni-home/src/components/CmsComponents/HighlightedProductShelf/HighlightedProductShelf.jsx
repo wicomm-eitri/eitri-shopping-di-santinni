@@ -1,8 +1,13 @@
+import { useState, useEffect } from 'react'
+import { View, Text } from 'eitri-luminus'
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
 import { LuChevronRight } from 'react-icons/lu'
-import { getProductsService } from '../../../services/ProductService'
+import { ModalAddProductToCart } from 'eitri-shopping-di-santinni-shared'
 import ProductCard from '../../ProductCard/ProductCard'
+import { useLocalShoppingCart } from '../../../providers/LocalCart'
+import { openCart } from '../../../services/NavigationService'
+import { getProductsService } from '../../../services/ProductService'
 
 // Hook customizado para countdown
 const useCountdown = (endDate, enabled) => {
@@ -69,8 +74,18 @@ const CountdownTimer = ({ time, textColor, t }) => {
 }
 
 // Componente principal
-export default function HighlightedProductShelf({ data }) {
+export default function HighlightedProductShelf(props) {
+	const { data } = props
 	const { t } = useTranslation()
+	const { cart, removeItem, updateItemQuantity } = useLocalShoppingCart()
+
+	const [showModal, setShowModal] = useState(false)
+	const [productModal, setProductModal] = useState(null)
+
+	const openModal = product => {
+		setProductModal(product)
+		setShowModal(true)
+	}
 
 	const [products, setProducts] = useState([])
 	const [isLoading, setIsLoading] = useState(false)
@@ -159,13 +174,26 @@ export default function HighlightedProductShelf({ data }) {
 							<ProductCard
 								key={product.productId}
 								product={product}
-								className='min-w-[50vw]'
+								className='min-w-[40vw]'
+								openModal={openModal}
 								actionButtonCustomColor={data?.actionButtonColor}
 							/>
 						))
 					)}
 				</View>
 			</View>
+
+			<ModalAddProductToCart
+				product={productModal}
+				cart={cart}
+				changeItemQuantity={updateItemQuantity}
+				removeItemFromCart={removeItem}
+				navigateCart={() => {
+					openCart()
+				}}
+				showModal={showModal}
+				closeModal={() => setShowModal(false)}
+			/>
 		</View>
 	)
 }

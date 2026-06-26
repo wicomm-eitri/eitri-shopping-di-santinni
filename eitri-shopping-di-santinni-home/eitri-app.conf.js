@@ -5,7 +5,7 @@ module.exports = {
 	'eitri-luminus': '2.22.6',
 	'eitri-bifrost': '5.1.0',
 	'eitri-commons': '2.2.1',
-	'version': '0.1.14',
+	'version': '0.1.15',
 	'versionMessage': 'banner largura ',
 	'public-key': '4bc06d45-1a2b-4c41-a29e-1224bed83e5a',
 	'applicationId': 'f0301a60-5a72-487b-8855-a4fbd21d1f39',
@@ -15,7 +15,7 @@ module.exports = {
 	'eitri-app-dependencies': {
 		'eitri-shopping-di-santinni-shared': {
 			isEitriAppShared: true,
-			version: '0.1.10'
+			version: '0.1.11'
 		},
 		'eitri-shopping-vtex-shared': {
 			isEitriAppShared: true,

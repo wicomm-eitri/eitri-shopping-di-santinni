@@ -1,7 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { Page, View, Text, Image } from 'eitri-luminus'
 import { HeaderContentWrapper, HeaderReturn, HeaderText, BottomInset } from 'eitri-shopping-di-santinni-shared'
 import { navigate } from '@/services/navigationService'
 import { useLocalShoppingCart } from '../providers/LocalCart'
@@ -11,6 +10,7 @@ import { formatAmountInCents } from '../utils/utils'
 
 const parseItemName = name => {
 	const raw = (name || '').trim()
+
 	if (!raw) return { baseName: '', size: '', color: '' }
 
 	const words = raw.split(/\s+/)
@@ -40,7 +40,13 @@ const parseItemName = name => {
 		}
 	}
 
+	if (detectedColor && /^[0-9./\s-]+$/.test(detectedColor.trim())) {
+		detectedSize = detectedColor
+		detectedColor = ''
+	}
+
 	const base = nameParts.join(' ').trim()
+
 	return { baseName: base || raw, size: detectedSize, color: detectedColor }
 }
 
@@ -263,6 +269,7 @@ export default function PixOrder(props) {
 					<View className='flex flex-col gap-4 mb-6'>
 						{cart?.items?.map(item => {
 							const { baseName, size, color } = parseItemName(item.name)
+
 							return (
 								<View
 									key={item.uniqueId}

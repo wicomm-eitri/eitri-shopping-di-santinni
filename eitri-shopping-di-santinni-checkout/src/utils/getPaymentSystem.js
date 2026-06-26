@@ -9,6 +9,7 @@ export const getPaymentSystem = cart => {
 		// Se a VTEX envia o Cartão DS como Cartão de Crédito, nós o separamos
 		// para que ele ganhe seu próprio botão de Pagamento Customizado.
 		const psName = paymentSystem?.name?.toLowerCase() || ''
+
 		if (psName.includes('cartão ds') || psName.includes('cartao ds') || psName.includes('bandeira própria') || psName.includes('bandeira propria')) {
 			paymentSystem.groupName = 'customPrivate_DS'
 		}

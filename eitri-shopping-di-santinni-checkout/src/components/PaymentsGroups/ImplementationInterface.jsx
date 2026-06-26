@@ -37,17 +37,17 @@ export default function ImplementationInterface(props) {
 
 	if (!groupName || !PAYMENT_GROUPS_IMPLEMENTATION[groupName]) {
 		if (
-			groupName?.toLowerCase().includes('custom') || 
-			groupName?.toLowerCase().includes('promissory') || 
-			groupName?.toLowerCase().includes('storecard') || 
+			groupName?.toLowerCase().includes('custom') ||
+			groupName?.toLowerCase().includes('promissory') ||
+			groupName?.toLowerCase().includes('storecard') ||
 			groupName?.toLowerCase().includes('cobranded')
 		) {
 			const Implementation = StoreCard
+
 			/*prettier-ignore*/
 			return React.createElement(Implementation, { groupName, systemGroup, onSelectPaymentMethod, selectedPayment: props.selectedPayment })
 		}
 
-		// Para ajudar a descobrir o ID correto se for diferente:
 		return <Text className='text-red-500'>Não mapeado: {groupName}</Text>
 		// return null
 	}

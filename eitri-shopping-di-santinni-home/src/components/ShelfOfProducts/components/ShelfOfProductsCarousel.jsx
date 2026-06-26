@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { View } from 'eitri-luminus'
 import { CustomCarousel } from 'eitri-shopping-di-santinni-shared'
 import ProductCard from '../../ProductCard/ProductCard'
 
@@ -31,7 +30,11 @@ export default function ShelfOfProductsCarousel(props) {
 							<View
 								key={`${product?.productId ?? index}-${index}`}
 								className='flex justify-center py-2 h-full'>
-								<ProductCard product={product} className='w-full' />
+								<ProductCard
+									product={product}
+									className='w-full'
+									openModal={props.openModal}
+								/>
 							</View>
 						))}
 					</CustomCarousel>
