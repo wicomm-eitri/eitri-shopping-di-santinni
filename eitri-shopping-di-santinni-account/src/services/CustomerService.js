@@ -182,7 +182,9 @@ export const removeFromWishlist = async wishListItemId => {
 		const targetList = wishlists[0]
 
 		// Remove o produto da lista baseando-se no ID retornado para a tela
-		const updatedProducts = (targetList.products || []).filter(item => String(item.ID) !== String(wishListItemId) && String(item.notes) !== String(wishListItemId))
+		const updatedProducts = (targetList.products || []).filter(
+			item => String(item.ID) !== String(wishListItemId) && String(item.notes) !== String(wishListItemId)
+		)
 
 		const mutationUpdate = `
             mutation UpdateWishlist($wishlist: WishlistInput!) {
@@ -221,13 +223,13 @@ export const removeFromWishlist = async wishListItemId => {
 		EventBus.publish({
 			channel: 'removeFromWishlist',
 			broadcast: true,
-			data: { 
-				id: targetList.id, 
-				response: { 
-					data: { 
-						removeFromList: true 
-					} 
-				} 
+			data: {
+				id: targetList.id,
+				response: {
+					data: {
+						removeFromList: true
+					}
+				}
 			}
 		})
 
