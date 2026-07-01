@@ -12,11 +12,13 @@ export default function SimpleCard(props) {
 			<View className='bg-white rounded border border-gray-300 p-4 flex flex-col relative w-full'>
 				<View className='w-full'>{children}</View>
 
-				<View
-					onClick={onPress}
-					className='absolute top-1/2 -translate-y-1/2 right-4 z-10'>
-					<Image src={editIcon} width="24px" height="24px" />
-				</View>
+				{onPress && (
+					<View
+						onClick={onPress}
+						className='absolute top-1/2 -translate-y-1/2 right-4 z-10'>
+						<Image src={editIcon} width="24px" height="24px" />
+					</View>
+				)}
 			</View>
 		</View>
 	)

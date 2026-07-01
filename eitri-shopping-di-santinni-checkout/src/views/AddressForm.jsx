@@ -14,7 +14,6 @@ import { useLocalShoppingCart } from '../providers/LocalCart'
 import { trackScreenView } from '../services/Tracking'
 import { resolvePostalCode } from '../services/freigthService'
 import { navigate, requestLogin } from '../services/navigationService'
-import { verifySocialNumber } from '../utils/verifySocialNumber'
 
 function PostalCodeInput({ value, onChange, isLoading, t, error, touched, onBlur }) {
 	return (
@@ -114,36 +113,6 @@ function AddressFields({ address, handleAddressChange, t, touched, errors, onBlu
 				/>
 				{errors.state && touched.state && <Text className='text-xs text-red-500'>{errors.state}</Text>}
 			</View>
-
-			<View>
-				<CustomInput
-					label={t('personalData.frmPhone')}
-					placeholder={t('(00) 000000-0000')}
-					inputMode='tel'
-					mask='(99) 99999-9999'
-					variant='mask'
-					value={address?.phone || ''}
-					onChange={e => handleAddressChange('phone', e)}
-					className={errors.phone && touched.phone ? 'border-red-500' : ''}
-					onBlur={() => onBlur('phone')}
-				/>
-				{errors.phone && touched.phone && <Text className='text-xs text-red-500'>{errors.phone}</Text>}
-			</View>
-
-			<View>
-				<CustomInput
-					label={t('personalData.frmTaxpayerId')}
-					placeholder={t('personalData.placeholderTaxpayerId')}
-					inputMode='numeric'
-					mask='999.999.999-99'
-					variant='mask'
-					value={address?.document || ''}
-					onChange={e => handleAddressChange('document', e)}
-					className={errors.document && touched.document ? 'border-red-500' : ''}
-					onBlur={() => onBlur('document')}
-				/>
-				{errors.document && touched.document && <Text className='text-xs text-red-500'>{errors.document}</Text>}
-			</View>
 		</>
 	)
 }
@@ -162,20 +131,15 @@ function validateAddress(address, t) {
 		city: !address.city ? t('addNewShippingAddress.errorCity') : '',
 		state: !address.state ? t('addNewShippingAddress.errorState') : '',
 		receiverName: !address.receiverName ? t('addNewShippingAddress.errorReceiverName') : '',
-		number: !address.number ? t('addNewShippingAddress.errorNumber') : '',
-		phone: !address.phone ? t('addNewShippingAddress.errorPhone', 'Telefone é obrigatório') : '',
-		document: !address.document
-			? t('addNewShippingAddress.errorDocument', 'CPF é obrigatório')
-			: !verifySocialNumber(address.document.replace(/\D/g, ''))
-				? t('addNewShippingAddress.errorDocumentInvalid', 'CPF inválido')
-				: ''
+		number: !address.number ? t('addNewShippingAddress.errorNumber') : ''
 	}
 }
 
 export default function AddressForm(props) {
 	const PAGE_NAME = 'Checkout - Cadastro de Endereço'
 
-	const { cart, cartIsLoading, setLogisticInfo, setShippingAddress, setNewAddress, startCart } = useLocalShoppingCart()
+	const { cart, cartIsLoading, setLogisticInfo, setShippingAddress, setNewAddress, startCart } =
+		useLocalShoppingCart()
 	const { t } = useTranslation()
 
 	const [addressId, setAddressId] = useState(props.location?.state?.addressId)
@@ -338,7 +302,7 @@ export default function AddressForm(props) {
 			}
 
 			setAddressError(t('addNewShippingAddress.errorDefault'))
-			setTimeout(() => setAddressError(''), 8000) 
+			setTimeout(() => setAddressError(''), 8000)
 		} finally {
 			setIsSubmitting(false)
 		}
@@ -433,9 +397,7 @@ export default function AddressForm(props) {
 							city: true,
 							state: true,
 							receiverName: true,
-							number: true,
-							phone: true,
-							document: true
+							number: true
 						})
 						submit()
 					}}

@@ -216,7 +216,7 @@ export default function BannerList(props) {
 										onClick={() => onClick(slider)}>
 										{slider?.subLabel && (
 											<View className='absolute bottom-3 left-3 bg-white rounded-full px-4 py-1.5'>
-												<Text className='font-semibold text-red-700 text-sm uppercase'>
+												<Text className='font-semibold text-red-700 text-[10px] uppercase'>
 													{slider.subLabel}
 												</Text>
 											</View>
@@ -230,9 +230,9 @@ export default function BannerList(props) {
 												height: 'initial'
 											}}
 											className='mt-1'>
-											<Text className='font-bold line-clamp-2 block text-center'>
+											{/* <Text className='font-bold line-clamp-2 block text-center'>
 												{slider?.action?.title}
-											</Text>
+											</Text> */}
 										</View>
 									)}
 								</View>
