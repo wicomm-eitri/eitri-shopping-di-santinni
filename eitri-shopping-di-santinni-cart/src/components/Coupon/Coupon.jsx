@@ -15,29 +15,43 @@ export default function Coupon(props) {
 	const { t } = useTranslation()
 
 	useEffect(() => {
-		if (cart?.marketingData?.coupon) {
-			setInvalidCoupon(false)
-			setAppliedCoupon(cart.marketingData.coupon)
+		const currentCoupon = cart?.marketingData?.coupon || coupon
+		const errorMessage = cart?.messages || []
+		
+		const couponError = currentCoupon && errorMessage.find(message => {
+			const textLower = message.text?.toLowerCase() || ''
+			const codeLower = message.code?.toLowerCase() || ''
+			const couponLower = currentCoupon.toLowerCase()
+			
+			return textLower.includes(couponLower) || 
+			       textLower.includes('cupom') || 
+			       codeLower.includes('coupon') || 
+			       codeLower.includes('discount')
+		})
 
-			if (coupon === cart?.marketingData?.coupon) {
-				setCouponTextAlert(t('coupon.txtAppliedCoupon', 'Cupom aplicado!'))
-			}
-		} else {
-			const errorMessage = cart?.messages || []
-			const couponError = coupon && errorMessage.find(message => message.text.includes(coupon))
+		const hasBenefits = cart?.ratesAndBenefitsData?.rateAndBenefitsIdentifiers?.length > 0
 
-			if (couponError) {
-				if (couponError.code === 'couponNotFound') {
-					setCouponTextAlert(t('coupon.txtInvalidCoupon', 'Cupom inválido'))
-				} else if (couponError.code === 'couponExpired') {
-					setCouponTextAlert(t('coupon.txtExpiredCoupon', 'Cupom Expirado'))
-				}
+		setAppliedCoupon(cart?.marketingData?.coupon || '')
 
-				setInvalidCoupon(true)
+		if (couponError) {
+			setInvalidCoupon(true)
+			
+			if (couponError.code === 'couponNotFound') {
+				setCouponTextAlert(t('coupon.txtInvalidCoupon', 'Cupom inválido'))
+			} else if (couponError.code === 'couponExpired') {
+				setCouponTextAlert(t('coupon.txtExpiredCoupon', 'Cupom Expirado'))
 			} else {
-				setInvalidCoupon(false)
-				setAppliedCoupon('')
+				setCouponTextAlert(couponError.text)
 			}
+		} else if (cart?.marketingData?.coupon && !hasBenefits) {
+			setInvalidCoupon(true)
+			setCouponTextAlert(t('coupon.txtNotEligible', 'Cupom não elegível para os itens no carrinho'))
+		} else if (cart?.marketingData?.coupon) {
+			setInvalidCoupon(false)
+			setCouponTextAlert(t('coupon.txtAppliedCoupon', 'Cupom aplicado!'))
+		} else {
+			setInvalidCoupon(false)
+			setCouponTextAlert('')
 		}
 	}, [cart])
 

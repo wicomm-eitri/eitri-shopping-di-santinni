@@ -14,8 +14,8 @@ import SkuSelector from '../components/SkuSelector/SkuSelector'
 import { useLocalShoppingCart } from '../providers/LocalCart'
 import { startConfigure } from '../services/AppService'
 import { saveCartIdOnStorage } from '../services/cartService'
-import { getProductById, getProductBySlug, markLastViewedProduct } from '../services/productService'
 import { productOnWishlist } from '../services/customerService'
+import { getProductById, getProductBySlug, markLastViewedProduct } from '../services/productService'
 import { crashLog, sendScreenView, sendViewItem } from '../services/trackingService'
 
 export default function Home() {
@@ -54,7 +54,7 @@ export default function Home() {
 		if (product) {
 			setProduct(product)
 			setCurrentSku(findAvailableSKU(product))
-			
+
 			const wlInfo = await productOnWishlist(product.productId)
 
 			setWishlistInfo(wlInfo)
@@ -133,31 +133,7 @@ export default function Home() {
 			textBold: '5%',
 			textRegular: 'Cartão DS'
 		})
-		badges.push({
-			textRegular: 'Retirada Expressa'
-		})
-		badges.push({
-			textBold: '5%',
-			textRegular: 'PIX'
-		})
-		badges.push({
-			textBold: '5%',
-			textRegular: 'Cartão DS'
-		})
-		badges.push({
-			textRegular: 'Retirada Expressa'
-		})
-		badges.push({
-			textBold: '5%',
-			textRegular: 'PIX'
-		})
-		badges.push({
-			textBold: '5%',
-			textRegular: 'Cartão DS'
-		})
-		badges.push({
-			textRegular: 'Retirada Expressa'
-		})
+
 		product?.productCluster?.map(cluster => {
 			if (cluster.name.includes('%')) {
 				const [textBold, textRegular] = cluster.name.split('%')
@@ -172,6 +148,8 @@ export default function Home() {
 				})
 			}
 		})
+
+		console.log('Badges:', badges)
 
 		return badges
 	}

@@ -54,6 +54,7 @@ export default function PixOrder(props) {
 	const { t } = useTranslation()
 	const [timeOut, setTimeOut] = useState(10 * 60)
 	const [pixPayload, setPixPayload] = useState(null)
+	const [isCopied, setIsCopied] = useState(false)
 
 	let isMounted = true
 
@@ -112,6 +113,8 @@ export default function PixOrder(props) {
 		Eitri.clipboard.setText({
 			text: pixPayload.code
 		})
+		setIsCopied(true)
+		setTimeout(() => setIsCopied(false), 3000)
 	}
 
 	async function checkPixStatus(transactionId, paymentId) {
@@ -196,8 +199,11 @@ export default function PixOrder(props) {
 
 					{/* Botão Copiar */}
 					<View onClick={copyCode}>
-						<Text className='text-red-700 text-xs underline  py-1'>
-							{t('pixOrder.copyCode', 'COPIAR CÓDIGO')}
+						<Text
+							className={`text-xs underline py-1 font-bold ${isCopied ? 'text-green-600' : 'text-red-700'}`}>
+							{isCopied
+								? t('pixOrder.codeCopied', 'CÓDIGO COPIADO!')
+								: t('pixOrder.copyCode', 'COPIAR CÓDIGO')}
 						</Text>
 					</View>
 
@@ -318,14 +324,14 @@ export default function PixOrder(props) {
 							<Text className='text-sm text-gray-600'>{t('pixOrder.subtotal', 'Subtotal')}</Text>
 							<Text className='text-sm text-gray-600'>{formatAmountInCents(getSubtotal())}</Text>
 						</View>
-						<View className='flex justify-between'>
-							<Text className='text-sm text-gray-600'>{t('pixOrder.discount', 'Desconto')}</Text>
-							<Text className='text-sm text-gray-600'>
-								{getDiscount() < 0
-									? `- ${formatAmountInCents(Math.abs(getDiscount()))}`
-									: formatAmountInCents(0)}
-							</Text>
-						</View>
+						{getDiscount() < 0 && (
+							<View className='flex justify-between'>
+								<Text className='text-sm text-gray-600'>{t('pixOrder.discount', 'Desconto')}</Text>
+								<Text className='text-sm text-gray-600'>
+									- {formatAmountInCents(Math.abs(getDiscount()))}
+								</Text>
+							</View>
+						)}
 						<View className='flex justify-between'>
 							<Text className='text-sm text-gray-600'>{t('pixOrder.shipping', 'Frete')}</Text>
 							<Text className='text-sm text-gray-600'>

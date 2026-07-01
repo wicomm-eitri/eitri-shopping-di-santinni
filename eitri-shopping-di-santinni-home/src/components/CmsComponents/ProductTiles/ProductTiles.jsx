@@ -65,7 +65,7 @@ export default function ProductTiles(props) {
 		<View className='py-2'>
 			{data?.title && (
 				<View className='px-4 pb-3'>
-					<Text className='font-bold text-lg text-red-400 uppercase'>{data?.title}</Text>
+					<Text className='font-bold text-lg  uppercase'>{data?.title}</Text>
 				</View>
 			)}
 
@@ -89,11 +89,11 @@ export default function ProductTiles(props) {
 										className={`text-sm tracking-wide uppercase ${
 											isActive ? 'text-red-600 font-bold' : 'text-gray-700 font-medium'
 										}`}>
-									{shelf.title}
-								</Text>
-							</View>
-						)
-					})}
+										{shelf.title}
+									</Text>
+								</View>
+							)
+						})}
 					</View>
 				</View>
 			</View>
