@@ -161,9 +161,7 @@ export default function AddressForm(props) {
 		reference: '',
 		addressQuery: '',
 		addressType: 'residential',
-		receiverName: cart?.clientProfileData?.firstName
-			? `${cart?.clientProfileData?.firstName} ${cart?.clientProfileData?.lastName}`
-			: '',
+		receiverName: '',
 		isDisposable: false
 	})
 	const [touched, setTouched] = useState({})
