@@ -1,4 +1,4 @@
-import { getCart, addItemToCart, removeCartItem } from '../services/CartService'
+import { getCart, addItemToCart, removeCartItem, updateItemQuantity as updateCartItemQuantity } from '../services/CartService'
 
 const LocalCart = createContext({})
 
@@ -23,6 +23,9 @@ export default function CartProvider({ children }) {
 	const removeItem = async itemId => {
 		return executeCartOperation(removeCartItem, itemId)
 	}
+	const updateItemQuantity = async (itemId, quantity) => {
+		return executeCartOperation(updateCartItemQuantity, itemId, quantity)
+	}
 
 	return (
 		<LocalCart.Provider
@@ -32,7 +35,8 @@ export default function CartProvider({ children }) {
 				cart,
 				cartIsLoading,
 				addItem,
-				removeItem
+				removeItem,
+				updateItemQuantity
 			}}>
 			{children}
 		</LocalCart.Provider>

@@ -127,9 +127,7 @@ export default function ModalAddProductToCart(props) {
 
 		if (!prevShowModal && showModal && Object.keys(localQuantities).length === 0) {
 			const seeded = normalizedCart.items.reduce((acc, item, idx) => {
-				const idxKey = item.itemIndex ?? idx
-
-				acc[idxKey] = item.quantity
+				acc[idx] = item.quantity
 
 				return acc
 			}, {})
@@ -144,11 +142,7 @@ export default function ModalAddProductToCart(props) {
 				const updated = { ...prev }
 
 				normalizedCart.items.forEach((item, idx) => {
-					const idxKey = item.itemIndex ?? idx
-
-					if (!(idxKey in prev)) {
-						updated[idxKey] = item.quantity
-					}
+					updated[idx] = item.quantity
 				})
 
 				return updated
@@ -267,46 +261,30 @@ export default function ModalAddProductToCart(props) {
 		formattedDiscounts,
 		formattedShipping
 	} = useMemo(() => {
-		if (!normalizedCart?.totalizers) {
-			const sum = normalizedCart?.items?.reduce((acc, item) => acc + item.price * item.quantity, 0) || 0
+		const itemsTotalizer = normalizedCart?.totalizers?.find(t => t.id === 'Items')
+		const discountsTotalizer = normalizedCart?.totalizers?.find(t => t.id === 'Discounts')
+		const shippingTotalizer = normalizedCart?.totalizers?.find(t => t.id === 'Shipping')
 
-			return {
-				itemsTotalizer: null,
-				discountsTotalizer: null,
-				shippingTotalizer: null,
-				cartTotal: normalizedCart?.value || 0,
-				calculatedDiscount: 0,
-				formattedSubtotal: formatAmountInCents(sum),
-				formattedDiscounts: '',
-				formattedShipping: formatAmountInCents(0)
-			}
-		}
-
-		const itemsTotalizer = normalizedCart.totalizers.find(t => t.id === 'Items')
-		const discountsTotalizer = normalizedCart.totalizers.find(t => t.id === 'Discounts')
-		const shippingTotalizer = normalizedCart.totalizers.find(t => t.id === 'Shipping')
-		const cartTotal = normalizedCart.value
+		const optimisticSubtotal = normalizedCart?.items?.reduce((acc, item, idx) => {
+			const qty = localQuantities[idx] ?? item.quantity
+			return acc + item.price * qty
+		}, 0) || 0
 
 		let calculatedDiscount = 0
+		let formattedDiscounts = ''
 
 		if (discountsTotalizer) {
 			calculatedDiscount = discountsTotalizer.value
-		}
-
-		const subtotalVal = itemsTotalizer
-			? itemsTotalizer.value
-			: normalizedCart?.items?.reduce((acc, item) => acc + item.price * item.quantity, 0) || 0
-
-		const formattedSubtotal = formatAmountInCents(subtotalVal)
-
-		let formattedDiscounts = ''
-
-		if (discountsTotalizer && discountsTotalizer.value !== 0) {
-			formattedDiscounts = formatAmountInCents(Math.abs(discountsTotalizer.value))
+			if (discountsTotalizer.value !== 0) {
+				formattedDiscounts = formatAmountInCents(Math.abs(discountsTotalizer.value))
+			}
 		}
 
 		const shippingVal = shippingTotalizer ? shippingTotalizer.value : 0
 		const formattedShipping = formatAmountInCents(shippingVal)
+
+		const cartTotal = optimisticSubtotal + shippingVal + calculatedDiscount
+		const formattedSubtotal = formatAmountInCents(optimisticSubtotal)
 
 		return {
 			itemsTotalizer,
@@ -318,7 +296,7 @@ export default function ModalAddProductToCart(props) {
 			formattedDiscounts,
 			formattedShipping
 		}
-	}, [normalizedCart])
+	}, [normalizedCart, localQuantities])
 
 	const getInstallmentInfo = () => {
 		const options = normalizedCart?.paymentData?.installmentOptions
