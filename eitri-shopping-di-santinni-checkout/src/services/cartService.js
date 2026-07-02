@@ -59,6 +59,18 @@ export const removeItemFromCart = async index => {
 	return await Vtex.cart.removeItem(index)
 }
 
+export const addItemOffer = async (itemIndex, offeringId) => {
+	return await Vtex.cart.addOfferingsItems(itemIndex, offeringId)
+}
+
+export const removeItemOffer = async (itemIndex, offeringId) => {
+	return await Vtex.cart.removeOfferingsItems(itemIndex, offeringId)
+}
+
+export const changeItemQuantity = async (index, newQuantity) => {
+	return await Vtex.cart.changeItemQuantity(index, newQuantity)
+}
+
 export const cartHasCustomerData = cart => {
 	return !!(
 		cart.clientProfileData &&

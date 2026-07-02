@@ -9,11 +9,11 @@ import { navigate, PAGES } from '../services/NavigationService'
 import { sendScreenView } from '../services/TrackingService'
 import suporteIcon from '../assets/icons/Suporte.svg'
 import config from '../assets/icons/config.svg'
+import redesSociaisIcon from '../assets/icons/instagram.svg'
 import meusFavoritosIcon from '../assets/icons/meus_favoritos.svg'
 import meusPedidosIcon from '../assets/icons/meus_pedidos.svg'
 import minhaContaIcon from '../assets/icons/minha_conta.svg'
 import nossasLojasIcon from '../assets/icons/nossas_lojas.svg'
-import redesSociaisIcon from '../assets/icons/nossas_lojas.svg'
 import trocasDevolucoesIcon from '../assets/icons/trocas_devoluções.svg'
 
 export default function Home(props) {
