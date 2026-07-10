@@ -23,62 +23,75 @@ export default function ProductCardDefault(props) {
 	} = props
 
 	return (
-		<View className={`relative drop-shadow-[0px_0px_6px_rgba(0,0,0,0.2)] bg-white rounded ${className}`}>
-			<View className='flex flex-col rounded-sm p-2'>
-				{/*{badge ? (*/}
-				{/*	<View className="max-h-[27px] min-h-[27px] rounded-full w-fit bg-green-300 px-4 py-1">*/}
-				{/*		<Text className="font-bold">{badge}</Text>*/}
-				{/*	</View>*/}
-				{/*) : (*/}
-				{/*	<View className="h-[27px]" />*/}
-				{/*)}*/}
+		<View className={`relative bg-transparent rounded-xl flex flex-col ${className}`}>
+			<View className='flex flex-col w-full h-full'>
+				{/* Top Image Container */}
+				<View className='relative flex flex-col w-full justify-center items-center h-[180px] bg-[#F6F6F6] rounded-xl overflow-hidden mb-3'>
+					{/* Badge */}
+					{badge && (
+						<View className='absolute top-3 left-3 z-[98] rounded-full bg-[#C61030] px-2 py-0.5'>
+							<Text className='font-bold text-white text-[11px]'>{badge}</Text>
+						</View>
+					)}
 
-				<View className='relative flex flex-col w-full justify-center items-center h-[160px] min-h-[160px] max-h-[160px]'>
+					{/* Wishlist Icon */}
+					<View
+						className='absolute top-3 right-3 z-[98]'
+						onClick={onPressOnWishlist}>
+						<WishlistIcon filled={isOnWishlist} />
+					</View>
+
 					<Image
-						className='object-contain h-full w-full rounded'
+						className='object-contain h-[130px] w-full mix-blend-multiply'
 						src={image}
 					/>
-					<View className='absolute top-[5px] right-[5px] bg-white rounded-full flex items-center justify-center h-[32px] w-[32px] z-[98]'>
-						<WishlistIcon
-							filled={isOnWishlist}
-							className='text-[#555555]'
-						/>
+				</View>
+
+				{/* Brand */}
+				<View className='flex min-h-[16px] mb-1'>
+					{brand && <Text className='text-[#888888] text-[11px] font-medium uppercase'>{brand}</Text>}
+				</View>
+
+				{/* Name */}
+				<View className='min-h-[44px] mb-2'>
+					<Text
+						className='text-[#1A1A1A] text-[15px] font-semibold leading-tight'
+						numberOfLines={2}
+						ellipsizeMode='tail'>
+						{name}
+					</Text>
+				</View>
+
+				{/* Prices */}
+				<View className='flex flex-col gap-0.5 mb-4'>
+					<Text
+						className={`line-through font-bold text-[#888888] text-[12px] ${listPrice ? '' : 'opacity-0'}`}>
+						{listPrice || 'R$ 000,00'}
+					</Text>
+
+					<Text className='font-bold text-[#C61030] text-[20px]'>{price}</Text>
+
+					<Text className={`text-[#888888] text-[12px] ${installments ? '' : 'opacity-0'}`}>
+						{installments || 'ou 0x de R$ 0,00 sem juros'}
+					</Text>
+				</View>
+
+				{/* Button */}
+				<View className='mt-auto flex justify-center items-center'>
+					<View
+						onClick={onPressCartButton}
+						className='h-[42px] w-full rounded-full flex justify-center items-center bg-[#C61030] z-[99]'>
+						{loadingCartOp ? (
+							<Loading width='36px' />
+						) : (
+							<Text className='text-white font-bold text-[13px]'>{actionLabel}</Text>
+						)}
 					</View>
-				</View>
-
-				<View className='mt-2 flex justify-between gap-4 h-[48px]'>
-					{brand && <Text className='text-[#888888] text-xs fon uppercase'>{brand}</Text>}
-				</View>
-
-				<View className='flex flex-col gap-2 mt-1'>
-					{listPrice ? (
-						<Text className='line-through font-bold text-neutral-500 text-xs'>{listPrice}</Text>
-					) : (
-						<View className='h-[16px]' />
-					)}
-
-					<Text className='font-bold text-primary-700 text-sm'>{price}</Text>
-
-					{installments ? (
-						<Text className='font-bold text-neutral-500 text-xs'>{installments}</Text>
-					) : (
-						<View className='h-[16px]' />
-					)}
-				</View>
-
-				<View
-					onClick={onPressCartButton}
-					className='mt-2 h-[36px] bg-primary w-full rounded-full flex justify-center items-center  border-primary-700 border-[0.5px] bg-primary-700 z-[99]'>
-					{loadingCartOp ? (
-						<Loading width='36px' />
-					) : (
-						<Text className='text-primary-content font-medium text-xs'>{actionLabel}</Text>
-					)}
 				</View>
 			</View>
 
 			<View
-				className='absolute top-0 bottom-0 left-0 right-0'
+				className='absolute top-0 bottom-[50px] left-0 right-0 z-[90]'
 				onClick={onPressOnCard}
 			/>
 		</View>

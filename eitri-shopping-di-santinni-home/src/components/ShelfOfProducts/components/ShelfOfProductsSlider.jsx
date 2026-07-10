@@ -19,6 +19,7 @@ export default function ShelfOfProductsSlider(props) {
 								key={`${product.productId}-${i}`}
 								product={product}
 								className={`min-w-[50vw]`}
+								openModal={props.openModal}
 							/>
 						))}
 					</View>

@@ -1,11 +1,22 @@
+import { useState } from 'react'
 import { useTranslation } from 'eitri-i18n'
-import { View, Text } from 'eitri-luminus'
-import { Loading } from 'eitri-shopping-di-santinni-shared'
+import { Loading, ModalAddProductToCart } from 'eitri-shopping-di-santinni-shared'
+import { useLocalShoppingCart } from '../../providers/LocalCart'
+import { openCart } from '../../services/NavigationService'
 import ProductCard from '../ProductCard/ProductCard'
 
 export default function SearchResults(props) {
 	const { searchResults, isLoading } = props
 	const { t } = useTranslation()
+	const { cart, removeItem, updateItemQuantity } = useLocalShoppingCart()
+
+	const [showModal, setShowModal] = useState(false)
+	const [productModal, setProductModal] = useState(null)
+
+	const openModal = product => {
+		setProductModal(product)
+		setShowModal(true)
+	}
 
 	if (searchResults.length === 0 && !isLoading) {
 		return (
@@ -48,7 +59,10 @@ export default function SearchResults(props) {
 					<View
 						key={product.productId}
 						className='w-full'>
-						<ProductCard product={product} />
+						<ProductCard
+							product={product}
+							openModal={openModal}
+						/>
 					</View>
 				))}
 			</View>
@@ -58,6 +72,18 @@ export default function SearchResults(props) {
 					<Loading />
 				</View>
 			)}
+
+			<ModalAddProductToCart
+				product={productModal}
+				cart={cart}
+				changeItemQuantity={updateItemQuantity}
+				removeItemFromCart={removeItem}
+				navigateCart={() => {
+					openCart()
+				}}
+				showModal={showModal}
+				closeModal={() => setShowModal(false)}
+			/>
 		</View>
 	)
 }

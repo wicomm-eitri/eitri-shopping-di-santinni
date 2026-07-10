@@ -6,26 +6,36 @@ export default function Alert(props) {
 	const [isAnimatingOut, setIsAnimatingOut] = useState(false)
 
 	useEffect(() => {
+		let dismissTimer
+
 		if (show) {
 			setVisible(true)
 			setIsAnimatingOut(false)
 
 			const hideTimer = setTimeout(() => {
 				setIsAnimatingOut(true) // Inicia a animação de saída
-				const dismissTimer = setTimeout(() => {
+				dismissTimer = setTimeout(() => {
 					setVisible(false)
 
 					if (typeof onDismiss === 'function') {
 						onDismiss()
 					}
 				}, 300) // Duração da animação de saída
-
-				return () => clearTimeout(dismissTimer)
 			}, duration * 1000)
 
-			return () => clearTimeout(hideTimer)
+			return () => {
+				clearTimeout(hideTimer)
+				clearTimeout(dismissTimer)
+			}
+		} else {
+			setIsAnimatingOut(true)
+			dismissTimer = setTimeout(() => {
+				setVisible(false)
+			}, 300)
+			
+			return () => clearTimeout(dismissTimer)
 		}
-	}, [show, duration, onDismiss])
+	}, [show, duration])
 
 	if (!visible) {
 		return null

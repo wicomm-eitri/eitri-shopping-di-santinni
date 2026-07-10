@@ -1,37 +1,39 @@
-import { Image } from 'eitri-luminus'
+import React from 'react'
 
 export default function ProfileCardButton(props) {
 	const { icon, label, onClick } = props
 
 	return (
 		<View
-			className='flex justify-between bg-white rounded shadow-sm border border-gray-300 p-4 w-full'
+			className='flex justify-between items-center bg-white rounded-full shadow-none border border-gray-200 px-5 py-3 w-full  hover:bg-gray-50 transition-colors'
 			onClick={onClick}>
-			<View className='flex flex-row items-center gap-3'>
-				<Image
-					src={icon}
-					width={24}
-					height={24}
-				/>
-				<Text className='text-gray-900 text-base font-medium'>{label}</Text>
+			{/* Lado Esquerdo: Ícone + Label */}
+			<View className='flex flex-row items-center gap-3.5'>
+				{icon && (
+					<Image
+						src={icon}
+						width={20}
+						height={20}
+						className='object-contain'
+					/>
+				)}
+				<Text className='text-gray-700 text-sm font-normal tracking-wide'>{label}</Text>
 			</View>
-			<View>
+
+			{/* Lado Direito: Seta (Chevron Right minimalista) */}
+			<View className='flex items-center justify-center'>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
-					width='24'
-					height='24'
+					width='16'
+					height='16'
 					viewBox='0 0 24 24'
 					fill='none'
 					stroke='currentColor'
 					strokeWidth='1.5'
 					strokeLinecap='round'
-					className='text'>
-					<line
-						x1='5'
-						y1='12'
-						x2='19'
-						y2='12'></line>
-					<polyline points='12 5 19 12 12 19'></polyline>
+					strokeLinejoin='round'
+					className='text-gray-400'>
+					<polyline points='9 18 15 12 9 6'></polyline>
 				</svg>
 			</View>
 		</View>

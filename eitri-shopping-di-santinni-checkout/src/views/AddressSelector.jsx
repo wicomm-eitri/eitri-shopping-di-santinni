@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'eitri-i18n'
-import { Page, Text, View } from 'eitri-luminus'
-import { HeaderContentWrapper, HeaderReturn, HeaderText, BottomInset, Loading } from 'eitri-shopping-di-santinni-shared'
+import { BottomInset, HeaderContentWrapper, HeaderReturn, HeaderText, Loading } from 'eitri-shopping-di-santinni-shared'
 import CardSelector from '../components/CardSelector/CardSelector'
 import FixedBottom from '../components/FixedBottom/FixedBottom'
 import OtpLogin from '../components/OtpLogin/OtpLogin'
@@ -46,9 +44,7 @@ export default function AddressSelector(props) {
 		}
 	}
 
-	const handleAddNewAddress = () => {
-		navigate('AddressForm', {}, true)
-	}
+	const handleAddNewAddress = () => navigate('AddressForm', {}, true)
 
 	const getAddresses = () => {
 		if (cart?.shippingData?.availableAddresses) {
@@ -84,7 +80,7 @@ export default function AddressSelector(props) {
 		<Page title={PAGE}>
 			<HeaderContentWrapper>
 				<HeaderReturn />
-				<HeaderText text={t('addNewShippingAddress.title', 'Entrega')} />
+				<HeaderText text={t('addNewShippingAddress.title')} />
 			</HeaderContentWrapper>
 
 			<Loading
@@ -95,7 +91,7 @@ export default function AddressSelector(props) {
 			<View className='flex-1 flex flex-col p-4'>
 				<View className={`w-full`}>
 					<View className='flex flex-col gap-1 mb-4'>
-						<Text className='text-lg font-bold text-base-content'>
+						<Text className='text-secondary font-garamond text-xl font-semibold'>
 							{t('addressSelector.subtitle', 'Selecione um endereço para entrega')}
 						</Text>
 					</View>
@@ -106,11 +102,12 @@ export default function AddressSelector(props) {
 							mainTitle={`${address.street}, ${address.number || ''} ${address.complement || ''}`}
 							mainClickHandler={() => handleAddressSelect(address)}
 							secondaryActionHandler={() => handleEditAddress(address)}
-							secondaryActionTitle={t('addressSelector.edit', 'Editar')}>
-							<Text className='text text-base-content/70'>
+							secondaryActionTitle={'Editar'}>
+							<Text className='text-xs text-secondary'>
 								{`${address.neighborhood} - ${address.city} - ${address.state}`}
 							</Text>
-							<Text className='text text-base-content/70'>{address.postalCode}</Text>
+
+							<Text className='text-xs text-secondary'>{address.postalCode}</Text>
 						</CardSelector>
 					))}
 				</View>
@@ -120,7 +117,7 @@ export default function AddressSelector(props) {
 				className='flex flex-col align-center gap-4'
 				offSetHeight={56}>
 				<View onClick={handleAddNewAddress}>
-					<Text className='text-primary text-center font-bold block'>
+					<Text className='text-secondary underline text-center font-semibold block'>
 						{t('addressSelector.addNewAddress', 'Adicionar Novo Endereço')}
 					</Text>
 				</View>

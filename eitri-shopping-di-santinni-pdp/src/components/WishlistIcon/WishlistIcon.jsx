@@ -1,19 +1,24 @@
 export default function WishlistIcon(props) {
-	const { checked } = props
+	const { filled, className, size } = props
 
 	return (
 		<svg
-			width='24'
-			height='25'
-			viewBox='0 0 16 17'
-			fill='none'
-			xmlns='http://www.w3.org/2000/svg'>
+			xmlns='http://www.w3.org/2000/svg'
+			width={size || '24'}
+			height={size || '24'}
+			viewBox='0 0 25 25'
+			strokeWidth='2'
+			stroke='currentColor'
+			strokeLinecap='round'
+			strokeLinejoin='round'
+			className={className || 'text-[#C8102E]'}
+			fill={filled ? 'currentColor' : 'none'}>
 			<path
-				fillRule='evenodd'
-				clipRule='evenodd'
-				d='M12.6667 14.1488H11.4478L8.47148 11.1724C8.21108 10.9121 7.78901 10.9121 7.52861 11.1724L4.5523 14.1488H3.33334V5.48218C3.33334 4.37761 4.22878 3.48218 5.33334 3.48218H10.6667C11.7713 3.48218 12.6667 4.3776 12.6667 5.48218V14.1488ZM11.3333 5.48218C11.3333 5.11399 11.0349 4.81551 10.6667 4.81551H5.33334C4.96516 4.81551 4.66668 5.11399 4.66668 5.48218V12.1488L6.58583 10.2296C7.36688 9.44864 8.63321 9.44864 9.41428 10.2296L11.3333 12.1488V5.48218Z'
-				fill={checked ? '#9600CF' : 'black'}
-				fillOpacity='0.6'
+				d='M11.922 21.625L3.72515 13.0896C1.41682 10.6854 1.56265 6.74374 4.04182 4.53124C6.50119 2.33645 10.2304 2.76249 12.1741 5.46145L12.5012 5.91458L12.8283 5.46145C14.772 2.76249 18.5012 2.33645 20.9606 4.53124C23.4397 6.74479 23.5856 10.6875 21.2762 13.0906L13.0783 21.6271C13.004 21.7057 12.9144 21.7683 12.8151 21.8111C12.7158 21.8538 12.6088 21.8759 12.5007 21.8759C12.3925 21.8759 12.2855 21.8538 12.1862 21.8111C12.0869 21.7683 11.9974 21.7057 11.9231 21.6271L11.922 21.625Z'
+				stroke='currentColor'
+				strokeWidth='2'
+				strokeLinecap='round'
+				strokeLinejoin='round'
 			/>
 		</svg>
 	)

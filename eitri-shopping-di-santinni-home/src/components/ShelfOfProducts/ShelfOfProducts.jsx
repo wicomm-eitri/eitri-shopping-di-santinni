@@ -3,10 +3,23 @@ import { useTranslation } from 'eitri-i18n'
 import { getSpacingValue } from '../../utils/utils'
 import ShelfOfProductsCarousel from './components/ShelfOfProductsCarousel'
 import ShelfOfProductsSlider from './components/ShelfOfProductsSlider'
+import { ModalAddProductToCart } from 'eitri-shopping-di-santinni-shared'
+import { useLocalShoppingCart } from '../../providers/LocalCart'
+import { openCart } from '../../services/NavigationService'
+import { useState } from 'react'
 
 export default function ShelfOfProducts(props) {
-	const { products, title, isLoading, mode, searchParams, params, ...rest } = props
+	const { products, title, isLoading, mode, searchParams, paddingLeft, params, ...rest } = props
 	const { t } = useTranslation()
+	const { cart, removeItem, updateItemQuantity } = useLocalShoppingCart()
+
+	const [showModal, setShowModal] = useState(false)
+	const [productModal, setProductModal] = useState(null)
+
+	const openModal = product => {
+		setProductModal(product)
+		setShowModal(true)
+	}
 
 	const seeMore = () => {
 		Eitri.navigation.navigate({
@@ -48,6 +61,8 @@ export default function ShelfOfProducts(props) {
 				<ShelfOfProductsCarousel
 					isLoading={isLoading}
 					products={products}
+					paddingLeft={paddingLeft}
+					openModal={openModal}
 				/>
 			)}
 
@@ -55,8 +70,21 @@ export default function ShelfOfProducts(props) {
 				<ShelfOfProductsSlider
 					isLoading={isLoading}
 					products={products}
+					openModal={openModal}
 				/>
 			)}
+
+			<ModalAddProductToCart
+				product={productModal}
+				cart={cart}
+				changeItemQuantity={updateItemQuantity}
+				removeItemFromCart={removeItem}
+				navigateCart={() => {
+					openCart()
+				}}
+				showModal={showModal}
+				closeModal={() => setShowModal(false)}
+			/>
 		</View>
 	)
 }

@@ -24,7 +24,7 @@ export default function RecommendationProducts(props) {
 			// 2. Agrupar por productId usando Map (🔥 mais performático)
 			const productMap = new Map()
 
-			recommendationProducts.forEach(product => {
+			recommendationProducts?.forEach(product => {
 				if (!productMap.has(product.productId)) {
 					productMap.set(product.productId, {
 						...product,
@@ -60,9 +60,11 @@ export default function RecommendationProducts(props) {
 	if ((!recommendationProducts || !recommendationProducts?.length) && !isLoading) return null
 
 	return (
-		<View className='mt-4'>
+		<View className='py-[30px] px-4 bg-white flex flex-col gap-5'>
 			<View className='px-4'>
-				<Text className='text-xl text-brown-500'>A escolha ideal para acompanhar</Text>
+				<Text className='text-xl font-semibold tracking-[0.4px] uppercase text-brown-500'>
+					{t('productBasicTemplate.txtWhoSaw', 'Você pode gostar')}
+				</Text>
 			</View>
 
 			{isLoading ? (

@@ -57,13 +57,13 @@
 	},
 	"pixOrder": {
 		"txtTimeRemaining": "Tempo restante",
-		"labelCopyCode": "Copiar código",
+		"labelCopyCode": "COPIAR CÓDIGO",
 		"pageTitle": "Pix QR Code",
 		"header": "Pagamento PIX",
 		"approvalInfo": "Com o PIX, sua compra é aprovada na hora",
 		"purchaseValue": "Valor da compra",
 		"codeTitle": "Código PIX",
-		"copyCode": "Copiar código",
+		"copyCode": "COPIAR CÓDIGO",
 		"share": "Compartilhar",
 		"hideQrCode": "Ocultar QR Code",
 		"showQrCode": "Mostrar QR Code",
@@ -93,7 +93,8 @@
 		"labelBack": "Voltar"
 	},
 	"addNewShippingAddress": {
-		"title": "Entrega",
+		"title": "Novo endereço",
+		"txtName": "Nome completo ",
 		"errorAddress": "Endereço inválido, por favor verifique os dados",
 		"errorDefault": "Ocorreu um erro inesperado, tente novamente",
 		"txtCalculate": "Calcule o frete e prazo",
@@ -105,10 +106,10 @@
 		"frmReference": "Referência",
 		"frmReceiveName": "Quem irá receber o pedido?",
 		"frmStreet": "Rua / Avenida",
-		"frmNeighborhood": "Rua / Avenida",
+		"frmNeighborhood": "Bairro",
 		"frmCity": "Cidade",
 		"frmState": "Estado",
-		"labelButton": "Continuar",
+		"labelButton": "Salvar endereço",
 		"ok": "OK",
 		"loading": "Aguarde...",
 		"errorPostalCode": "Informe o CEP",
@@ -125,14 +126,14 @@
 	},
 	"deliveryData": {
 		"txtWithdrawal": "RETIRADA",
-		"txtDelivery": "ENTREGA",
+		"txtDelivery": "FORMA DE ENTREGA",
 		"txtNoNumber": "sem número",
 		"txtAlert": "Suas informações de endereço estão incompletas. Por favor clique aqui para atualizá-las.",
 		"storeAddress": "Endereço da Loja",
 		"deliveryAddress": "Endereço de Entrega"
 	},
 	"selectedPaymentData": {
-		"txtPayment": "PAGAMENTO",
+		"txtPayment": "FORMA DE PAGAMENTO",
 		"txtFillCard": "Preencha os dados do cartão",
 		"cardType": "CARTÃO DE CRÉDITO",
 		"cardNumber": "Número do cartão",
@@ -309,8 +310,8 @@
 		"package": "Pacote"
 	},
 	"shippingMethod": {
-		"title": "Como você prefere receber seu produto?",
-		"sendToAddress": "Enviar para o meu endereço",
+		"title": "MEUS ENDEREÇOS",
+		"sendToAddress": "Endereço de entrega",
 		"changeDeliveryAddress": "Trocar endereço de entrega",
 		"pickupOtherStore": "Retirar em outra loja"
 	},

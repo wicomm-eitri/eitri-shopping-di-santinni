@@ -1,16 +1,26 @@
 import { useTranslation } from 'eitri-i18n'
-import { Badge, Text, View } from 'eitri-luminus'
 import { useLocalShoppingCart } from '../../../providers/LocalCart'
-import { navigate } from '../../../services/navigationService'
 import Pix from '../../Icons/MethodIcons/Pix'
 import GroupsWrapper from './GroupsWrapper'
 
 export default function InstantPayment(props) {
 	const { cart } = useLocalShoppingCart()
-	const { systemGroup, onSelectPaymentMethod } = props
+	const { systemGroup, onSelectPaymentMethod, selectedPayment } = props
 	const { t } = useTranslation()
 
 	const VTEX_INSTANT_PAYMENT = '125'
+
+	const isChecked = (() => {
+		if (selectedPayment) {
+			const candidates = [VTEX_INSTANT_PAYMENT]
+
+			return Array.isArray(selectedPayment)
+				? selectedPayment.some(p => candidates.includes(p.paymentSystem))
+				: candidates.includes(selectedPayment.paymentSystem)
+		}
+
+		return systemGroup.isCurrentPaymentSystemGroup
+	})()
 
 	const onSelectThisGroup = async () => {
 		await onSelectPaymentMethod([
@@ -23,8 +33,6 @@ export default function InstantPayment(props) {
 				hasDefaultBillingAddress: true
 			}
 		])
-		//trackAddPaymentInfo(cart, 'Pix')
-		navigate('CheckoutReview')
 	}
 
 	const pixBenefits = cart?.ratesAndBenefitsData?.rateAndBenefitsIdentifiers?.find(b => b.name === '3% OFF Pix')
@@ -32,10 +40,9 @@ export default function InstantPayment(props) {
 	return (
 		<GroupsWrapper
 			title={t('paymentMethods.instantPayment.title', 'Pix')}
-			subtitle={t('paymentMethods.instantPayment.subtitle', 'Pagamento instantâneo')}
 			icon={<Pix />}
 			onPress={onSelectThisGroup}
-			isChecked={systemGroup.isCurrentPaymentSystemGroup}>
+			selected={isChecked}>
 			<View onClick={onSelectThisGroup}>
 				{pixBenefits && (
 					<View className='flex flex-row items-center gap-2 mb-3'>
@@ -44,14 +51,14 @@ export default function InstantPayment(props) {
 						</Badge>
 					</View>
 				)}
-				<View className='mt-2 bg-neutral-100 p-4 rounded'>
+				{/* <View className='mt-2 bg-neutral-100 p-4 rounded'>
 					<Text className='text-sm text-neutral-500'>
 						{t(
 							'paymentMethods.instantPayment.info',
 							'O código Pix será exibido na próxima etapa, após a revisão do seu pedido.'
 						)}
 					</Text>
-				</View>
+				</View> */}
 			</View>
 		</GroupsWrapper>
 	)

@@ -1,48 +1,63 @@
 import { useTranslation } from 'eitri-i18n'
-import { Text, View } from 'eitri-luminus'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { formatAmountInCents } from '../../utils/utils'
 
-export default function CartSummary() {
-	const { t } = useTranslation()
+export default function CartSummary(props) {
 	const { cart } = useLocalShoppingCart()
 
-	// Calculate final total
-	const finalTotal = cart?.totalizers?.reduce((acc, totalizer) => acc + totalizer.value, 0)
+	const [itemsValue, setItemsValue] = useState(0)
+	const [discounts, setDiscounts] = useState(0)
+	const [shipping, setShipping] = useState(0)
+	const [total, setTotal] = useState(0)
+
+	const { t } = useTranslation()
+
+	useEffect(() => {
+		if (!cart) return
+
+		const items = getTotalizerById(cart.totalizers, 'Items')
+		const discounts = getTotalizerById(cart.totalizers, 'Discounts')
+		const shipping = getTotalizerById(cart.totalizers, 'Shipping')
+
+		setItemsValue(items?.value || 0)
+		setDiscounts(discounts?.value || 0)
+		setShipping(shipping?.value || 0)
+
+		const total = (items?.value ?? 0) + (discounts?.value ?? 0) + (shipping?.value ?? 0)
+
+		setTotal(total)
+	}, [cart])
+
+	const getTotalizerById = (totalizers, id) => totalizers.find(item => item.id === id)
+
+	if (total === 0) return null
 
 	return (
-		<View className='bg-white rounded shadow-sm border border-gray-300 p-4 w-full flex flex-col'>
-			<View className='flex flex-row justify-start items-center mb-2 gap-2 flex-wrap'>
-				{cart?.items?.map(item => (
-					<View
-						key={item.id}
-						className='w-12 h-12 p-1 rounded-full overflow-hidden border'>
-						<Image
-							src={item.imageUrl}
-							width='100%'
-							height='100%'
-							className='object-cover'
-						/>
-					</View>
-				))}
-			</View>
+		<View className='flex flex-col justify-center w-full px-4'>
+			{itemsValue > 0 && (
+				<View className='flex justify-between py-2'>
+					<Text className='font-semibold'>{t('cartSummary.txtSubtotal', 'Subtotal')}</Text>
+					<Text className='font-semibold'>{formatAmountInCents(itemsValue)}</Text>
+				</View>
+			)}
 
-			{/* Totalizers breakdown */}
-			<View className='flex flex-col gap-1 pb-2'>
-				{cart?.totalizers?.map(totalizer => (
-					<View
-						key={totalizer.id}
-						className='flex flex-row justify-between items-center'>
-						<Text className='text-neutral-600 text-sm'>{totalizer.name}</Text>
-						<Text className='text-neutral-700 font-medium'>{formatAmountInCents(totalizer.value)}</Text>
-					</View>
-				))}
-			</View>
+			{shipping > 0 && (
+				<View className='flex justify-between py-2'>
+					<Text className='text-sm'>{t('cartSummary.txtDelivery', 'Entrega')}</Text>
+					<Text className='text-sm'>{formatAmountInCents(shipping)}</Text>
+				</View>
+			)}
 
-			{/* Final total */}
-			<View className='flex flex-row w-full justify-between items-center pt-3 border-t border-neutral-300'>
-				<Text className='text-neutral-700 font-bold'>{t('finishCart.txtTotal', 'Total')}</Text>
-				<Text className='font-bold text-primary-700'>{formatAmountInCents(finalTotal)}</Text>
+			{discounts < 0 && (
+				<View className='flex justify-between py-2'>
+					<Text className='text-sm'>{t('cartSummary.txtDiscount', 'Desconto')}</Text>
+					<Text className='text-sm text-red-600'>{formatAmountInCents(discounts)}</Text>
+				</View>
+			)}
+
+			<View className='flex justify-between py-3 border-t border-gray-300 mt-3'>
+				<Text className='font-bold text-lg'>{t('cartSummary.txtTotal', 'TOTAL')}</Text>
+				<Text className='font-bold text-lg text-red-600'>{formatAmountInCents(total)}</Text>
 			</View>
 		</View>
 	)

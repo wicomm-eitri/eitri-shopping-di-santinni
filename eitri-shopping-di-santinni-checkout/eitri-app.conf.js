@@ -5,8 +5,8 @@ module.exports = {
 	'eitri-luminus': '2.22.6',
 	'eitri-bifrost': '5.1.0',
 	'eitri-commons': '2.2.1',
-	'version': '0.1.1',
-	'versionMessage': 'Atualizei/refatorei componentes',
+	'version': '0.1.11',
+	'versionMessage': 'fix de mudanças de itens no carrinho',
 	'public-key': 'd0437867-ce83-45da-ada6-8253035b5d20',
 	'applicationId': 'f0301a60-5a72-487b-8855-a4fbd21d1f39',
 	'id': '8843ccd9-f15d-4904-822d-fba5eebd93d3',
@@ -15,15 +15,16 @@ module.exports = {
 	'eitri-app-dependencies': {
 		'eitri-shopping-di-santinni-shared': {
 			isEitriAppShared: true,
-			version: '0.1.1'
+			version: '0.1.11'
 		},
 		'eitri-shopping-vtex-shared': {
 			isEitriAppShared: true,
-			version: '1.9.0'
+			version: '1.12.6'
 		},
 		'i18n': {
 			version: '14.1.2'
-		}
+		},
+		'recaptcha': { providers: ['google'], version: '2' }
 	},
 	'type': 'module',
 	'check-js': false

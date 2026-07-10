@@ -12,7 +12,15 @@ export const PAGES = {
 	ORDER_LIST: '/OrderList',
 	ORDER_DETAILS: '/OrderDetails',
 	WISH_LIST: '/WishList',
-	POINTS: '/Points'
+	POINTS: '/Points',
+	SUPPORT: '/Support',
+	SETTINGS: '/Settings',
+	EXCHANGE_POLICY: '/ExchangePolicy',
+	ABOUT_US: '/AboutUs',
+	BECOMEAFRANCHISEE: '/BecomeAFranchisee',
+	NOSSASLOJAS: '/NossasLojas',
+	FREQUENTLY_ASKED_QUESTIONS: '/FrequentlyAskedQuestions',
+	SOCIAL_NETWORKS: '/SocialNetworks'
 }
 
 export const openProduct = async product => {

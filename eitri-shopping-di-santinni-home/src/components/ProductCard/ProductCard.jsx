@@ -177,14 +177,22 @@ const getFormattedListPrice = seller => {
 }
 
 // ========== Componente Principal ==========
-export default function ProductCard({ product, className, actionButtonCustomColor }) {
+export default function ProductCard({ product, className, actionButtonCustomColor, openModal }) {
 	const { t } = useTranslation()
 	const { addItem, removeItem, updateItemQuantity, cart } = useLocalShoppingCart()
 
 	const [loadingCartOp, setLoadingCartOp] = useState(false)
 
 	// Extrai dados do produto
-	const item = useMemo(() => product?.items?.[0], [product])
+	const item = useMemo(() => {
+		if (!product?.items?.length) return null
+
+		const availableItem = product.items.find(i =>
+			i.sellers?.some(seller => seller.commertialOffer?.AvailableQuantity > 0)
+		)
+
+		return availableItem || product.items[0]
+	}, [product])
 
 	const sellerDefault = useMemo(() => {
 		if (!item?.sellers?.length) return null
@@ -254,7 +262,7 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 			if (itemInCart) {
 				handleQuantityChange(itemQuantity + 1)
 			} else if (item) {
-				const cartUpdate = await addItem({ ...item, quantity: itemQuantity })
+				await addItem({ ...item, quantity: itemQuantity })
 
 				// if (cartUpdate?.items?.length >= 0) {
 				// 	const totalQuantity = cartUpdate?.items?.reduce((acc, item) => acc + item.quantity, 0) ?? 0
@@ -350,8 +358,12 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 			return
 		}
 
+		if (typeof openModal === 'function') {
+			openModal(product)
+		}
+
 		handleAddToCart()
-	}, [loadingCartOp, itemInCart, product, handleAddToCart])
+	}, [loadingCartOp, itemInCart, product, handleAddToCart, openModal])
 
 	// ========== Renderização ==========
 

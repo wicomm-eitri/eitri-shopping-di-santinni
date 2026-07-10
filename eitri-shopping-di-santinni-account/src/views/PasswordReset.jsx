@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'eitri-i18n'
 import {
 	Loading,
@@ -56,15 +57,18 @@ export default function PasswordReset(props) {
 
 			<HeaderContentWrapper className=''>
 				<HeaderReturn />
-				<HeaderText text={t('passwordReset.headerText', 'Senha')} />
+				<HeaderText text={t('passwordReset.headerText', 'Esqueceu a senha?')} />
 			</HeaderContentWrapper>
 
 			<View className='p-4 flex flex-col h-full'>
 				<View>
-					<View className='flex flex flex-col gap-2 mb-4'>
-						<Text className='w-full font-bold text-xl'>
-							{t('passwordReset.emailRecoveryTitle', 'Digite seu e-mail para recuperar a senha')}
-						</Text>
+					<CustomInput
+						inputMode='email'
+						placeholder={t('passwordReset.setEmail', 'Digite seu e-mail')}
+						value={username}
+						onChange={e => setUsername(e.target.value)}
+					/>
+					<View className='flex flex-col gap-2 mb-4'>
 						<Text className='text-sm text-gray-600'>
 							{t(
 								'passwordReset.messageRecovery',
@@ -72,18 +76,13 @@ export default function PasswordReset(props) {
 							)}
 						</Text>
 					</View>
-
-					<CustomInput
-						inputMode='email'
-						placeholder={t('passwordReset.setEmail', 'Digite seu e-mail')}
-						value={username}
-						onChange={e => setUsername(e.target.value)}
-					/>
 				</View>
 
 				<View className='mt-4'>
 					<CustomButton
-						label={t('passwordReset.sendButton', 'Enviar código')}
+						className='uppercase !h-11 rounded-full'
+						textClassName='font-semibold'
+						label={t('passwordReset.sendButton', 'ENVIAR CÓDIGO')}
 						onPress={goToPasswordResetCode}
 						disabled={!username || loading}
 					/>

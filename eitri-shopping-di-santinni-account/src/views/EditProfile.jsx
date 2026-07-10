@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'eitri-i18n'
 import {
 	CustomButton,
@@ -38,15 +39,12 @@ export default function EditProfile(props) {
 		addonUserTappedActiveTabListener()
 	}, [])
 
-	const handleInputChange = (target, e) => {
-		const value = e.target.value
-
+	const handleInputChange = (target, value) => {
 		setUser({
 			...user,
 			[target]: value
 		})
 
-		// Limpar erro do campo quando o usuário começar a digitar
 		if (errors[target]) {
 			setErrors({
 				...errors,
@@ -58,17 +56,26 @@ export default function EditProfile(props) {
 	const validateFields = () => {
 		const newErrors = {}
 
-		// Validar nome
 		if (!user.firstName || user.firstName.trim() === '') {
 			newErrors.firstName = t('editProfile.errors.firstNameRequired', 'Nome é obrigatório')
 		}
 
-		// Validar sobrenome
-		if (!user.lastName || user.lastName.trim() === '') {
-			newErrors.lastName = t('editProfile.errors.lastNameRequired', 'Sobrenome é obrigatório')
+		if (!user.document || user.document.trim() === '') {
+			newErrors.document = t('editProfile.errors.documentRequired', 'CPF é obrigatório')
 		}
 
-		// Validar data de nascimento
+		if (!user.homePhone || user.homePhone.trim() === '') {
+			newErrors.homePhone = t('editProfile.errors.phoneRequired', 'Celular é obrigatório')
+		}
+
+		if (!user.email || user.email.trim() === '') {
+			newErrors.email = t('editProfile.errors.emailRequired', 'E-mail é obrigatório')
+		}
+
+		if (!user.gender) {
+			newErrors.gender = t('editProfile.errors.genderRequired', 'Gênero é obrigatório')
+		}
+
 		if (!user.birthDate || user.birthDate.trim() === '') {
 			newErrors.birthDate = t('editProfile.errors.birthDateRequired', 'Data de nascimento é obrigatória')
 		} else {
@@ -82,21 +89,6 @@ export default function EditProfile(props) {
 			}
 		}
 
-		// Validar telefone
-		if (!user.homePhone || user.homePhone.trim() === '') {
-			newErrors.homePhone = t('editProfile.errors.phoneRequired', 'Telefone é obrigatório')
-		}
-
-		// Validar gênero
-		if (!user.gender) {
-			newErrors.gender = t('editProfile.errors.genderRequired', 'Gênero é obrigatório')
-		}
-
-		// Validar CPF
-		if (!user.document || user.document.trim() === '') {
-			newErrors.document = t('editProfile.errors.documentRequired', 'CPF é obrigatório')
-		}
-
 		setErrors(newErrors)
 
 		return Object.keys(newErrors).length === 0
@@ -104,7 +96,6 @@ export default function EditProfile(props) {
 
 	const handleSave = async () => {
 		try {
-			// Validar campos antes de salvar
 			if (!validateFields()) {
 				return
 			}
@@ -140,21 +131,24 @@ export default function EditProfile(props) {
 	}
 
 	function convertToISO(dateStr) {
+		if (!dateStr) return { isValid: false }
+
 		const dt = dateStr?.replaceAll('/', '')
+
+		if (dt.length < 8) return { isValid: false }
+
 		const day = parseInt(dt.substring(0, 2), 10)
 		const month = parseInt(dt.substring(2, 4), 10)
 		const year = parseInt(dt.substring(4, 8), 10)
 
 		const date = new Date(year, month - 1, day)
 
-		// Valid date
 		let isValid = date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day
 
 		if (!isValid) {
 			return { isValid }
 		}
 
-		// More than 18 years
 		const today = new Date()
 
 		isValid =
@@ -169,17 +163,16 @@ export default function EditProfile(props) {
 		return { isValid, isoDate: date.toISOString() }
 	}
 
-	// Verificar se todos os campos obrigatórios estão preenchidos
 	const isFormValid = () => {
 		return (
 			user.firstName &&
 			user.firstName.trim() !== '' &&
-			user.lastName &&
-			user.lastName.trim() !== '' &&
 			user.birthDate &&
 			user.birthDate.trim() !== '' &&
 			user.homePhone &&
 			user.homePhone.trim() !== '' &&
+			user.email &&
+			user.email.trim() !== '' &&
 			user.gender &&
 			user.document &&
 			user.document.trim() !== ''
@@ -188,11 +181,11 @@ export default function EditProfile(props) {
 
 	return (
 		<Page
-			title={'Editar perfil'}
+			title={'Minha conta'}
 			statusBarTextColor='white'>
 			<HeaderContentWrapper>
 				<HeaderReturn />
-				<HeaderText text={t('editProfile.title', 'Editar perfil')} />
+				<HeaderText text={t('editProfile.headerTitle', 'Minha conta')} />
 			</HeaderContentWrapper>
 
 			<Loading
@@ -200,105 +193,130 @@ export default function EditProfile(props) {
 				isLoading={isLoading}
 			/>
 
-			<View className='p-4 flex flex-col gap-4'>
-				<View>
-					<Text className='w-full font-bold text-xs'>{t('editProfile.lbName', 'Nome')} *</Text>
-					<View className='mt-1 flex gap-1.5'>
-						<CustomInput
-							backgroundColor='background-color'
-							placeholder={t('editProfile.lbName', 'Nome')}
-							value={user?.firstName || ''}
-							onChange={value => handleInputChange('firstName', value)}
-							error={errors.firstName}
-						/>
-						{errors.firstName && <Text className='text-red-500 text-xs mt-1'>{errors.firstName}</Text>}
-						<CustomInput
-							backgroundColor='background-color'
-							placeholder={t('editProfile.lbLastName', 'Sobrenome')}
-							value={user?.lastName || ''}
-							onChange={value => handleInputChange('lastName', value)}
-							error={errors.lastName}
-						/>
-						{errors.lastName && <Text className='text-red-500 text-xs mt-1'>{errors.lastName}</Text>}
-					</View>
-				</View>
+			<View className='p-4 flex flex-col gap-5 overflow-y-auto max-h-[calc(100vh-250px)]'>
+				<Text className='font-bold text-base text-[#C8102E]'>
+					{t('editProfile.subtitle', 'Editar informações')}
+				</Text>
 
-				<View>
-					<Text className='w-full mb-1 font-bold text-xs'>
-						{t('editProfile.lbBirthdate', 'Data de nascimento')} *
+				{/* 1. Nome completo */}
+				<View className='flex flex-col gap-1'>
+					<Text className='font-medium text-sm text-neutral-800'>
+						{t('editProfile.lbName', 'Nome completo')}
 					</Text>
 					<CustomInput
-						backgroundColor='background-color'
-						placeholder={t('editProfile.placeholders.birthDate', 'DD/MM/AAAA')}
+						className='!border-0 !border-b !border-gray-400 !rounded-none !px-0 !bg-transparent !focus:border-neutral-800'
+						backgroundColor='transparent'
+						placeholder='Giovanna'
+						value={user?.firstName || ''}
+						onChange={e => handleInputChange('firstName', e.target ? e.target.value : e)}
+						error={errors.firstName}
+					/>
+					{errors.firstName && <Text className='text-red-500 text-xs mt-0.5'>{errors.firstName}</Text>}
+				</View>
+
+				{/* 2. CPF */}
+				<View className='flex flex-col gap-1'>
+					<Text className='font-medium text-sm text-neutral-800'>{t('editProfile.lbCPF', 'CPF')}</Text>
+					<CustomInput
+						className='!border-0 !border-b !border-gray-400 !rounded-none !px-0 !bg-transparent !focus:border-neutral-800'
+						backgroundColor='transparent'
+						placeholder='123.456.789-10'
+						value={user?.document || ''}
+						inputMode='numeric'
+						variant='mask'
+						mask='999.999.999-99'
+						onChange={e => handleInputChange('document', e.target ? e.target.value : e)}
+						error={errors.document}
+					/>
+					{errors.document && <Text className='text-red-500 text-xs mt-0.5'>{errors.document}</Text>}
+				</View>
+
+				{/* 3. Celular */}
+				<View className='flex flex-col gap-1'>
+					<Text className='font-medium text-sm text-neutral-800'>{t('editProfile.lbPhone', 'Celular')}</Text>
+					<CustomInput
+						className='!border-0 !border-b !border-gray-400 !rounded-none !px-0 !bg-transparent !focus:border-neutral-800'
+						backgroundColor='transparent'
+						placeholder='(00) 00000-0000'
+						value={user?.homePhone?.replace('+55', '') || ''}
+						inputMode='numeric'
+						variant='mask'
+						mask='(99) 99999-9999'
+						onChange={e => handleInputChange('homePhone', e.target ? e.target.value : e)}
+						error={errors.homePhone}
+					/>
+					{errors.homePhone && <Text className='text-red-500 text-xs mt-0.5'>{errors.homePhone}</Text>}
+				</View>
+
+				{/* 4. E-mail */}
+				<View className='flex flex-col gap-1'>
+					<Text className='font-medium text-sm text-neutral-800'>{t('editProfile.lbEmail', 'E-mail')}</Text>
+					<CustomInput
+						className='!border-0 !border-b !border-gray-400 !rounded-none !px-0 !bg-transparent !focus:border-neutral-800'
+						backgroundColor='transparent'
+						placeholder='giovanafiorillo@mail.com.br'
+						inputMode='email'
+						value={user?.email || ''}
+						onChange={e => handleInputChange('email', e.target ? e.target.value : e)}
+						error={errors.email}
+					/>
+					{errors.email && <Text className='text-red-500 text-xs mt-0.5'>{errors.email}</Text>}
+				</View>
+
+				{/* 5. Gênero (Ajustado para usar input com linha inferior também) */}
+				<View className='flex flex-col gap-4'>
+					<Text className='font-medium text-sm text-neutral-800'>{t('editProfile.lbGender', 'Gênero')}</Text>
+					{/* Linha simulando o input para manter consistência visual caso prefira usar texto/select ou manter as opções de rádio em uma linha inferior */}
+					<View className='flex flex-row gap-6 py-2 border-b border-gray-400'>
+						<View
+							className='flex flex-row items-center gap-2'
+							sendFocusToInput>
+							<Radio
+								value='female'
+								checked={user?.gender === 'female'}
+								onChange={() => handleInputChange('gender', 'female')}
+							/>
+							<Text className='text-sm text-neutral-700'>
+								{t('editProfile.lbGenderFemale', 'Feminino')}
+							</Text>
+						</View>
+						<View
+							className='flex flex-row items-center gap-2'
+							sendFocusToInput>
+							<Radio
+								value='male'
+								checked={user?.gender === 'male'}
+								onChange={() => handleInputChange('gender', 'male')}
+							/>
+							<Text className='text-sm text-neutral-700'>
+								{t('editProfile.lbGenderMale', 'Masculino')}
+							</Text>
+						</View>
+					</View>
+					{errors.gender && <Text className='text-red-500 text-xs mt-0.5'>{errors.gender}</Text>}
+				</View>
+
+				{/* 6. Data de nascimento */}
+				<View className='flex flex-col gap-1'>
+					<Text className='font-medium text-sm text-neutral-800'>
+						{t('editProfile.lbBirthdate', 'Data de nascimento')}
+					</Text>
+					<CustomInput
+						className='!border-0 !border-b !border-gray-400 !rounded-none !px-0 !bg-transparent !focus:border-neutral-800'
+						backgroundColor='transparent'
+						placeholder='00/00/0000'
 						variant='mask'
 						mask='99/99/9999'
 						inputMode='numeric'
 						value={user?.birthDate || ''}
-						onChange={value => handleInputChange('birthDate', value)}
+						onChange={e => handleInputChange('birthDate', e.target ? e.target.value : e)}
 						error={errors.birthDate}
 					/>
-					{errors.birthDate && <Text className='text-red-500 text-xs mt-1'>{errors.birthDate}</Text>}
-				</View>
-
-				<View>
-					<Text className='w-full mb-1 font-bold text-xs'>{t('editProfile.lbPhone', 'Telefone')} *</Text>
-					<CustomInput
-						backgroundColor='background-color'
-						placeholder={t('editProfile.placeholders.phone', '(99) 99999-9999')}
-						value={user?.homePhone?.replace('+55', '') || ''}
-						inputMode='numeric'
-						variant='mask'
-						onChange={value => handleInputChange('homePhone', value)}
-						mask='(99) 99999-9999'
-						error={errors.homePhone}
-					/>
-					{errors.homePhone && <Text className='text-red-500 text-xs mt-1'>{errors.homePhone}</Text>}
-				</View>
-
-				<View>
-					<Text className='w-full mb-1 font-bold text-xs'>{t('editProfile.lbGender', 'Sexo')} *</Text>
-					<View className='flex gap-4'>
-						<View
-							className='flex flex-row items-center gap-1'
-							sendFocusToInput>
-							<Radio
-								value={'male'}
-								checked={user?.gender === 'male'}
-								onChange={value => handleInputChange('gender', value)}
-							/>
-							<Text className='w-full ml-1'>{t('editProfile.lbGenderMale', 'Masculino')}</Text>
-						</View>
-						<View
-							className='flex flex-row items-center gap-1'
-							sendFocusToInput>
-							<Radio
-								value={'female'}
-								checked={user?.gender === 'female'}
-								onChange={value => handleInputChange('gender', value)}
-							/>
-							<Text className='w-full ml-1'>{t('editProfile.lbGenderFemale', 'Feminino')}</Text>
-						</View>
-					</View>
-					{errors.gender && <Text className='text-red-500 text-xs mt-1'>{errors.gender}</Text>}
-				</View>
-
-				<View>
-					<Text className='w-full mb-1 font-bold text-xs'>{t('editProfile.lbCPF', 'CPF')} *</Text>
-					<CustomInput
-						backgroundColor='background-color'
-						placeholder={t('editProfile.placeholders.cpf', '000.000.000-00')}
-						value={user.document || ''}
-						inputMode='numeric'
-						variant='mask'
-						onChange={value => handleInputChange('document', value)}
-						mask='999.999.999-99'
-						error={errors.document}
-					/>
-					{errors.document && <Text className='text-red-500 text-xs mt-1'>{errors.document}</Text>}
+					{errors.birthDate && <Text className='text-red-500 text-xs mt-0.5'>{errors.birthDate}</Text>}
 				</View>
 
 				{showNotification && (
-					<View className='bg-green-500 text-white px-4 py-3 rounded shadow-lg flex flex-row items-center justify-between'>
+					<View className='bg-green-500 text-white px-4 py-3 rounded shadow-lg flex flex-row items-center justify-between mt-2'>
 						<View className='flex flex-row items-center gap-2'>
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
@@ -321,12 +339,11 @@ export default function EditProfile(props) {
 				)}
 			</View>
 
-			{/* Botão fixo na parte inferior */}
-			<View className='fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-300'>
+			<View className='fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200'>
 				<View className='p-4'>
 					<CustomButton
 						width='100%'
-						label={t('editProfile.lbSave', 'Salvar')}
+						label={t('editProfile.lbSave', 'SALVAR')}
 						onPress={handleSave}
 						disabled={!isFormValid() || isLoading}
 					/>
@@ -334,7 +351,7 @@ export default function EditProfile(props) {
 				<BottomInset />
 			</View>
 
-			<BottomInset offSet={77} />
+			<BottomInset offSet={85} />
 		</Page>
 	)
 }

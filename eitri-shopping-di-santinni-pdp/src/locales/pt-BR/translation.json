@@ -18,7 +18,8 @@
 		"labelZipCode": "00000-000",
 		"labelCalculate": "Calcular",
 		"txtCalculate": "Consulte o frete",
-		"txtDontKnowZipCode": "Não sei meu CEP"
+		"txtDontKnowZipCode": "Não sei meu CEP",
+		"errorInvalidZipCode": "CEP inválido. Verifique e tente novamente."
 	},
 	"productCard": {
 		"actionBuy": "Comprar",
@@ -34,7 +35,7 @@
 		"txtWithoutInterest": "sem juros"
 	},
 	"modalComponent": {
-		"txtProductAdded": "Produto adicionado",
+		"txtProductAdded": "Produto adicionado ao carrinho",
 		"txtQuantity": "Quantidade:",
 		"txtGoToCart": "Ir para carrinho",
 		"txtAddToCart": "Adicionar ao carrinho",

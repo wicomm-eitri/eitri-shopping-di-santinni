@@ -1,35 +1,49 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
+import { Vtex } from 'eitri-shopping-vtex-shared'
 import share from '../../assets/images/share-red.svg'
-import wishlist from '../../assets/images/wishlist-heart.svg'
+import star from '../../assets/images/star.svg'
+import starFilled from '../../assets/images/starFilled.svg'
+import { useLocalShoppingCart } from '../../providers/LocalCart'
+import { addToWishlist, productOnWishlist, removeItemFromWishlist } from '../../services/customerService'
 import { formatAmount, formatPrice } from '../../utils/utils'
+import WishlistIcon from '../WishlistIcon/WishlistIcon'
 
 const Star = ({ filled }) => (
 	<View>
-		<svg
-			xmlns='http://www.w3.org/2000/svg'
-			width='13'
-			height='12'
-			viewBox='0 0 13 12'
-			fill='none'>
-			<path
-				d='M6.24563 9.8425L2.38812 11.8706L3.125 7.575L0 4.53312L4.3125 3.90812L6.24125 0L8.17 3.90812L12.4825 4.53312L9.3575 7.575L10.0944 11.8706L6.24563 9.8425Z'
-				fill={filled ? '#C8102E' : '#FFF'}
-				stroke='#C8102E'
-				strokeWidth='0.5'
-			/>
-		</svg>
+		<Image
+			src={filled ? starFilled : star}
+			className='w-4 h-4'
+		/>
 	</View>
 )
 
 export default function MainDescription(props) {
-	const { product, currentSku, locale, currency } = props
-
-	console.log('product: ', product)
-	console.log('currentSku: ', currentSku)
+	const { product, currentSku, locale, currency, initialWishlistInfo } = props
 
 	const { t } = useTranslation()
+	const { cart } = useLocalShoppingCart()
+
 	const [averageRating, setAverageRating] = useState(3)
+	const [loadingWishlist, setLoadingWishlist] = useState(!initialWishlistInfo)
+	const [itemWishlistId, setItemWishlistId] = useState(initialWishlistInfo?.listId || -1)
+	const [itemOnWishlist, setItemOnWishlist] = useState(initialWishlistInfo?.inList || false)
+
+	useEffect(() => {
+		if (initialWishlistInfo) {
+			setItemOnWishlist(initialWishlistInfo.inList)
+			setItemWishlistId(initialWishlistInfo.listId || -1)
+			setLoadingWishlist(false)
+		} else if (product?.productId) {
+			checkIfIsFavorite(product.productId)
+		}
+
+		Eitri.navigation.addOnResumeListener(() => {
+			if (product?.productId) {
+				checkIfIsFavorite(product.productId)
+			}
+		})
+	}, [product?.productId, initialWishlistInfo])
 
 	const count = useRef(5)
 
@@ -90,11 +104,51 @@ export default function MainDescription(props) {
 	const mainSeller = currentSku?.sellers?.find(seller => seller.sellerDefault) || currentSku?.sellers?.[0]
 
 	const handleShare = () => {
-		console.log('click on handleShare')
+		// TODO Anthonius: Vtex.configs.domain não funciona, pegar domain de outra forma
+		const url = `${Vtex?.configs?.domain}/${product?.linkText}/p?utm_source=eitri-shop-source`
+
+		Eitri.share.link({
+			url: url
+		})
 	}
 
-	const handleWishlist = () => {
-		console.log('click on handleWishlist')
+	const checkIfIsFavorite = async (productId, isRetry = false) => {
+		setLoadingWishlist(true)
+		const { inList, listId } = await productOnWishlist(productId)
+
+		if (inList) {
+			setItemOnWishlist(true)
+			setItemWishlistId(listId)
+		} else {
+			if (!isRetry) {
+				setTimeout(() => checkIfIsFavorite(productId, true), 1000)
+			} else {
+				setItemOnWishlist(false)
+				setItemWishlistId(-1)
+			}
+		}
+
+		setLoadingWishlist(false)
+	}
+
+	const handleWishlist = async () => {
+		if (!itemOnWishlist) {
+			try {
+				setItemOnWishlist(true)
+				await addToWishlist(product?.productId, product?.productName, product?.items[0]?.itemId)
+			} catch (e) {
+				console.error('handleSaveFavorite: Error', e)
+				setItemOnWishlist(false)
+			}
+		} else {
+			try {
+				setItemOnWishlist(false)
+				await removeItemFromWishlist(product?.productId)
+			} catch (e) {
+				console.error('handleSaveFavorite: Error', e)
+				setItemOnWishlist(true)
+			}
+		}
 	}
 
 	const Price = () => (
@@ -120,7 +174,8 @@ export default function MainDescription(props) {
 			</Text>
 			<View className='flex justify-between'>
 				<View className='flex gap-2 items-center'>
-					<View className='flex items-center gap-0.5'>
+					{/* avaliações ocultadas por enquanto */}
+					{/* <View className='flex items-center gap-0.5'>
 						{[1, 2, 3, 4, 5].map(star => (
 							<Star
 								key={star}
@@ -128,14 +183,14 @@ export default function MainDescription(props) {
 							/>
 						))}
 					</View>
-					<Text className='text-xs underline tracking-[0.24px] text-red-700'>123</Text>
+					<Text className='text-xs underline tracking-[0.24px] text-red-700'>123</Text> */}
 				</View>
 				<View className='flex gap-2 items-center'>
 					<View onClick={handleShare}>
 						<Image src={share} />
 					</View>
 					<View onClick={handleWishlist}>
-						<Image src={wishlist} />
+						<WishlistIcon filled={itemOnWishlist} />
 					</View>
 				</View>
 			</View>
@@ -144,6 +199,7 @@ export default function MainDescription(props) {
 
 	return (
 		<View className='flex flex-col w-full gap-4'>
+			{/* TODO Anthonius: Verificar avaliações - como implementar */}
 			<ProductNameAndActions />
 			<Price />
 			{/* <View>

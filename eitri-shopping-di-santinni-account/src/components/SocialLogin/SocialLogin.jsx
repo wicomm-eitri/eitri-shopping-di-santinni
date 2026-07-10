@@ -14,7 +14,7 @@ export default function SocialLogin(props) {
 			await executor()
 			handleSocialLogin()
 		} catch (e) {
-			console.log(t('socialLogin.socialLoginError', 'Error on social login:'), e)
+			console.error(t('socialLogin.socialLoginError', 'Error on social login:'), e)
 		}
 	}
 
@@ -22,7 +22,7 @@ export default function SocialLogin(props) {
 		<View className='flex flex-col gap-3'>
 			{oAuthProviders?.some(p => p.providerName === 'Google') && (
 				<View
-					className='flex items-center justify-center gap-3 h-12 bg-white rounded border border-gray-300 p-2 cursor-pointer'
+					className='flex items-center justify-center gap-3 h-12 bg-white rounded border border-gray-300 p-2 '
 					onClick={() => onSocialLogin(loginWithGoogle)}>
 					<Image
 						src={iconGoogle}
@@ -37,7 +37,7 @@ export default function SocialLogin(props) {
 
 			{oAuthProviders?.some(p => p.providerName === 'Facebook') && (
 				<View
-					className='flex items-center justify-center gap-3 bg-[#3D5A98] rounded h-12 p-2 cursor-pointer'
+					className='flex items-center justify-center gap-3 bg-[#3D5A98] rounded h-12 p-2 '
 					onClick={() => onSocialLogin(loginWithFacebook)}>
 					<Image
 						src={iconFacebook}

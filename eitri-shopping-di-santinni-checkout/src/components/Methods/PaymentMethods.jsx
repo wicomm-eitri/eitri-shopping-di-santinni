@@ -6,7 +6,7 @@ import ImplementationInterface from '../PaymentsGroups/ImplementationInterface'
 export default function PaymentMethods(props) {
 	const { cart } = useLocalShoppingCart()
 
-	const { onSelectPaymentMethod } = props
+	const { onSelectPaymentMethod, selectedPayment } = props
 
 	const paymentSystemGroups = getPaymentSystem(cart)
 
@@ -34,6 +34,7 @@ export default function PaymentMethods(props) {
 						groupName={system.groupName}
 						systemGroup={system}
 						onSelectPaymentMethod={onSelectPaymentMethod}
+						selectedPayment={selectedPayment}
 					/>
 				)
 			})}

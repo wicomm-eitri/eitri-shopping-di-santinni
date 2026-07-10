@@ -3,7 +3,7 @@ export default function HeaderText(props) {
 
 	return (
 		<View>
-			<Text className={`text-header-content text-xl font-medium text-neutral-900 ${className}`}>{text}</Text>
+			<Text className={`text-header-content text-xl font-medium text-neutral-900 truncate ${className}`}>{text}</Text>
 		</View>
 	)
 }

@@ -1,15 +1,14 @@
 import { useTranslation } from 'eitri-i18n'
-import { Text, View } from 'eitri-luminus'
 import { CustomButton } from 'eitri-shopping-di-santinni-shared'
 
 export default function AddressTypeTabs({ selectedTab, onTabChange }) {
 	const { t } = useTranslation()
 
 	return (
-		<View className='flex flex-row bg-base-200 rounded-lg p-1 mb-4'>
+		<View className='flex  bg-base-200 rounded-lg p-1 mb-4'>
 			<CustomButton
 				label={
-					<View className='flex flex-row items-center justify-center gap-2'>
+					<View className='flex  items-center justify-center gap-2'>
 						<svg
 							width='16'
 							height='16'
@@ -52,7 +51,7 @@ export default function AddressTypeTabs({ selectedTab, onTabChange }) {
 			<View className='w-2' />
 			<CustomButton
 				label={
-					<View className='flex flex-row items-center justify-center gap-2'>
+					<View className='flex  items-center justify-center gap-2'>
 						<svg
 							width='16'
 							height='16'

@@ -6,7 +6,10 @@ import {
 	getCart,
 	removeClientData,
 	removeItemFromCart,
-	selectPaymentOption
+	selectPaymentOption,
+	addItemOffer,
+	removeItemOffer,
+	changeItemQuantity
 } from '../services/cartService'
 import setFreight, {
 	setLogisticInfo,
@@ -92,6 +95,18 @@ export default function CartProvider({ children }) {
 		return executeCartOperation(removeItemFromCart, index)
 	}
 
+	const _addItemOffer = async (itemIndex, offeringId) => {
+		return executeCartOperation(addItemOffer, itemIndex, offeringId)
+	}
+
+	const _removeItemOffer = async (itemIndex, offeringId) => {
+		return executeCartOperation(removeItemOffer, itemIndex, offeringId)
+	}
+
+	const changeQuantity = async (index, newQuantity) => {
+		return executeCartOperation(changeItemQuantity, index, newQuantity)
+	}
+
 	const setPaymentOption = async payload => {
 		return executeCartOperation(selectPaymentOption, payload)
 	}
@@ -112,6 +127,10 @@ export default function CartProvider({ children }) {
 				removeClientData: _removeClientData,
 				setLogisticInfo: _setLogisticInfo,
 				removeCartItem: _removeCartItem,
+				removeItem: _removeCartItem,
+				changeQuantity,
+				addItemOffer: _addItemOffer,
+				removeItemOffer: _removeItemOffer,
 				setPaymentOption: setPaymentOption,
 				generateNewCart: _generateNewCart,
 				addItem: _addItem,

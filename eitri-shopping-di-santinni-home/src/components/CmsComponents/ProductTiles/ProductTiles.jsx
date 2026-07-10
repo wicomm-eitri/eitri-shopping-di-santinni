@@ -30,6 +30,7 @@ export default function ProductTiles(props) {
 
 			if (cachedProducts[shelf.title]) {
 				setCurrentProducts(cachedProducts[shelf.title])
+
 				return
 			}
 
@@ -64,37 +65,36 @@ export default function ProductTiles(props) {
 		<View className='py-2'>
 			{data?.title && (
 				<View className='px-4 pb-3'>
-					<Text className='font-bold text-lg text-white uppercase'>{data?.title}</Text>
+					<Text className='font-bold text-lg  uppercase'>{data?.title}</Text>
 				</View>
 			)}
 
-			{/* O Wrapper px-4 garante que a linha branca tenha recuo lateral e fique alinhada com o título */}
 			<View className='px-4 mb-4'>
-				{/* Linha branca firme (border-b-[2px] border-white) que engloba as abas */}
-				<View className='overflow-x-auto flex gap-6 border-b-[2px] border-white hide-scrollbar'>
-					{shelves?.map(shelf => {
-						const isActive = shelf.title === currentShelf.title
-						return (
-							<View
-								key={shelf.title}
-								onClick={() => onChooseShelf(shelf)}
-								className={`pb-2 min-w-fit cursor-pointer transition-all ${
-									isActive ? 'border-b-[2px]' : ''
-								}`}
-								style={{
-									borderColor: isActive ? '#2C2C2C' : 'transparent',
-									// O segredo para a linha preta ficar NA FRENTE da linha branca
-									marginBottom: isActive ? -2 : 0
-								}}>
-								<Text
-									className={`text-sm tracking-wide uppercase ${
-										isActive ? 'text-white font-bold' : 'text-white opacity-90 font-medium'
-									}`}>
-									{shelf.title}
-								</Text>
-							</View>
-						)
-					})}
+				{/* Scroll wrapper separado da borda para não cortar a linha vermelha */}
+				<View className='overflow-x-auto hide-scrollbar'>
+					<View className='flex flex-row gap-6 border-b-[2px] border-white'>
+						{shelves?.map(shelf => {
+							const isActive = shelf.title === currentShelf.title
+
+							return (
+								<View
+									key={shelf.title}
+									onClick={() => onChooseShelf(shelf)}
+									className={`pb-2 min-w-fit cursor-pointer transition-all border-b-[2px]`}
+									style={{
+										borderColor: isActive ? '#DC2626' : 'transparent',
+										marginBottom: -2
+									}}>
+									<Text
+										className={`text-sm tracking-wide uppercase ${
+											isActive ? 'text-red-600 font-bold' : 'text-gray-700 font-medium'
+										}`}>
+										{shelf.title}
+									</Text>
+								</View>
+							)
+						})}
+					</View>
 				</View>
 			</View>
 

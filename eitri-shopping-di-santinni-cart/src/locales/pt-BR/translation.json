@@ -31,7 +31,7 @@
 	"emptyCart": {
 		"txtEmptyCart": "Sua sacola está vazio",
 		"txtMessageList": "Adicione produtos na sua sacola e eles serão listados aqui.",
-		"labelButton": "Comprar Agora"
+		"labelButton": "Ver mais produtos"
 	},
 	"freight": {
 		"errorCep": "Digite um CEP válido",

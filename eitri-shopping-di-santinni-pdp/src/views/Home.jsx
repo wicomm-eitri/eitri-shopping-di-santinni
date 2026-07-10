@@ -1,6 +1,5 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import { View } from 'eitri-luminus'
 import { BottomInset, Loading } from 'eitri-shopping-di-santinni-shared'
 import ActionButton from '../components/ActionButton/ActionButton'
 import Badges from '../components/Badges/Badges'
@@ -15,6 +14,7 @@ import SkuSelector from '../components/SkuSelector/SkuSelector'
 import { useLocalShoppingCart } from '../providers/LocalCart'
 import { startConfigure } from '../services/AppService'
 import { saveCartIdOnStorage } from '../services/cartService'
+import { productOnWishlist } from '../services/customerService'
 import { getProductById, getProductBySlug, markLastViewedProduct } from '../services/productService'
 import { crashLog, sendScreenView, sendViewItem } from '../services/trackingService'
 
@@ -26,6 +26,7 @@ export default function Home() {
 	const [isLoading, setIsLoading] = useState(null)
 	const [configLoaded, setConfigLoaded] = useState(false)
 	const [currentSku, setCurrentSku] = useState(null)
+	const [wishlistInfo, setWishlistInfo] = useState(null)
 
 	useEffect(() => {
 		window.scroll(0, 0)
@@ -44,12 +45,6 @@ export default function Home() {
 
 		let product = await startParams.product
 
-		if (product) {
-			setProduct(product)
-			setCurrentSku(findAvailableSKU(product))
-			setIsLoading(false)
-		}
-
 		await loadConfigs()
 
 		if (!product) {
@@ -59,6 +54,11 @@ export default function Home() {
 		if (product) {
 			setProduct(product)
 			setCurrentSku(findAvailableSKU(product))
+
+			const wlInfo = await productOnWishlist(product.productId)
+
+			setWishlistInfo(wlInfo)
+
 			setIsLoading(false)
 		}
 
@@ -133,31 +133,7 @@ export default function Home() {
 			textBold: '5%',
 			textRegular: 'Cartão DS'
 		})
-		badges.push({
-			textRegular: 'Retirada Expressa'
-		})
-		badges.push({
-			textBold: '5%',
-			textRegular: 'PIX'
-		})
-		badges.push({
-			textBold: '5%',
-			textRegular: 'Cartão DS'
-		})
-		badges.push({
-			textRegular: 'Retirada Expressa'
-		})
-		badges.push({
-			textBold: '5%',
-			textRegular: 'PIX'
-		})
-		badges.push({
-			textBold: '5%',
-			textRegular: 'Cartão DS'
-		})
-		badges.push({
-			textRegular: 'Retirada Expressa'
-		})
+
 		product?.productCluster?.map(cluster => {
 			if (cluster.name.includes('%')) {
 				const [textBold, textRegular] = cluster.name.split('%')
@@ -173,17 +149,20 @@ export default function Home() {
 			}
 		})
 
+		console.log('Badges:', badges)
+
 		return badges
 	}
 
 	return (
 		<Page
 			statusBarTextColor='black'
-			className='bg-[#F2F2F2]'
+			// className='bg-[#F2F2F2]'
 			title={t('home.pageTitle', 'Página de produto')}>
 			<Header
 				product={product}
 				configLoaded={configLoaded}
+				initialWishlistInfo={wishlistInfo}
 			/>
 
 			<Loading
@@ -193,7 +172,7 @@ export default function Home() {
 
 			{product && (
 				<View>
-					<View className='pb-4'>
+					<View className='bg-[#F2F2F2]'>
 						<ImageCarousel currentSku={currentSku} />
 
 						<View className='mt-8 px-4 flex flex-col gap-4'>
@@ -201,6 +180,7 @@ export default function Home() {
 								<MainDescription
 									product={product}
 									currentSku={currentSku}
+									initialWishlistInfo={wishlistInfo}
 								/>
 
 								<SkuSelector
@@ -210,6 +190,8 @@ export default function Home() {
 								/>
 								<ActionButton currentSku={currentSku} />
 							</View>
+							{/* TODO: Esconder scrollbar no iOS quando a Eitri lançar o CSS */}
+
 							<View className='flex items-center gap-2 mt-2 overflow-x-auto'>
 								{findBadges()?.map((badge, index) => (
 									<Badges
@@ -221,14 +203,17 @@ export default function Home() {
 							</View>
 
 							{configLoaded && <Freight currentSku={currentSku} />}
-							<RenderVideo videoUrl={'https://shoulder.com.br/cdn/ecommerce/lps/2024/lpgetbeemob.mp4'} />
+							<RenderVideo
+								isMocked
+								videoUrl={'https://shoulder.com.br/cdn/ecommerce/lps/2024/lpgetbeemob.mp4'}
+							/>
 							{/*<RichContent product={product} />*/}
 
 							<DescriptionComponent product={product} />
 
 							{/* <Reviews /> */}
 						</View>
-
+						{/* TODO: Anthonius - Alterar componente para deixar igual figma */}
 						{configLoaded && <RecommendationProducts product={product} />}
 					</View>
 

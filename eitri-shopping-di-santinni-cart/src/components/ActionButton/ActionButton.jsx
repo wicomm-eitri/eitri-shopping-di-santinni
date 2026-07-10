@@ -3,6 +3,7 @@ import { BottomInset } from 'eitri-shopping-di-santinni-shared'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { navigateToCheckout } from '../../services/navigationService'
 import { formatAmountInCents } from '../../utils/utils'
+import { requestLogin } from '../../services/customerService'
 
 export default function ActionButton(props) {
 	const { cart } = useLocalShoppingCart()
@@ -11,7 +12,14 @@ export default function ActionButton(props) {
 	const [total, setTotal] = useState(0)
 
 	const goToCheckout = async () => {
-		if (isValidToProceed()) navigateToCheckout(cart?.orderFormId)
+		if (isValidToProceed()) {
+			try {
+				await requestLogin()
+				navigateToCheckout(cart?.orderFormId)
+			} catch (e) {
+				// User cancelled login or error occurred
+			}
+		}
 	}
 
 	const isValidToProceed = () => {

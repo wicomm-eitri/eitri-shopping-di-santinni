@@ -29,6 +29,7 @@ export default function ProductTilesHighlights(props) {
 
 			if (cachedProducts[shelf.title]) {
 				setCurrentProducts(cachedProducts[shelf.title])
+
 				return
 			}
 
@@ -82,6 +83,7 @@ export default function ProductTilesHighlights(props) {
 				<View className='flex overflow-x-auto px-4 gap-6 relative z-10 hide-scrollbar'>
 					{shelves?.map(shelf => {
 						const isActive = shelf.title === currentShelf.title
+
 						return (
 							<View
 								key={shelf.title}
@@ -93,8 +95,8 @@ export default function ProductTilesHighlights(props) {
 									borderBottomColor: isActive ? '#2C2C2C' : 'transparent'
 								}}>
 								<Text
-									style={{ color: '#FAFAF8', opacity: isActive ? 1 : 0.85 }}
-									className={`uppercase whitespace-nowrap ${isActive ? 'font-bold' : 'font-medium'}`}>
+									style={{ opacity: isActive ? 1 : 0.85 }}
+									className={`uppercase whitespace-nowrap text-white ${isActive ? 'font-bold' : 'font-medium'}`}>
 									{shelf.title}
 								</Text>
 							</View>
@@ -120,6 +122,7 @@ export default function ProductTilesHighlights(props) {
 					isLoading={isLoadingProducts}
 					products={currentProducts}
 					params={paramsObject}
+					paddingLeft="16px"
 				/>
 			) : (
 				<View className='flex overflow-x-auto gap-2 px-4 py-2 mt-2'>

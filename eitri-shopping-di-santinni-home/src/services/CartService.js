@@ -4,7 +4,7 @@ export const getCart = async () => {
 	try {
 		return await Vtex.cart.getCurrentOrCreateCart()
 	} catch (error) {
-		console.log('Erro ao buscar carrinho', error)
+		console.error('Erro ao buscar carrinho', error)
 	}
 }
 
@@ -21,5 +21,13 @@ export const removeCartItem = async index => {
 		return await Vtex.cart.removeItem(index)
 	} catch (error) {
 		console.error('Erro ao remover item ao carrinho', error)
+	}
+}
+
+export const updateItemQuantity = async (index, newQuantity) => {
+	try {
+		return await Vtex.cart.changeItemQuantity(index, newQuantity)
+	} catch (error) {
+		console.error('Erro ao atualizar quantidade do item', error)
 	}
 }

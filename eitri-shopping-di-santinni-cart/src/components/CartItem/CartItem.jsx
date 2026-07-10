@@ -48,6 +48,11 @@ export default function CartItem(props) {
 			}
 		}
 
+		if (detectedColor && /^[0-9./\s-]+$/.test(detectedColor.trim())) {
+			detectedSize = detectedColor
+			detectedColor = ''
+		}
+
 		const base = nameParts.join(' ').trim()
 
 		return { baseName: base || raw, size: detectedSize, color: detectedColor }
@@ -98,8 +103,8 @@ export default function CartItem(props) {
 
 				<View className='flex flex-col gap-2 w-full'>
 					{item.availability !== 'available' && (
-						<View className='mb-2 p-2 bg-red-50 border border-red-200 rounded'>
-							<Text className='text-sm text-red-600 font-medium'>
+						<View className='mb-2 p-2 bg-red-50 border border-red-200 rounded flex items-center justify-center'>
+							<Text className='w-full text-sm text-red-600 font-medium text-center'>
 								{item.availability === 'cannotBeDelivered'
 									? t('cartItem.cannotBeDelivered', 'Este item não pode ser entregue')
 									: t('cartItem.notAvailable', 'Este item não está disponível')}
@@ -108,11 +113,12 @@ export default function CartItem(props) {
 					)}
 
 					<View className='flex justify-between gap-2'>
-						<Text className='text-xs pr-2'>{item.name}</Text>
+						<Text className='text-sm pr-2'>{item.name}</Text>
 
 						<View onClick={handleRemoveCartItemIntention}>
 							<Image
 								src={TrashIcon}
+								className='min-w-[13px]'
 								alt='Ícone de lixeira'
 							/>
 						</View>
@@ -120,12 +126,12 @@ export default function CartItem(props) {
 
 					<View className='flex flex-col gap-1'>
 						{size && (
-							<Text className='text-[10px]'>
+							<Text className='text-sm'>
 								Tamanho:<Text className='text-gray-500 font-light'> {size}</Text>
 							</Text>
 						)}
 						{color && (
-							<Text className='text-[10px]'>
+							<Text className='text-sm'>
 								Cor:<Text className='text-gray-500 font-light'> {color}</Text>
 							</Text>
 						)}
@@ -136,7 +142,7 @@ export default function CartItem(props) {
 						<Text className='text-xs font-medium'>{formatAmountInCents(item.price)}</Text>
 
 						{item?.listPrice && item.price !== item.listPrice && (
-							<Text className='line-through font-light text-gray-500 text-[10px]'>
+							<Text className='line-through font-light text-gray-500 text-sm'>
 								{formatAmountInCents(item.listPrice)}
 							</Text>
 						)}
@@ -176,13 +182,13 @@ export default function CartItem(props) {
 				</View>
 			)}
 
-			{message && (
+			{/* {message && (
 				<View className='flex flex-col justify-center items-center my-2'>
 					<Text className='text-sm text-center text-warning'>
 						{message.text || t('cartItem.txtMessageUnavailable', 'Este produto não está disponível!')}
 					</Text>
 				</View>
-			)}
+			)} */}
 
 			<ModalConfirm
 				text={modalRemoveItemText}

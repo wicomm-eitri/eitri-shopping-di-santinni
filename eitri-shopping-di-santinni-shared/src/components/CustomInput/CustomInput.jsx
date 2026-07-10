@@ -25,12 +25,20 @@ export default function CustomInput(props) {
 		<View className='w-full'>
 			{label && (
 				<View className='mb-1'>
-					<Text className='text-xs font-bold'>{label}</Text>
+					<Text className='text-xs text-gray-700 font-bold'>{label}</Text>
 				</View>
 			)}
 			<View className='relative'>
+				{icon && (
+					<View className='absolute left-3 top-1/2 z-10 -translate-y-1/2'>
+						<Image
+							src={icon}
+							className='h-5 w-5'
+						/>
+					</View>
+				)}
 				<TextInput
-					className={`w-full rounded border-gray-300 border-solid border-2 focus:outline-none ${className}`}
+					className={`w-full rounded border-gray-300 border-solid border-2 focus:outline-none ${icon ? 'pl-10' : ''} ${className}`}
 					type={showPassword ? 'text' : type || 'text'}
 					onChange={onChange}
 					value={value}

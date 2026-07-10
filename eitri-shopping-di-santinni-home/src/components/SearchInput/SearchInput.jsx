@@ -129,8 +129,8 @@ export default function SearchInput(props) {
 						onChange={handleInputChange}
 						onKeyPress={handleOnKeyPress}
 						onBlur={onBlurHandler}
-						placeholder={t('searchInput.placeholder', 'Pesquisar...')}
-						className='focus:outline-none !bg-transparent border-none shadow-none w-full px-2 text-sm'
+						placeholder={t('searchInput.placeholder', 'Pesquisar')}
+						className='!outline-none !focus:outline-none !focus-visible:outline-none focus:ring-0 focus:border-transparent !bg-transparent !border-none shadow-none w-full px-2 text-sm'
 					/>
 				</View>
 				{searchTerm && (

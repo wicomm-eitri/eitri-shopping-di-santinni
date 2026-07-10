@@ -10,7 +10,6 @@ import { useLocalShoppingCart } from '../providers/LocalCart'
 import { startConfigure } from '../services/AppService'
 import { saveCartIdOnStorage } from '../services/cartService'
 import { sendPageView } from '../services/trackingService'
-import CloseIcon from '../assets/icons/close-cart.svg'
 
 export default function Home(props) {
 	const { t } = useTranslation()
@@ -65,13 +64,7 @@ export default function Home(props) {
 					className='text-red-700'
 				/>
 
-				{!openWithBottomBar && (
-					<Image
-						src={CloseIcon}
-						alt='Ícone de fechar carrinho'
-						className='w-5 h-5'
-					/>
-				)}
+				{!openWithBottomBar && <View className='w-5 h-5' />}
 			</HeaderContentWrapper>
 
 			<Loading

@@ -99,7 +99,7 @@ export default function CreditCardBillingAddress() {
 
 				<Text
 					htmlFor='useShippingAddress'
-					className='text-sm cursor-pointer'>
+					className='text-sm '>
 					{`${t('creditCardBillingAddress.sameAs', 'O endereço da fatura é')} ${getShippingAddressLabel()}`}
 				</Text>
 			</View>

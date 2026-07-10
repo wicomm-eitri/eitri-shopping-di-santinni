@@ -1,25 +1,60 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import {
-	HeaderContentWrapper,
-	HeaderReturn,
-	HeaderText,
-	CustomButton,
-	CustomInput,
-	BottomInset
-} from 'eitri-shopping-di-santinni-shared'
+import { HeaderContentWrapper, HeaderReturn, HeaderText, BottomInset } from 'eitri-shopping-di-santinni-shared'
 import { navigate } from '@/services/navigationService'
 import { useLocalShoppingCart } from '../providers/LocalCart'
 import { trackScreenView } from '../services/Tracking'
 import { clearCart, getPixStatus } from '../services/cartService'
 import { formatAmountInCents } from '../utils/utils'
 
+const parseItemName = name => {
+	const raw = (name || '').trim()
+
+	if (!raw) return { baseName: '', size: '', color: '' }
+
+	const words = raw.split(/\s+/)
+	const sizeRegex = /^(PP|P|M|G|GG|XS|S|L|XL|XXL|XXXL|U|[0-9]{1,3})$/i
+
+	let detectedSize = ''
+	let detectedColor = ''
+	let nameParts = [...words]
+	const last = words[words.length - 1]
+
+	if (sizeRegex.test(last)) {
+		detectedSize = last.toUpperCase()
+		nameParts.pop()
+	}
+
+	if (nameParts.length > 0) {
+		const lastPart = nameParts[nameParts.length - 1]
+		const secondLastPart = nameParts.length > 1 ? nameParts[nameParts.length - 2] : null
+		const isUpper = s => /^[A-ZÀ-Ÿ0-9-]+$/.test(s.replace(/\W+/g, ''))
+
+		if (secondLastPart && isUpper(secondLastPart) && isUpper(lastPart)) {
+			detectedColor = `${secondLastPart} ${lastPart}`
+			nameParts.splice(-2, 2)
+		} else {
+			detectedColor = lastPart
+			nameParts.pop()
+		}
+	}
+
+	if (detectedColor && /^[0-9./\s-]+$/.test(detectedColor.trim())) {
+		detectedSize = detectedColor
+		detectedColor = ''
+	}
+
+	const base = nameParts.join(' ').trim()
+
+	return { baseName: base || raw, size: detectedSize, color: detectedColor }
+}
+
 export default function PixOrder(props) {
 	const { t } = useTranslation()
 	const [timeOut, setTimeOut] = useState(10 * 60)
 	const [pixPayload, setPixPayload] = useState(null)
-	const [showQRCode, setShowQRCode] = useState(false)
+	const [isCopied, setIsCopied] = useState(false)
 
 	let isMounted = true
 
@@ -58,10 +93,8 @@ export default function PixOrder(props) {
 
 	function parseResponse(str) {
 		try {
-			// tenta parsear como JSON válido
 			return JSON.parse(str)
 		} catch (e) {
-			// se falhar, extrai manualmente os campos que você precisa
 			const codeMatch = str.match(/code:([^,}]*)/)
 			const qrCodeMatch = str.match(/qrCodeBase64Image:([^,}]*)/)
 			const paymentId = str.match(/paymentId:([^,}]*)/)
@@ -80,23 +113,8 @@ export default function PixOrder(props) {
 		Eitri.clipboard.setText({
 			text: pixPayload.code
 		})
-	}
-
-	const shareCode = async () => {
-		await Eitri.share.link({
-			url: `${pixPayload.code}`
-		})
-	}
-
-	const toggleQRCode = () => {
-		setShowQRCode(!showQRCode)
-	}
-
-	const formatTime = seconds => {
-		let minutes = Math.floor(seconds / 60)
-		let remainingSeconds = seconds % 60
-
-		return `${minutes < 10 ? '0' : ''}${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`
+		setIsCopied(true)
+		setTimeout(() => setIsCopied(false), 3000)
 	}
 
 	async function checkPixStatus(transactionId, paymentId) {
@@ -119,140 +137,214 @@ export default function PixOrder(props) {
 		}
 	}
 
-	// Call the function to start fetching data
+	const format2Digits = n => n.toString().padStart(2, '0')
+
+	const expiryFormatted = useMemo(() => {
+		const expiryDate = new Date()
+
+		expiryDate.setMinutes(expiryDate.getMinutes() + 10)
+
+		return `${format2Digits(expiryDate.getDate())}/${format2Digits(
+			expiryDate.getMonth() + 1
+		)}/${expiryDate.getFullYear()} ${format2Digits(expiryDate.getHours())}:${format2Digits(
+			expiryDate.getMinutes()
+		)}:${format2Digits(expiryDate.getSeconds())}`
+	}, [])
+
+	const orderDateFormatted = useMemo(() => {
+		return `${format2Digits(new Date().getDate())}/${format2Digits(
+			new Date().getMonth() + 1
+		)}/${new Date().getFullYear()}`
+	}, [])
 
 	if (!pixPayload) return null
 
+	const customerName = cart?.clientProfileData?.firstName
+		? `${cart.clientProfileData.firstName} ${cart.clientProfileData.lastName}`
+		: ''
+
+	const getSubtotal = () => cart?.totalizers?.find(t => t.id === 'Items')?.value || 0
+	const getDiscount = () => cart?.totalizers?.find(t => t.id === 'Discounts')?.value || 0
+	const getShipping = () => cart?.totalizers?.find(t => t.id === 'Shipping')?.value || 0
+
 	return (
-		<Page title={t('pixOrder.pageTitle', 'Pix QR Code')}>
+		<Page>
 			<HeaderContentWrapper>
 				<HeaderReturn />
-				<HeaderText text={t('pixOrder.header', 'Pagamento PIX')} />
+				<HeaderText text={'Checkout'} />
 			</HeaderContentWrapper>
 
-			<View className='p-4 flex flex-col gap-4'>
-				{/* Informação sobre PIX */}
-				<View className='flex items-center gap-3 bg-white rounded p-4'>
-					<View className='text-primary'>
-						<svg
-							xmlns='http://www.w3.org/2000/svg'
-							width='16'
-							height='16'
-							viewBox='0 0 24 24'
-							fill='none'
-							stroke='currentColor'
-							strokeWidth='2'
-							strokeLinecap='round'
-							strokeLinejoin='round'>
-							<circle
-								cx='12'
-								cy='12'
-								r='10'></circle>
-							<polyline points='12 6 12 12 16 14'></polyline>
-						</svg>
-					</View>
-					<Text className='text-base-content/70 font-medium'>
-						{t('pixOrder.approvalInfo', 'Com o PIX, sua compra é aprovada na hora')}
+			<View className='p-4 flex flex-col bg-white min-h-screen'>
+				{/* Header PIX */}
+				<View className='flex flex-col items-center justify-center pt-2'>
+					<Text className='text-red-700 font-bold text-sm uppercase mb-2'>
+						{t('pixOrder.title', 'PAGAMENTO POR PIX')}
 					</Text>
-				</View>
 
-				{/* Valor do pagamento */}
-				<View className='bg-white rounded p-4'>
-					<Text className='text-base-content/70'>
-						{t('pixOrder.purchaseValue', 'Valor da compra')}:{' '}
-						<Text className='font-bold'>{formatAmountInCents(cart.value)}</Text>
-					</Text>
-				</View>
-
-				{/* Código PIX */}
-				<View className='bg-white rounded p-4'>
-					<Text className='text-base font-semibold mb-3 text-base-content'>
-						{t('pixOrder.codeTitle', 'Código PIX')}
-					</Text>
-					<CustomInput
-						value={pixPayload.code}
-						disabled
-						className='w-full rounded bg-base-100 border-base-300 mt-2'
+					{/* QR Code */}
+					<Image
+						src={`data:image;base64,${pixPayload.qrCodeBase64Image}`}
+						className='w-[160px] h-[160px] mb-4'
 					/>
-				</View>
 
-				<View className='flex flex-col gap-2'>
-					{/* Botões de ação */}
-					<View className='flex flex-row gap-2'>
-						<CustomButton
-							label={t('pixOrder.copyCode', 'Copiar código')}
-							className='flex-1'
-							onPress={copyCode}
-						/>
-						<CustomButton
-							label={t('pixOrder.share', 'Compartilhar')}
-							className='flex-1'
-							onPress={shareCode}
-						/>
+					{/* Input do código PIX */}
+					<View className='w-full border border-gray-300 p-3 mb-2 flex items-center justify-center overflow-hidden'>
+						<Text
+							className='text-xs text-center text-gray-400 w-full truncate'
+							numberOfLines={1}
+							ellipsizeMode='tail'>
+							{pixPayload.code}
+						</Text>
 					</View>
 
-					{/* Botão para mostrar/ocultar QR Code */}
-					<CustomButton
-						label={
-							showQRCode
-								? t('pixOrder.hideQrCode', 'Ocultar QR Code')
-								: t('pixOrder.showQrCode', 'Mostrar QR Code')
-						}
-						className='w-full'
-						onPress={toggleQRCode}
-					/>
+					{/* Botão Copiar */}
+					<View onClick={copyCode}>
+						<Text
+							className={`text-xs underline py-1 font-bold ${isCopied ? 'text-green-600' : 'text-red-700'}`}>
+							{isCopied
+								? t('pixOrder.codeCopied', 'CÓDIGO COPIADO!')
+								: t('pixOrder.copyCode', 'COPIAR CÓDIGO')}
+						</Text>
+					</View>
+
+					{/* Validade */}
+					<View className='mt-3 flex flex-col items-center gap-1 mb-8'>
+						<Text className='text-xs font-bold text-gray-800'>
+							{t('pixOrder.validUntil', 'QR Code válido até:')} {expiryFormatted}
+						</Text>
+						<Text className='text-xs font-bold text-gray-800'>
+							{t('pixOrder.brasiliaTime', '(Horário de Brasília)')}
+						</Text>
+					</View>
 				</View>
 
-				{/* QR Code */}
-				{showQRCode && (
-					<View className='flex items-center justify-center gap-4'>
-						<View className='bg-white p-4 rounded shadow-lg'>
-							<Image
-								src={`data:image;base64,${pixPayload.qrCodeBase64Image}`}
-								className='w-48 h-48'
-							/>
-						</View>
-					</View>
-				)}
+				{/* Informações do pedido */}
+				<View className='flex flex-col gap-2 mb-8'>
+					<View className='flex flex-col gap-2 '>
+						<Text className='font-bold text-xs text-gray-900 mb-1'>
+							{t('pixOrder.orderInfo', 'Informações do pedido')}
+						</Text>
 
-				{/* Instruções */}
-				<View className='bg-white rounded p-4'>
-					<Text className='text-lg font-bold mb-3 text-base-content'>
-						{t('pixOrder.howToPayTitle', 'Como pagar com PIX')}
-					</Text>
-					<View className='flex flex-col gap-2 mt-2'>
-						<View className='flex flex-row items-center'>
-							<Text className='text-base-content/70'>
-								{`• ${t('pixOrder.step1', 'Acesse seu Internet Banking')}`}
+						<Text className='text-xs text-gray-700'>
+							Status:{' '}
+							<Text className='text-red-700 font-bold text-xs'>
+								{t('pixOrder.waitingPayment', 'Esperando pagamento')}
 							</Text>
-						</View>
-						<View className='flex flex-row items-center'>
-							<Text className='text-base-content/70'>
-								{`• ${t('pixOrder.step2', 'Escolha o pagamento via PIX')}`}
-							</Text>
-						</View>
-						<View className='flex flex-row items-center'>
-							<Text className='text-base-content/70'>{`• ${t('pixOrder.step3', 'Cole o código acima')}`}</Text>
-						</View>
+						</Text>
 					</View>
-				</View>
-
-				{/* Timer */}
-				<View className='flex items-center justify-center'>
-					<Text className='text-base-content/70 text-sm text-center'>
-						{t('pixOrder.timeRemaining', 'Tempo restante')}:{' '}
-						<Text className='font-semibold'>{formatTime(timeOut)}</Text>
+					<Text className='text-sm text-gray-700'>
+						Valor total:{' '}
+						<Text className='font-bold text-gray-900 text-sm'>{formatAmountInCents(cart?.value || 0)}</Text>
 					</Text>
-				</View>
 
-				{/* Informações adicionais */}
-				<View className='px-4'>
-					<Text className='block text-sm text-base-content/70 text-center'>
+					<Text className='text-sm text-gray-700'>
+						Data do pedido: <Text className='font-bold text-gray-900 text-sm'>{orderDateFormatted}</Text>
+					</Text>
+
+					<Text className='text-sm text-gray-700'>
+						Comprado por: <Text className='font-bold text-gray-900 text-sm'>{customerName}</Text>
+					</Text>
+
+					<Text className='text-sm text-gray-700'>
+						Forma de pagamento: <Text className='font-bold text-gray-900 text-sm'>Pix</Text>
+					</Text>
+
+					<Text className='text-sm text-gray-600 mt-2 leading-tight pr-4'>
 						{t(
-							'pixOrder.autoProcessInfo',
-							'O pagamento será processado automaticamente após a confirmação'
+							'pixOrder.trackOrder',
+							'Você pode acompanhar o status do seu pedido em Minha Conta > Meus Pedidos'
 						)}
 					</Text>
+
+					<View
+						className='flex items-center justify-center mt-2'
+						onClick={() => navigate('Profile')}>
+						<Text className='text-red-700 text-xs  uppercase'>
+							{t('pixOrder.viewOrders', 'VER MEUS PEDIDOS')}
+						</Text>
+					</View>
+				</View>
+
+				{/* Resumo do pedido */}
+				<View className='flex flex-col mt-2 pb-10'>
+					<Text className='font-bold  text-gray-900 mb-4'>
+						{t('pixOrder.orderSummary', 'Resumo do pedido')}
+					</Text>
+
+					{/* Itens */}
+					<View className='flex flex-col gap-4 mb-6'>
+						{cart?.items?.map(item => {
+							const { baseName, size, color } = parseItemName(item.name)
+
+							return (
+								<View
+									key={item.uniqueId}
+									className='flex flex-row gap-4 mb-2'>
+									<View className='w-[80px] h-[100px] rounded-md overflow-hidden bg-white flex items-center justify-center'>
+										<Image
+											src={item.imageUrl}
+											className='w-full h-full object-contain'
+										/>
+									</View>
+									<View className='flex flex-col flex-1 justify-center gap-1.5'>
+										<Text
+											className='text-sm font-bold text-gray-900 leading-tight'
+											numberOfLines={2}
+											ellipsizeMode='tail'>
+											{baseName}
+										</Text>
+
+										<View className='flex flex-col gap-0.5 mt-1'>
+											{size && (
+												<Text className='text-[10px] text-gray-500'>
+													Tamanho:{' '}
+													<Text className='font-bold text-[10px] text-gray-900'>{size}</Text>
+												</Text>
+											)}
+											{color && (
+												<Text className='text-[10px] text-gray-500'>
+													Cor:{' '}
+													<Text className='font-bold text-[10px] text-gray-900'>{color}</Text>
+												</Text>
+											)}
+										</View>
+
+										<Text className='text-red-700 font-bold text-lg mt-1'>
+											{formatAmountInCents(item.price)}
+										</Text>
+									</View>
+								</View>
+							)
+						})}
+					</View>
+
+					{/* Totais */}
+					<View className='flex flex-col gap-2'>
+						<View className='flex justify-between'>
+							<Text className='text-sm text-gray-600'>{t('pixOrder.subtotal', 'Subtotal')}</Text>
+							<Text className='text-sm text-gray-600'>{formatAmountInCents(getSubtotal())}</Text>
+						</View>
+						{getDiscount() < 0 && (
+							<View className='flex justify-between'>
+								<Text className='text-sm text-gray-600'>{t('pixOrder.discount', 'Desconto')}</Text>
+								<Text className='text-sm text-gray-600'>
+									- {formatAmountInCents(Math.abs(getDiscount()))}
+								</Text>
+							</View>
+						)}
+						<View className='flex justify-between'>
+							<Text className='text-sm text-gray-600'>{t('pixOrder.shipping', 'Frete')}</Text>
+							<Text className='text-sm text-gray-600'>
+								{getShipping() === 0 ? 'Grátis' : formatAmountInCents(getShipping())}
+							</Text>
+						</View>
+						<View className='flex justify-between mt-1'>
+							<Text className='text-sm font-bold text-gray-900'>{t('pixOrder.total', 'Total')}</Text>
+							<Text className='text-sm font-bold text-gray-900'>
+								{formatAmountInCents(cart?.value || 0)}
+							</Text>
+						</View>
+					</View>
 				</View>
 			</View>
 

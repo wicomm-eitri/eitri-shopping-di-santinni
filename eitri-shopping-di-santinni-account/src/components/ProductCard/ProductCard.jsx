@@ -33,6 +33,10 @@ export default function ProductCard(props) {
 		}
 	}
 
+	const getItemBrand = () => {
+		return product?.brand || product?.brandName || product?.properties?.find(p => p.name === 'brand')?.values?.[0]
+	}
+
 	const getItemImage = () => {
 		if (item) {
 			return item?.images?.[0]?.imageUrl
@@ -81,10 +85,10 @@ export default function ProductCard(props) {
 		const price = sellerDefault?.commertialOffer?.Price
 		const listPrice = sellerDefault?.commertialOffer?.ListPrice
 
-		if (price !== listPrice) {
+		if (price !== listPrice && listPrice) {
 			const discount = ((listPrice - price) / listPrice) * 100
 
-			return `${discount.toFixed(0)}% ${t('productCard.off', 'OFF')}`
+			return `-${discount.toFixed(0)}%`
 		} else {
 			return ''
 		}
@@ -207,6 +211,7 @@ export default function ProductCard(props) {
 		image: getItemImage(),
 		video: productVideo,
 		badge: getBadge(),
+		brand: getItemBrand(),
 		listPrice: getListPrice(),
 		showListItem: App?.configs?.appConfigs?.productCard?.showListPrice ?? true,
 		price: formatPrice(sellerDefault?.commertialOffer.Price),
