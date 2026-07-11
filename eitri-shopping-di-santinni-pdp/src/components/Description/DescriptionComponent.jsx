@@ -8,8 +8,8 @@ export default function DescriptionComponent(props) {
 
 	const tabs = [
 		{ id: 'description', label: 'Descrição' },
-		{ id: 'especifications', label: 'Especificações' },
-		{ id: 'care', label: 'Cuidados' },
+		{ id: 'especifications', label: 'Especificações' }
+		// { id: 'care', label: 'Cuidados' },
 		//{ id: 'reviews', label: 'Avaliações' }
 	]
 
@@ -47,9 +47,7 @@ export default function DescriptionComponent(props) {
 								{tab.label}
 							</Text>
 
-							<View
-								className={isSelected ? 'w-full h-[3px] bg-red-700' : 'w-full h-[3px] bg-white'}
-							/>
+							<View className={isSelected ? 'w-full h-[3px] bg-red-700' : 'w-full h-[3px] bg-white'} />
 						</View>
 					)
 				})}
