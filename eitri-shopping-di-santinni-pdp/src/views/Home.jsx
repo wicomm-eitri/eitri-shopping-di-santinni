@@ -149,16 +149,14 @@ export default function Home() {
 			}
 		})
 
-		console.log('Badges:', badges)
-
 		return badges
 	}
 
 	return (
 		<Page
 			statusBarTextColor='black'
-			// className='bg-[#F2F2F2]'
-			title={t('home.pageTitle', 'Página de produto')}>
+			title={t('home.pageTitle', 'Página de produto')}
+			bottomInset>
 			<Header
 				product={product}
 				configLoaded={configLoaded}
@@ -188,6 +186,7 @@ export default function Home() {
 									product={product}
 									onSkuChange={onSkuChange}
 								/>
+
 								<ActionButton currentSku={currentSku} />
 							</View>
 							{/* TODO: Esconder scrollbar no iOS quando a Eitri lançar o CSS */}
@@ -203,10 +202,12 @@ export default function Home() {
 							</View>
 
 							{configLoaded && <Freight currentSku={currentSku} />}
+
 							<RenderVideo
 								isMocked
 								videoUrl={'https://shoulder.com.br/cdn/ecommerce/lps/2024/lpgetbeemob.mp4'}
 							/>
+
 							{/*<RichContent product={product} />*/}
 
 							<DescriptionComponent product={product} />
