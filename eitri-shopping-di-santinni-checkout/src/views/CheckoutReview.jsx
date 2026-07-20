@@ -173,11 +173,14 @@ export default function CheckoutReview() {
 	}
 
 	const isReadyToPay = () => {
+		const isPickup = cart?.shippingData?.logisticsInfo?.[0]?.selectedDeliveryChannel === 'pickup-in-point'
+		const hasNumber = cart?.shippingData?.address?.number
+
 		return (
 			unavailableItems.length === 0 &&
 			cart?.items?.length > 0 &&
 			cart?.shippingData?.address &&
-			cart?.shippingData?.address?.number
+			(hasNumber || isPickup || cart?.shippingData?.address?.addressType === 'search')
 		)
 	}
 
