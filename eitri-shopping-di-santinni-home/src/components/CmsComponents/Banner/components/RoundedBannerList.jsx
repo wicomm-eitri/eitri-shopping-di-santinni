@@ -9,18 +9,23 @@ const SIZE_DEPARTMENTS = ['feminino', 'masculino', 'infantil', 'tenis']
 
 const formatSizeLabel = (value, name) => {
 	if (/^\d+([.,]\d+)?$/.test(value)) return value
+
 	if (/^\d+-\d+$/.test(value)) return value
+
 	return (name || value).toUpperCase()
 }
 
 const isFootwearSize = value => {
 	const isNumeric = /^\d+([.,]\d+)?$/.test(value)
 	const isRange = /^\d+-\d+$/.test(value)
+
 	if (!isNumeric && !isRange) return false
 
 	const parts = value.split('-')
+
 	return parts.every(part => {
 		const num = parseFloat(part.replace(',', '.'))
+
 		return !isNaN(num) && num >= 10 && num <= 48
 	})
 }
@@ -29,7 +34,9 @@ const fetchDepartmentSizes = async dept => {
 	try {
 		const res = await getProductsFacetsService({ facets: [{ key: 'category-1', value: dept }] })
 		const facet = res?.facets?.find(f => f.key === 'tamanho' || f.name?.toLowerCase() === 'tamanho')
+
 		if (!facet) return []
+
 		return (facet.values || []).map(v => ({
 			value: String(v.value),
 			name: String(v.name ?? v.value)
@@ -42,6 +49,7 @@ const fetchDepartmentSizes = async dept => {
 const fetchAllStoreSizes = async () => {
 	const results = await Promise.all(SIZE_DEPARTMENTS.map(fetchDepartmentSizes))
 	const byValue = new Map()
+
 	for (const list of results) {
 		for (const { value, name } of list) {
 			if (isFootwearSize(value) && !byValue.has(value)) {
@@ -87,9 +95,11 @@ const fetchAllStoreSizes = async () => {
 
 			const numA = parseFloat(a.title);
 			const numB = parseFloat(b.title);
+
 			if (!Number.isNaN(numA) && !Number.isNaN(numB)) {
 				return numA - numB;
 			}
+
 			return a.title.localeCompare(b.title);
 		})
 
@@ -163,10 +173,12 @@ export default function RoundedBannerList(props) {
 		setCurrentIndex(current => {
 			if (direction === 'right') {
 				const next = current + steps
+
 				return next > maxIndex ? maxIndex : next
 			}
 
 			const prev = current - steps
+
 			return prev < 0 ? 0 : prev
 		})
 	}

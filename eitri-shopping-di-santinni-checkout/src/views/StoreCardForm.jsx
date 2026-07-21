@@ -111,6 +111,7 @@ const CustomDropdown = ({ value, options, onChange, placeholder }) => {
 		</View>
 	)
 }
+
 export default function StoreCardForm(props) {
 	const { cart, setCardInfo, selectPaymentOption } = useLocalShoppingCart()
 
@@ -139,6 +140,7 @@ export default function StoreCardForm(props) {
 	const [selectedInstallment, setSelectedInstallment] = useState(null)
 	const [installmentsLoading, setInstallmentsLoading] = useState(false)
 	const [identifiedPaymentSystem, setIdentifiedPaymentSystem] = useState(null)
+
 	useEffect(() => {
 		trackScreenView(PAGE, 'checkout.StoreCardForm')
 	}, [])
@@ -158,20 +160,24 @@ export default function StoreCardForm(props) {
 					if (storeCardSystemGroup) {
 						const isStoreCard = storeCardSystemGroup?.paymentSystems?.some(method => {
 							const regex = RegExp(method?.validator?.regex)
+
 							return regex.test(cardData?.cardNumber?.replace(/\D+/g, ''))
 						})
 
 						if (isStoreCard) {
 							navigate('AddCardForm', { cardNumber: cardData?.cardNumber }, true)
+
 							return
 						}
 					}
 
 					let fallbackSystem = systemGroup?.paymentSystems?.[0]
+
 					if (!fallbackSystem) {
 						fallbackSystem = paymentSystemGroups?.find(ps => ps.groupName === 'customPrivate_DS')
 							?.paymentSystems?.[0]
 					}
+
 					psToUse = fallbackSystem
 				}
 
@@ -230,6 +236,7 @@ export default function StoreCardForm(props) {
 		if (!regex.test(value)) return setValidDueDate(false)
 
 		let [month, year] = value.split('/').map(Number)
+
 		if (year < 100) year += 2000
 
 		const now = new Date()
@@ -261,6 +268,7 @@ export default function StoreCardForm(props) {
 		}
 
 		const cleanDoc = cardData?.document?.replace(/\D/g, '')
+
 		setValidDocument(verifySocialNumber(cleanDoc))
 	}, [cardData?.document])
 
@@ -375,6 +383,7 @@ export default function StoreCardForm(props) {
 				placeholder='Números de parcelas'
 				onChange={val => {
 					const option = installmentOptions.find(i => i.count === val)
+
 					setSelectedInstallment(option)
 				}}
 			/>
