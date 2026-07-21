@@ -78,13 +78,13 @@ const fetchAllStoreSizes = async () => {
 					const isAdult = num >= 33
 
 					if (isAdult) {
-						return isQuebrado ? 2 : 1 // 1: Feminino inteiro, 2: Quebrado adulto
+						return isQuebrado ? 2 : 1
 					} else {
-						return isQuebrado ? 4 : 3 // 3: Infantil inteiro, 4: Quebrado infantil
+						return isQuebrado ? 4 : 3
 					}
 				}
 
-				return 5 // Outros
+				return 5
 			}
 
 			const groupA = getGroup(a.title)
@@ -156,7 +156,7 @@ export default function RoundedBannerList(props) {
 
 	const bannerDimensions = getBannerDimensions()
 	const bannerWidth = Number.parseInt(bannerDimensions.width, 10) || 72
-	const bannerStep = bannerWidth + 16 // 16px for gap-4
+	const bannerStep = bannerWidth + 16
 
 	const getScrollElement = () => {
 		if (!scrollRef.current) return null
