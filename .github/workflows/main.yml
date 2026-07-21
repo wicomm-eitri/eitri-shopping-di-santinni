@@ -93,124 +93,6 @@ jobs:
                   echo "✅✅✅ Eitri-apps shared a publicar: $SHARED_MODULES"
                   echo "✅✅✅ Demais eitri-apps a publicar: $NON_SHARED_MODULES"
 
-            # - name: Publish shared Eitri-apps
-            #   if: steps.detect.outputs.shared_modules != ''
-            #   run: |
-            #       set -euo pipefail
-            #       trap 'echo "❌ Falha ao publicar eitri-apps shared!"' ERR
-
-            #       HEAD_SHA=${{ github.event.pull_request.head.sha }}
-
-            #       PUBLISHED_MODULES=""
-
-            #       for module in ${{ steps.detect.outputs.shared_modules }}; do
-            #         echo "⚙️⚙️⚙️ Publicando shared eitri-app: $module"
-
-            #         if [[ "${{ github.base_ref }}" == "main" ]]; then
-            #           ENV_ID="${{ env.PROD_ENVID }}"
-            #         else
-            #           ENV_ID="${{ env.DEV_ENVID }}"
-            #         fi
-
-            #         config_file="$module/eitri-app.conf.js"
-
-            #         if [[ "${{ github.base_ref }}" == "develop" || "${{ github.base_ref }}" == "main" ]]; then
-            #           VERSION_MESSAGE=$(git show $HEAD_SHA:"$config_file" | grep "versionMessage" | head -1 | sed -E 's/.*versionMessage[^:]*:\s*["'\'']([^"'\'']+)["'\''].*/\1/' || echo "")
-
-            #           if [[ -z "$VERSION_MESSAGE" ]]; then
-            #             VERSION_MESSAGE="${{ github.event.pull_request.title }}"
-            #             echo "📌 versionMessage não encontrada. Usando título do PR"
-            #           else
-            #             echo "📌 versionMessage encontrada: $VERSION_MESSAGE"
-            #           fi
-            #         fi
-
-            #         pushd "$module" > /dev/null
-
-            #         if [[ "${{ github.base_ref }}" == "develop" ]]; then
-            #           echo "🔗 Executando 'eitri push-version --shared --message \"$VERSION_MESSAGE\"'"
-
-            #           eitri push-version --shared --message "$VERSION_MESSAGE"
-
-            #         elif [[ "${{ github.base_ref }}" == "main" && "${{ github.head_ref }}" != "develop" ]]; then
-            #           echo "::warning::Atenção, você está subindo alterações direto na main ⚠️"
-
-            #           echo "🔗 Executando 'eitri push-version --shared --message \"$VERSION_MESSAGE\"'"
-            #           eitri push-version --shared --message "$VERSION_MESSAGE"
-            #         else
-            #           echo "⏭️ Ignorando push-version (já gerado via develop)"
-            #         fi
-
-            #         echo "🚀 Publicando com 'eitri publish -e $ENV_ID'"
-            #         eitri publish -e $ENV_ID
-
-            #         popd > /dev/null
-
-            #         PUBLISHED_MODULES="$PUBLISHED_MODULES $module"
-            #         echo "✅ Finalizado: $module"
-            #       done
-
-            #       echo "✅✅✅ Eitri-apps shared publicados: $PUBLISHED_MODULES"
-
-            # - name: Publish non-shared Eitri-apps
-            #   if: steps.detect.outputs.non_shared_modules != ''
-            #   run: |
-            #       set -euo pipefail
-            #       trap 'echo "❌ Falha ao publicar módulos não compartilhados!"' ERR
-
-            #       HEAD_SHA=${{ github.event.pull_request.head.sha }}
-
-            #       PUBLISHED_MODULES=""
-
-            #       for module in ${{ steps.detect.outputs.non_shared_modules }}; do
-            #         echo "⚙️ Publicando módulo não compartilhado: $module"
-
-            #         if [[ "${{ github.base_ref }}" == "main" ]]; then
-            #           ENV_ID="${{ env.PROD_ENVID }}"
-            #         else
-            #           ENV_ID="${{ env.DEV_ENVID }}"
-            #         fi
-
-            #         config_file="$module/eitri-app.conf.js"
-
-            #         if [[ "${{ github.base_ref }}" == "develop" || "${{ github.base_ref }}" == "main" ]]; then
-            #           VERSION_MESSAGE=$(git show $HEAD_SHA:"$config_file" | grep "versionMessage" | head -1 | sed -E 's/.*versionMessage[^:]*:\s*["'\'']([^"'\'']+)["'\''].*/\1/' || echo "")
-
-            #           if [[ -z "$VERSION_MESSAGE" ]]; then
-            #             VERSION_MESSAGE="${{ github.event.pull_request.title }}"
-            #             echo "📌 versionMessage não encontrada. Usando título do PR"
-            #           else
-            #             echo "📌 versionMessage encontrada: $VERSION_MESSAGE"
-            #           fi
-            #         fi
-
-            #         pushd "$module" > /dev/null
-
-            #         if [[ "${{ github.base_ref }}" == "develop" ]]; then
-            #           echo "🔗 Executando 'eitri push-version --message \"$VERSION_MESSAGE\"'"
-
-            #           eitri push-version --message "$VERSION_MESSAGE"
-
-            #         elif [[ "${{ github.base_ref }}" == "main" && "${{ github.head_ref }}" != "develop" ]]; then
-            #           echo "::warning::Atenção, você está subindo alterações direto na main ⚠️"
-
-            #           echo "🔗 Executando 'eitri push-version --message \"$VERSION_MESSAGE\"'"
-            #           eitri push-version --message "$VERSION_MESSAGE"
-            #         else
-            #           echo "⏭️ Ignorando push-version (já gerado via develop)"
-            #         fi
-
-            #         echo "🚀 Publicando com 'eitri publish -e $ENV_ID'"
-            #         eitri publish -e $ENV_ID
-
-            #         popd > /dev/null
-
-            #         PUBLISHED_MODULES="$PUBLISHED_MODULES $module"
-            #         echo "✅✅✅ Finalizado: $module"
-            #       done
-
-            #       echo "✅✅✅ Eitri-apps publicados: $PUBLISHED_MODULES"
-
             - name: Publish Eitri-apps
               if: steps.detect.outputs.shared_modules != '' || steps.detect.outputs.non_shared_modules != ''
               run: |
@@ -253,6 +135,11 @@ jobs:
                       ENV_IDS="${{ env.DEV_ENVID }} ${{ env.PROD_ENVID }}"
                     fi
 
+                    # ---------- Valida ENV ----------
+                    if [[ -z "$ENV_IDS" ]]; then
+                       echo "::warning::Nenhuma ENV_ID cadastrada para este fluxo ⚠️"
+                    fi
+
                     pushd "$module" > /dev/null
 
 
@@ -266,11 +153,11 @@ jobs:
                       if [[ "$shared_flag" == "true" ]]; then
                         echo "🔗 Executando 'eitri push-version --shared --message \"$VERSION_MESSAGE\"'"
                         
-                        eitri push-version --shared --message "$VERSION_MESSAGE" || { echo " ::warning::Versão já existe! ⚠️"; VERSION_CREATED="false"; }
+                        eitri push-version --shared --message "$VERSION_MESSAGE" || { echo " ::warning::Houve um erro, provavelmente a versão já existe! ⚠️"; VERSION_CREATED="false"; }
                       else
                         echo "🔗 Executando 'eitri push-version --message \"$VERSION_MESSAGE\"'"
 
-                        eitri push-version --message "$VERSION_MESSAGE" || { echo " ::warning::Versão já existe! ⚠️"; VERSION_CREATED="false"; }
+                        eitri push-version --message "$VERSION_MESSAGE" || { echo " ::warning::Houve um erro, provavelmente a versão já existe! ⚠️"; VERSION_CREATED="false"; }
                       fi
 
                     elif [[ "${{ github.base_ref }}" == "main" && "${{ github.head_ref }}" != "develop" ]]; then
@@ -281,11 +168,11 @@ jobs:
                       if [[ "$shared_flag" == "true" ]]; then
                         echo "🔗 Executando 'eitri push-version --shared --message \"$VERSION_MESSAGE\"'"
 
-                        eitri push-version --shared --message "$VERSION_MESSAGE" || { echo " ::warning::Versão já existe! ⚠️"; VERSION_CREATED="false"; }
+                        eitri push-version --shared --message "$VERSION_MESSAGE" || { echo " ::warning::Houve um erro, provavelmente a versão já existe! ⚠️"; VERSION_CREATED="false"; }
                       else
                         echo "🔗 Executando 'eitri push-version --message \"$VERSION_MESSAGE\"'"
 
-                        eitri push-version --message "$VERSION_MESSAGE" || { echo " ::warning::Versão já existe! ⚠️"; VERSION_CREATED="false"; }
+                        eitri push-version --message "$VERSION_MESSAGE" || { echo " ::warning::Houve um erro, provavelmente a versão já existe! ⚠️"; VERSION_CREATED="false"; }
                       fi
                     else
                       echo "⏭️ Ignorando push-version (já gerado via develop)"

@@ -32,7 +32,17 @@
 	"mainDescription": {
 		"txtUntil": "ou",
 		"txtOf": "de",
-		"txtWithoutInterest": "sem juros"
+		"txtWithoutInterest": "sem juros",
+		"txtPaymentMethods": "Formas de pagamento"
+	},
+	"paymentMethods": {
+		"txtTitle": "Formas de Pagamento",
+		"txtCreditCard": "Cartão de Crédito",
+		"txtDSCard": "Cartão Di Santinni",
+		"txtPix": "PIX",
+		"txtWithoutInterest": "sem juros",
+		"txtWithInterest": "com juros",
+		"txtOff": "OFF"
 	},
 	"modalComponent": {
 		"txtProductAdded": "Produto adicionado ao carrinho",

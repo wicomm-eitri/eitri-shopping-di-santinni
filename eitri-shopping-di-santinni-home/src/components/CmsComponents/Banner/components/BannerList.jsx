@@ -1,13 +1,11 @@
-import React, { useState } from 'react'
+import React, { useRef } from 'react'
 import { View, Text } from 'eitri-luminus'
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu'
 
 export default function BannerList(props) {
 	const { data, onClick } = props
-	const [currentIndex, setCurrentIndex] = useState(0)
-	const [dragOffset, setDragOffset] = useState(0)
-	const [isDragging, setIsDragging] = useState(false)
-	const [startX, setStartX] = useState(0)
+	const scrollRef = useRef(null)
+
 	const imagesList = data.images
 	const { size, aspectRatio } = data
 	const paramsObject = Object.fromEntries((data?.params || []).map(item => [item.key, item.value]))
@@ -126,53 +124,35 @@ export default function BannerList(props) {
 	const bannerWidth = Number.parseInt(bannerDimensions.width, 10) || 300
 	const bannerStep = isBannerTrio ? bannerWidth : bannerWidth + 12
 
+	const getScrollElement = () => {
+		if (!scrollRef.current) return null
+
+		return typeof scrollRef.current.getViewElement === 'function'
+			? scrollRef.current.getViewElement()
+			: scrollRef.current
+	}
+
 	const goToSlide = direction => {
-		if (!imagesList?.length) return
+		const element = getScrollElement()
 
-		setDragOffset(0)
-		setIsDragging(false)
+		if (!element) return
 
-		const containerWidth = typeof window !== 'undefined' ? window.innerWidth : 400
-		const itemsVisible = Math.max(1, Math.floor(containerWidth / bannerStep))
-		const maxIndex = Math.max(0, imagesList.length - itemsVisible)
+		const maxScrollLeft = element.scrollWidth - element.clientWidth
 
-		setCurrentIndex(current => {
-			if (direction === 'right') {
-				return current >= maxIndex ? 0 : current + 1
-			}
+		if (direction === 'right') {
+			const nextScrollLeft = element.scrollLeft + bannerStep
 
-			return current <= 0 ? maxIndex : current - 1
-		})
-	}
-
-	const handleDragStart = clientX => {
-		if (!hasMultipleImages) return
-
-		setIsDragging(true)
-		setStartX(clientX)
-		setDragOffset(0)
-	}
-
-	const handleDragMove = clientX => {
-		if (!isDragging) return
-
-		setDragOffset(clientX - startX)
-	}
-
-	const handleDragEnd = () => {
-		if (!isDragging) return
-
-		const threshold = 50
-
-		if (Math.abs(dragOffset) > threshold) {
-			if (dragOffset > 0) {
-				goToSlide('left')
-			} else {
-				goToSlide('right')
-			}
+			element.scrollTo({
+				left: nextScrollLeft >= maxScrollLeft - 1 ? 0 : nextScrollLeft,
+				behavior: 'smooth'
+			})
 		} else {
-			setDragOffset(0)
-			setIsDragging(false)
+			const prevScrollLeft = element.scrollLeft - bannerStep
+
+			element.scrollTo({
+				left: prevScrollLeft <= 0 ? maxScrollLeft : prevScrollLeft,
+				behavior: 'smooth'
+			})
 		}
 	}
 
@@ -186,58 +166,46 @@ export default function BannerList(props) {
 			)}
 
 			<View className='relative'>
-				<View className={`overflow-hidden pb-2 ${isBannerTrio ? '' : 'px-4'}`}>
-					<View
-						className={`flex transition-transform duration-300 ease-out touch-pan-y ${isBannerTrio ? '' : 'gap-3'}`}
-						onTouchStart={e => handleDragStart(e.touches[0].clientX)}
-						onTouchMove={e => handleDragMove(e.touches[0].clientX)}
-						onTouchEnd={handleDragEnd}
-						onMouseDown={e => handleDragStart(e.clientX)}
-						onMouseMove={e => isDragging && handleDragMove(e.clientX)}
-						onMouseUp={handleDragEnd}
-						onMouseLeave={handleDragEnd}
-						style={{
-							transform: `translateX(calc(-${currentIndex * bannerStep}px + ${dragOffset}px))`,
-							transitionDuration: isDragging ? '0ms' : '300ms'
-						}}>
-						{imagesList &&
-							imagesList.map((slider, idx) => (
+				<View
+					ref={scrollRef}
+					className={`flex overflow-x-auto scroll-smooth snap-x snap-mandatory hide-scrollbar pb-2 ${isBannerTrio ? '' : 'px-4 gap-3'}`}>
+					{imagesList &&
+						imagesList.map((slider, idx) => (
+							<View
+								key={`${slider.imageUrl || slider.id || 'slide'}-${idx}`}
+								className='flex flex-col shrink-0 snap-start'>
 								<View
-									key={`${slider.imageUrl || slider.id || 'slide'}-${idx}`}
-									className='flex flex-col'>
-									<View
-										style={{
-											backgroundImage: `url(${slider.imageUrl})`,
-											...bannerDimensions,
-											backgroundSize: 'cover',
-											borderRadius: isBannerTrio ? '0px' : '12px'
-										}}
-										className='relative'
-										onClick={() => onClick(slider)}>
-										{slider?.subLabel && (
-											<View className='absolute bottom-3 left-3 bg-white rounded-full px-4 py-1.5'>
-												<Text className='font-semibold text-red-700 text-[10px] uppercase'>
-													{slider.subLabel}
-												</Text>
-											</View>
-										)}
-									</View>
-
-									{slider?.action?.title && (
-										<View
-											style={{
-												...bannerDimensions,
-												height: 'initial'
-											}}
-											className='mt-1'>
-											{/* <Text className='font-bold line-clamp-2 block text-center'>
-												{slider?.action?.title}
-											</Text> */}
+									style={{
+										backgroundImage: `url(${slider.imageUrl})`,
+										...bannerDimensions,
+										backgroundSize: 'cover',
+										borderRadius: isBannerTrio ? '0px' : '12px'
+									}}
+									className='relative'
+									onClick={() => onClick(slider)}>
+									{slider?.subLabel && (
+										<View className='absolute bottom-3 left-3 bg-white rounded-full px-4 py-1.5'>
+											<Text className='font-semibold text-red-700 text-[10px] uppercase'>
+												{slider.subLabel}
+											</Text>
 										</View>
 									)}
 								</View>
-							))}
-					</View>
+
+								{slider?.action?.title && (
+									<View
+										style={{
+											...bannerDimensions,
+											height: 'initial'
+										}}
+										className='mt-1'>
+										{/* <Text className='font-bold line-clamp-2 block text-center'>
+											{slider?.action?.title}
+										</Text> */}
+									</View>
+								)}
+							</View>
+						))}
 				</View>
 
 				{hasMultipleImages && showArrows && (

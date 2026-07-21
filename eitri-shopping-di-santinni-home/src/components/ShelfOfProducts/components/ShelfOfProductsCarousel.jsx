@@ -40,11 +40,11 @@ export default function ShelfOfProductsCarousel(props) {
 					</CustomCarousel>
 
 					{productsList.length > 1 && (
-						<View className='flex justify-center gap-1 mt-2'>
+						<View className='flex justify-center items-center gap-1 mt-2'>
 							{productsList.map((_, index) => (
 								<View
 									key={index}
-									className={`${currentSlide === index ? 'bg-primary w-7' : 'bg-neutral-400 w-3'} h-3 rounded-lg transition-[width,background-color] duration-300 ease-in-out`}
+									className={`${currentSlide === index ? 'bg-red-700' : 'bg-white'} w-3 h-3 rounded-full transition-[width,background-color] duration-300 ease-in-out`}
 								/>
 							))}
 						</View>

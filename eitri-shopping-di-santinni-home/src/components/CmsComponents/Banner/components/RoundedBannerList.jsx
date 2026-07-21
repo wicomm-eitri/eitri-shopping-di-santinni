@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Text, View } from 'eitri-luminus'
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu'
 import { getProductsFacetsService } from '../../../../services/ProductService'
@@ -67,40 +67,41 @@ const fetchAllStoreSizes = async () => {
 			}
 		}))
 		.sort((a, b) => {
-			const getGroup = (title) => {
-				const isQuebrado = title.includes('-') || title.includes('/') || title.includes(',') || title.includes('.');
-				
-				const numMatch = title.match(/\d+/);
-				const num = numMatch ? parseInt(numMatch[0], 10) : NaN;
+			const getGroup = title => {
+				const isQuebrado =
+					title.includes('-') || title.includes('/') || title.includes(',') || title.includes('.')
+
+				const numMatch = title.match(/\d+/)
+				const num = numMatch ? parseInt(numMatch[0], 10) : NaN
 
 				if (!isNaN(num)) {
-					const isAdult = num >= 33;
-					
+					const isAdult = num >= 33
+
 					if (isAdult) {
-						return isQuebrado ? 2 : 1; // 1: Feminino inteiro, 2: Quebrado adulto
+						return isQuebrado ? 2 : 1 // 1: Feminino inteiro, 2: Quebrado adulto
 					} else {
-						return isQuebrado ? 4 : 3; // 3: Infantil inteiro, 4: Quebrado infantil
+						return isQuebrado ? 4 : 3 // 3: Infantil inteiro, 4: Quebrado infantil
 					}
 				}
-				
-				return 5; // Outros
-			};
 
-			const groupA = getGroup(a.title);
-			const groupB = getGroup(b.title);
+				return 5 // Outros
+			}
+
+			const groupA = getGroup(a.title)
+			const groupB = getGroup(b.title)
 
 			if (groupA !== groupB) {
-				return groupA - groupB;
+				return groupA - groupB
 			}
 
-			const numA = parseFloat(a.title);
-			const numB = parseFloat(b.title);
+			const numA = parseFloat(a.title)
+			const numB = parseFloat(b.title)
 
 			if (!Number.isNaN(numA) && !Number.isNaN(numB)) {
-				return numA - numB;
+				return numA - numB
 			}
 
-			return a.title.localeCompare(b.title);
+			return a.title.localeCompare(b.title)
 		})
 
 	return sorted
@@ -130,12 +131,9 @@ export default function RoundedBannerList(props) {
 		}
 	}, [isSizeCarousel, data.images])
 
-	const imagesList = isSizeCarousel ? (dynamicImagesList || data.images || []) : (data.images || [])
+	const imagesList = isSizeCarousel ? dynamicImagesList || data.images || [] : data.images || []
 
-	const [currentIndex, setCurrentIndex] = useState(0)
-	const [dragOffset, setDragOffset] = useState(0)
-	const [isDragging, setIsDragging] = useState(false)
-	const [startX, setStartX] = useState(0)
+	const scrollRef = useRef(null)
 
 	const paramsObject = Object.fromEntries((data?.params || []).map(item => [item.key, item.value]))
 	const hasMultipleImages = imagesList?.length > 1
@@ -160,59 +158,35 @@ export default function RoundedBannerList(props) {
 	const bannerWidth = Number.parseInt(bannerDimensions.width, 10) || 72
 	const bannerStep = bannerWidth + 16 // 16px for gap-4
 
-	const goToSlide = (direction, steps = 1) => {
-		if (!imagesList?.length) return
+	const getScrollElement = () => {
+		if (!scrollRef.current) return null
 
-		setDragOffset(0)
-		setIsDragging(false)
-
-		const containerWidth = typeof window !== 'undefined' ? window.innerWidth : 400
-		const itemsVisible = Math.max(1, Math.floor(containerWidth / bannerStep))
-		const maxIndex = Math.max(0, imagesList.length - itemsVisible)
-
-		setCurrentIndex(current => {
-			if (direction === 'right') {
-				const next = current + steps
-
-				return next > maxIndex ? maxIndex : next
-			}
-
-			const prev = current - steps
-
-			return prev < 0 ? 0 : prev
-		})
+		return typeof scrollRef.current.getViewElement === 'function'
+			? scrollRef.current.getViewElement()
+			: scrollRef.current
 	}
 
-	const handleDragStart = clientX => {
-		if (!hasMultipleImages) return
+	const goToSlide = direction => {
+		const element = getScrollElement()
 
-		setIsDragging(true)
-		setStartX(clientX)
-		setDragOffset(0)
-	}
+		if (!element) return
 
-	const handleDragMove = clientX => {
-		if (!isDragging) return
+		const maxScrollLeft = element.scrollWidth - element.clientWidth
 
-		setDragOffset(clientX - startX)
-	}
+		if (direction === 'right') {
+			const nextScrollLeft = element.scrollLeft + bannerStep
 
-	const handleDragEnd = () => {
-		if (!isDragging) return
-
-		const threshold = 25
-
-		if (Math.abs(dragOffset) > threshold) {
-			const steps = Math.max(1, Math.round(Math.abs(dragOffset) / bannerStep))
-			
-			if (dragOffset > 0) {
-				goToSlide('left', steps)
-			} else {
-				goToSlide('right', steps)
-			}
+			element.scrollTo({
+				left: nextScrollLeft >= maxScrollLeft - 1 ? 0 : nextScrollLeft,
+				behavior: 'smooth'
+			})
 		} else {
-			setDragOffset(0)
-			setIsDragging(false)
+			const prevScrollLeft = element.scrollLeft - bannerStep
+
+			element.scrollTo({
+				left: prevScrollLeft <= 0 ? maxScrollLeft : prevScrollLeft,
+				behavior: 'smooth'
+			})
 		}
 	}
 
@@ -227,66 +201,54 @@ export default function RoundedBannerList(props) {
 			)}
 
 			<View className='relative'>
-				<View className='overflow-hidden px-4 pb-2 w-full'>
-					<View
-						className='flex gap-4 transition-transform duration-300 ease-out touch-pan-y justify-start'
-						onTouchStart={e => handleDragStart(e.touches[0].clientX)}
-						onTouchMove={e => handleDragMove(e.touches[0].clientX)}
-						onTouchEnd={handleDragEnd}
-						onMouseDown={e => handleDragStart(e.clientX)}
-						onMouseMove={e => isDragging && handleDragMove(e.clientX)}
-						onMouseUp={handleDragEnd}
-						onMouseLeave={handleDragEnd}
-						style={{
-							transform: `translateX(calc(-${currentIndex * bannerStep}px + ${dragOffset}px))`,
-							transitionDuration: isDragging ? '0ms' : '300ms'
-						}}
-						title={data.mainTitle}>
-						{imagesList.map((slider, index) => {
-							const hasImage = !!slider.imageUrl
-							const labelText = slider?.action?.title || slider?.title
+				<View
+					ref={scrollRef}
+					className='flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory hide-scrollbar px-4 pb-2 justify-start'
+					title={data.mainTitle}>
+					{imagesList.map((slider, index) => {
+						const hasImage = !!slider.imageUrl
+						const labelText = slider?.action?.title || slider?.title
 
-							return (
+						return (
+							<View
+								key={`${slider.imageUrl || slider.id || 'circle'}-${index}`}
+								className='flex flex-col items-center justify-start shrink-0 snap-start'
+								onClick={() => onClick(slider)}>
 								<View
-									key={`${slider.imageUrl || slider.id || 'circle'}-${index}`}
-									className='flex flex-col items-center justify-start shrink-0'
-									onClick={() => onClick(slider)}>
-									<View
-										style={{
-											...bannerDimensions,
-											...(hasImage
-												? {
-														backgroundImage: `url(${slider.imageUrl})`,
-														backgroundSize: 'cover',
-														backgroundPosition: 'center'
-													}
-												: {})
-										}}
-										className={`rounded-full flex items-center justify-center transition-opacity active:opacity-70 ${
-											hasImage
-												? 'shadow-md border-none'
-												: 'border-[1.5px] border-red-700 bg-transparent'
-										}`}>
-										{!hasImage && labelText && (
-											<Text 
-												className='font-semibold text-red-700'
-												style={{ fontSize: '19px', whiteSpace: 'nowrap' }}>
-												{labelText}
-											</Text>
-										)}
-									</View>
-
-									{hasImage && labelText && (
-										<View className='pt-2 max-w-[80px]'>
-											<Text className='font-bold text-center line-clamp-2 leading-4 text-sm text-neutral-800'>
-												{labelText}
-											</Text>
-										</View>
+									style={{
+										...bannerDimensions,
+										...(hasImage
+											? {
+													backgroundImage: `url(${slider.imageUrl})`,
+													backgroundSize: 'cover',
+													backgroundPosition: 'center'
+												}
+											: {})
+									}}
+									className={`rounded-full flex items-center justify-center transition-opacity active:opacity-70 ${
+										hasImage
+											? 'shadow-md border-none'
+											: 'border-[1.5px] border-red-700 bg-transparent'
+									}`}>
+									{!hasImage && labelText && (
+										<Text
+											className='font-semibold text-red-700'
+											style={{ fontSize: '19px', whiteSpace: 'nowrap' }}>
+											{labelText}
+										</Text>
 									)}
 								</View>
-							)
-						})}
-					</View>
+
+								{hasImage && labelText && (
+									<View className='pt-2 max-w-[80px]'>
+										<Text className='font-bold text-center line-clamp-2 leading-4 text-sm text-neutral-800'>
+											{labelText}
+										</Text>
+									</View>
+								)}
+							</View>
+						)
+					})}
 				</View>
 
 				{hasMultipleImages && showArrows && (

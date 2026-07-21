@@ -57,7 +57,7 @@ export default function OrderList(props) {
 
 	return (
 		<ProtectedView afterLoginRedirectTo={'OrderList'}>
-			<Page>
+			<Page title='Meus pedidos'>
 				<HeaderContentWrapper>
 					<HeaderReturn />
 					<HeaderText text={t('orderList.myOrders', 'Meus Pedidos')} />

@@ -29,11 +29,7 @@ export default function ProtectedView(props) {
 
 	if (isLoading) {
 		return (
-			<View
-				display='flex'
-				justifyContent='center'
-				alignItems='center'
-				minHeight='100vh'>
+			<View className='flex justify-center items-center min-h-screen'>
 				<Text block>{labelLoading || t('protectedView.loading', 'Carregando...')}</Text>
 			</View>
 		)

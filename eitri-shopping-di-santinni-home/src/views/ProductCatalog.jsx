@@ -35,11 +35,11 @@ export default function ProductCatalog(props) {
 			<>
 				<MainHeader isPLP />
 
-				<View className='flex justify-center items-center px-4 my-4'>
-					<Text className='text-xl font-semibold text-center w-full'>
-						{title || t('productCatalog.title', 'Catálogo')}
-					</Text>
-				</View>
+				{title && (
+					<View className='flex justify-center items-center px-4 my-4'>
+						<Text className='text-xl font-semibold text-center w-full'>{title}</Text>
+					</View>
+				)}
 
 				{appliedFacets && (
 					<ProductCatalogContent
