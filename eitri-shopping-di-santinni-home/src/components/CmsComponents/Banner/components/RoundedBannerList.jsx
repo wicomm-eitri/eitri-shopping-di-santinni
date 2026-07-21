@@ -1,12 +1,126 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Text, View } from 'eitri-luminus'
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu'
+import { getProductsFacetsService } from '../../../../services/ProductService'
+
+let sizesCache = null
+
+const SIZE_DEPARTMENTS = ['feminino', 'masculino', 'infantil', 'tenis']
+
+const formatSizeLabel = (value, name) => {
+	if (/^\d+([.,]\d+)?$/.test(value)) return value
+	if (/^\d+-\d+$/.test(value)) return value
+	return (name || value).toUpperCase()
+}
+
+const isFootwearSize = value => {
+	const isNumeric = /^\d+([.,]\d+)?$/.test(value)
+	const isRange = /^\d+-\d+$/.test(value)
+	if (!isNumeric && !isRange) return false
+
+	const parts = value.split('-')
+	return parts.every(part => {
+		const num = parseFloat(part.replace(',', '.'))
+		return !isNaN(num) && num >= 10 && num <= 48
+	})
+}
+
+const fetchDepartmentSizes = async dept => {
+	try {
+		const res = await getProductsFacetsService({ facets: [{ key: 'category-1', value: dept }] })
+		const facet = res?.facets?.find(f => f.key === 'tamanho' || f.name?.toLowerCase() === 'tamanho')
+		if (!facet) return []
+		return (facet.values || []).map(v => ({
+			value: String(v.value),
+			name: String(v.name ?? v.value)
+		}))
+	} catch (e) {
+		return []
+	}
+}
+
+const fetchAllStoreSizes = async () => {
+	const results = await Promise.all(SIZE_DEPARTMENTS.map(fetchDepartmentSizes))
+	const byValue = new Map()
+	for (const list of results) {
+		for (const { value, name } of list) {
+			if (isFootwearSize(value) && !byValue.has(value)) {
+				byValue.set(value, formatSizeLabel(value, name))
+			}
+		}
+	}
+
+	const sorted = Array.from(byValue.entries())
+		.map(([value, text]) => ({
+			title: text,
+			action: {
+				type: 'path',
+				value: `/${encodeURIComponent(value)}?map=tamanho`
+			}
+		}))
+		.sort((a, b) => {
+			const getGroup = (title) => {
+				const isQuebrado = title.includes('-') || title.includes('/') || title.includes(',') || title.includes('.');
+				
+				const numMatch = title.match(/\d+/);
+				const num = numMatch ? parseInt(numMatch[0], 10) : NaN;
+
+				if (!isNaN(num)) {
+					const isAdult = num >= 33;
+					
+					if (isAdult) {
+						return isQuebrado ? 2 : 1; // 1: Feminino inteiro, 2: Quebrado adulto
+					} else {
+						return isQuebrado ? 4 : 3; // 3: Infantil inteiro, 4: Quebrado infantil
+					}
+				}
+				
+				return 5; // Outros
+			};
+
+			const groupA = getGroup(a.title);
+			const groupB = getGroup(b.title);
+
+			if (groupA !== groupB) {
+				return groupA - groupB;
+			}
+
+			const numA = parseFloat(a.title);
+			const numB = parseFloat(b.title);
+			if (!Number.isNaN(numA) && !Number.isNaN(numB)) {
+				return numA - numB;
+			}
+			return a.title.localeCompare(b.title);
+		})
+
+	return sorted
+}
 
 export default function RoundedBannerList(props) {
 	const { data, onClick } = props
 	const { size } = data
 
-	const imagesList = data.images || []
+	const [dynamicImagesList, setDynamicImagesList] = useState(null)
+	const isSizeCarousel = data?.mainTitle?.trim().toLowerCase() === 'compre por tamanho'
+
+	useEffect(() => {
+		if (isSizeCarousel) {
+			if (sizesCache) {
+				setDynamicImagesList(sizesCache)
+			} else {
+				fetchAllStoreSizes().then(sizes => {
+					if (sizes.length > 0) {
+						sizesCache = sizes
+						setDynamicImagesList(sizes)
+					} else {
+						setDynamicImagesList(data.images || [])
+					}
+				})
+			}
+		}
+	}, [isSizeCarousel, data.images])
+
+	const imagesList = isSizeCarousel ? (dynamicImagesList || data.images || []) : (data.images || [])
 
 	const [currentIndex, setCurrentIndex] = useState(0)
 	const [dragOffset, setDragOffset] = useState(0)
@@ -36,7 +150,7 @@ export default function RoundedBannerList(props) {
 	const bannerWidth = Number.parseInt(bannerDimensions.width, 10) || 72
 	const bannerStep = bannerWidth + 16 // 16px for gap-4
 
-	const goToSlide = direction => {
+	const goToSlide = (direction, steps = 1) => {
 		if (!imagesList?.length) return
 
 		setDragOffset(0)
@@ -48,10 +162,12 @@ export default function RoundedBannerList(props) {
 
 		setCurrentIndex(current => {
 			if (direction === 'right') {
-				return current >= maxIndex ? 0 : current + 1
+				const next = current + steps
+				return next > maxIndex ? maxIndex : next
 			}
 
-			return current <= 0 ? maxIndex : current - 1
+			const prev = current - steps
+			return prev < 0 ? 0 : prev
 		})
 	}
 
@@ -72,13 +188,15 @@ export default function RoundedBannerList(props) {
 	const handleDragEnd = () => {
 		if (!isDragging) return
 
-		const threshold = 50
+		const threshold = 25
 
 		if (Math.abs(dragOffset) > threshold) {
+			const steps = Math.max(1, Math.round(Math.abs(dragOffset) / bannerStep))
+			
 			if (dragOffset > 0) {
-				goToSlide('left')
+				goToSlide('left', steps)
 			} else {
-				goToSlide('right')
+				goToSlide('right', steps)
 			}
 		} else {
 			setDragOffset(0)
@@ -138,7 +256,11 @@ export default function RoundedBannerList(props) {
 												: 'border-[1.5px] border-red-700 bg-transparent'
 										}`}>
 										{!hasImage && labelText && (
-											<Text className='font-semibold text-xl text-red-700'>{labelText}</Text>
+											<Text 
+												className='font-semibold text-red-700'
+												style={{ fontSize: '19px', whiteSpace: 'nowrap' }}>
+												{labelText}
+											</Text>
 										)}
 									</View>
 
