@@ -8,7 +8,7 @@ export default function CategoryTitle(props) {
 		return (
 			<View
 				onClick={onClick}
-				className='relative rounded-xl overflow-hidden bg-[#C5C5C5] h-[115px] w-full flex items-center justify-center p-2 cursor-pointer transition-opacity active:opacity-80'
+				className='relative rounded-xl overflow-hidden bg-[#C5C5C5] h-[115px] w-full flex items-center justify-center p-2  transition-opacity active:opacity-80'
 				style={{ backgroundColor: color || '#C5C5C5' }}>
 				{imgSrc && (
 					<View className='flex items-center justify-center h-full pb-4 pt-1 w-full'>

@@ -10,7 +10,6 @@ import Header from '../components/Header/Header'
 import ImageCarousel from '../components/ImageCarousel/ImageCarousel'
 import MainDescription from '../components/MainDescription/MainDescription'
 import RecommendationProducts from '../components/RecommendationProducts/RecommendationProducts'
-import RenderVideo from '../components/RenderVideo/RenderVideo'
 import SkuSelector from '../components/SkuSelector/SkuSelector'
 import { useLocalShoppingCart } from '../providers/LocalCart'
 import { startConfigure } from '../services/AppService'
@@ -227,12 +226,6 @@ export default function Home() {
 							</View>
 
 							{configLoaded && <Freight currentSku={currentSku} />}
-
-							<RenderVideo
-								isMocked
-								videoUrl={'https://shoulder.com.br/cdn/ecommerce/lps/2024/lpgetbeemob.mp4'}
-							/>
-
 							{/*<RichContent product={product} />*/}
 
 							<DescriptionComponent product={product} />

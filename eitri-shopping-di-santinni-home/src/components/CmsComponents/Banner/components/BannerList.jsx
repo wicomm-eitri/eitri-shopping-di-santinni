@@ -156,9 +156,11 @@ export default function BannerList(props) {
 		}
 	}
 
+	const isComprePorCategorias = data?.mainTitle?.trim().toLowerCase() === 'compre por categorias'
+
 	return (
 		<View
-			className={`flex flex-col gap-2 ${data?.isHideBanner ? 'hidden' : 'block'} ${isBannerTrio ? 'mb-[20px]' : ''}`}>
+			className={`flex flex-col gap-2 ${data?.isHideBanner ? 'hidden' : 'block'} ${isBannerTrio ? 'mb-[20px]' : ''} ${isComprePorCategorias ? 'mb-8' : ''}`}>
 			{data?.mainTitle && (
 				<View className='px-4 mb-8'>
 					<Text className='font-semibold text-2xl text-[#0C0C0C]'>{data.mainTitle}</Text>
@@ -184,8 +186,8 @@ export default function BannerList(props) {
 									className='relative'
 									onClick={() => onClick(slider)}>
 									{slider?.subLabel && (
-										<View className='absolute bottom-3 left-3 bg-white rounded-full px-4 py-1.5'>
-											<Text className='font-semibold text-red-700 text-[10px] uppercase'>
+										<View className='absolute bottom-3 left-1/2 -translate-x-1/2 bg-white rounded-full px-4 py-1.5 flex items-center justify-center'>
+											<Text className='font-semibold text-red-700 text-[10px] uppercase text-center'>
 												{slider.subLabel}
 											</Text>
 										</View>

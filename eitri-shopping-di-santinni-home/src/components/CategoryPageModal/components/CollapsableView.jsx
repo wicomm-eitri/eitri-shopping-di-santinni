@@ -18,7 +18,7 @@ export default function CollapsableView(props) {
 			className='border-neutral-content p-2'>
 			<View
 				onClick={toggleCollapsedState}
-				className='flex flex-row justify-between items-center cursor-pointer hover:bg-gray-100 p-2 rounded transition-colors'>
+				className='flex flex-row justify-between items-center  hover:bg-gray-100 p-2 rounded transition-colors'>
 				<Text className='text-base font-medium'>{title}</Text>
 
 				<svg

@@ -5,7 +5,7 @@ export default function Quantity(props) {
 
 	return (
 		<View className='flex items-center justify-between border border-[#CACACA] rounded-full w-[98px] h-[32px] px-2'>
-			<View className='w-[24px] h-[24px] flex items-center justify-center cursor-pointer'>
+			<View className='w-[24px] h-[24px] flex items-center justify-center '>
 				{quantity === 1 || disable ? (
 					<svg
 						width='16px'
@@ -49,7 +49,7 @@ export default function Quantity(props) {
 				<Text className='px-1 py-1 text-sm font-medium text-center flex-1'>{quantity}</Text>
 			)}
 
-			<View className='w-[24px] h-[24px] flex items-center justify-center cursor-pointer'>
+			<View className='w-[24px] h-[24px] flex items-center justify-center '>
 				{disable ? (
 					<View className='w-[16px] h-[16px]'>
 						<svg

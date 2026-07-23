@@ -1,111 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Text, View } from 'eitri-luminus'
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu'
-import { getProductsFacetsService } from '../../../../services/ProductService'
-
-let sizesCache = null
-
-const SIZE_DEPARTMENTS = ['feminino', 'masculino', 'infantil', 'tenis']
-
-const formatSizeLabel = (value, name) => {
-	if (/^\d+([.,]\d+)?$/.test(value)) return value
-
-	if (/^\d+-\d+$/.test(value)) return value
-
-	return (name || value).toUpperCase()
-}
-
-const isFootwearSize = value => {
-	const isNumeric = /^\d+([.,]\d+)?$/.test(value)
-	const isRange = /^\d+-\d+$/.test(value)
-
-	if (!isNumeric && !isRange) return false
-
-	const parts = value.split('-')
-
-	return parts.every(part => {
-		const num = parseFloat(part.replace(',', '.'))
-
-		return !isNaN(num) && num >= 10 && num <= 48
-	})
-}
-
-const fetchDepartmentSizes = async dept => {
-	try {
-		const res = await getProductsFacetsService({ facets: [{ key: 'category-1', value: dept }] })
-		const facet = res?.facets?.find(f => f.key === 'tamanho' || f.name?.toLowerCase() === 'tamanho')
-
-		if (!facet) return []
-
-		return (facet.values || []).map(v => ({
-			value: String(v.value),
-			name: String(v.name ?? v.value)
-		}))
-	} catch (e) {
-		return []
-	}
-}
-
-const fetchAllStoreSizes = async () => {
-	const results = await Promise.all(SIZE_DEPARTMENTS.map(fetchDepartmentSizes))
-	const byValue = new Map()
-
-	for (const list of results) {
-		for (const { value, name } of list) {
-			if (isFootwearSize(value) && !byValue.has(value)) {
-				byValue.set(value, formatSizeLabel(value, name))
-			}
-		}
-	}
-
-	const sorted = Array.from(byValue.entries())
-		.map(([value, text]) => ({
-			title: text,
-			action: {
-				type: 'path',
-				value: `/${encodeURIComponent(value)}?map=tamanho`
-			}
-		}))
-		.sort((a, b) => {
-			const getGroup = title => {
-				const isQuebrado =
-					title.includes('-') || title.includes('/') || title.includes(',') || title.includes('.')
-
-				const numMatch = title.match(/\d+/)
-				const num = numMatch ? parseInt(numMatch[0], 10) : NaN
-
-				if (!isNaN(num)) {
-					const isAdult = num >= 33
-
-					if (isAdult) {
-						return isQuebrado ? 2 : 1
-					} else {
-						return isQuebrado ? 4 : 3
-					}
-				}
-
-				return 5
-			}
-
-			const groupA = getGroup(a.title)
-			const groupB = getGroup(b.title)
-
-			if (groupA !== groupB) {
-				return groupA - groupB
-			}
-
-			const numA = parseFloat(a.title)
-			const numB = parseFloat(b.title)
-
-			if (!Number.isNaN(numA) && !Number.isNaN(numB)) {
-				return numA - numB
-			}
-
-			return a.title.localeCompare(b.title)
-		})
-
-	return sorted
-}
+import { fetchAllStoreSizes } from '../../../../services/sizesService'
 
 export default function RoundedBannerList(props) {
 	const { data, onClick } = props
@@ -116,18 +12,13 @@ export default function RoundedBannerList(props) {
 
 	useEffect(() => {
 		if (isSizeCarousel) {
-			if (sizesCache) {
-				setDynamicImagesList(sizesCache)
-			} else {
-				fetchAllStoreSizes().then(sizes => {
-					if (sizes.length > 0) {
-						sizesCache = sizes
-						setDynamicImagesList(sizes)
-					} else {
-						setDynamicImagesList(data.images || [])
-					}
-				})
-			}
+			fetchAllStoreSizes().then(sizes => {
+				if (sizes && sizes.length > 0) {
+					setDynamicImagesList(sizes)
+				} else {
+					setDynamicImagesList(data.images || [])
+				}
+			})
 		}
 	}, [isSizeCarousel, data.images])
 
