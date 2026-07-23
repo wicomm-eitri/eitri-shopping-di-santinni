@@ -15,6 +15,7 @@ const CollapsableFilterSection = ({ title, children }) => {
 				onClick={() => setCollapsed(!collapsed)}
 				className='flex flex-row justify-between items-center cursor-pointer hover:bg-gray-100 p-2 rounded transition-colors'>
 				<Text className='text-base font-medium'>{title}</Text>
+
 				<svg
 					viewBox='0 0 24 24'
 					width='20'
@@ -31,6 +32,7 @@ const CollapsableFilterSection = ({ title, children }) => {
 					/>
 				</svg>
 			</View>
+
 			{!collapsed && <View>{children}</View>}
 		</View>
 	)
@@ -190,6 +192,7 @@ export default function CatalogFilter(props) {
 					strokeLinejoin='round'>
 					<path d='M22 3H2l8 9.46V19l4 2v-8.54L22 3z' />
 				</svg>
+
 				<Text className='text-xs uppercase text-gray-500'>{t('categoryPageModal.title', 'Filtros')}</Text>
 			</View>
 
@@ -207,7 +210,7 @@ export default function CatalogFilter(props) {
 						<View className='flex flex-col gap-4 mt-4'>
 							{filterFacets.map(facet => (
 								<CollapsableFilterSection
-									key={facet.key}
+									key={facet.name}
 									title={facet.name}>
 									<View className='flex flex-col gap-4 mt-2'>
 										{facet.values.map((value, index) => (
@@ -224,6 +227,7 @@ export default function CatalogFilter(props) {
 									</View>
 								</CollapsableFilterSection>
 							))}
+
 							<CollapsableFilterSection
 								key='price'
 								title='Faixa de preço'>
@@ -251,6 +255,7 @@ export default function CatalogFilter(props) {
 										</Text>
 									</View>
 								</View>
+
 								<View className='flex-1'>
 									<View
 										onClick={onApplyFilters}
@@ -261,6 +266,7 @@ export default function CatalogFilter(props) {
 									</View>
 								</View>
 							</View>
+
 							<BottomInset />
 						</View>
 

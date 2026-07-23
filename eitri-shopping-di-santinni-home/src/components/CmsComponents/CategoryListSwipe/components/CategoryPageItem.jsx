@@ -9,7 +9,10 @@ import {
 } from 'eitri-shopping-di-santinni-shared'
 import { goToCart, goToSearch } from '../../../../utils/utils'
 import CategoryGroupTitle from './CategoryGroupTitle'
+import CategorySizeSwipe from './CategorySizeSwipe'
 import CategoryTitle from './CategoryTitle'
+
+const SIZE_SECTION_TITLE = 'compre por tamanho'
 
 export default function CategoryPageItem({ item, goToItem }) {
 	const { t } = useTranslation()
@@ -65,31 +68,48 @@ export default function CategoryPageItem({ item, goToItem }) {
 					className='bg-white flex-1 overflow-y-auto'>
 					{/* TODO: Perguntar Erick sobre o padding horizontal, se é 26px ou 24px */}
 					<View className='flex flex-col px-[26px] py-[32px] gap-8'>
-						{item?.subcategories?.map(s => (
-							<View
-								key={s.title}
-								className='flex flex-col gap-6'>
-								<CategoryGroupTitle title={s.title} />
-								{s?.subSubcategories?.map((subItem, index) => (
-									<CategoryTitle
-										key={`${subItem.title}-${index}`}
-										icon={subItem.icon}
-										hasSubItems={false}
-										title={subItem.title}
-										onClick={() => handleItemPress(subItem)}
+						{item?.subcategories?.map(s => {
+							const isSizeSection = s.title?.trim().toLowerCase() === SIZE_SECTION_TITLE
+
+							return (
+								<View
+									key={s.title}
+									className='flex flex-col gap-4'>
+									<CategoryGroupTitle
+										title={s.title}
+										variant={isSizeSection ? 'size' : undefined}
 									/>
-								))}
-								{s?.action && (
-									<CategoryTitle
-										icon={s.icon}
-										hasSubItems={false}
-										title={`${t('categoryPageItem.seeAll', 'Ver tudo')}`}
-										onClick={() => goToItem(s)}
-										textClassName='!capitalize !text-red-700'
-									/>
-								)}
-							</View>
-						))}
+
+									{isSizeSection ? (
+										<CategorySizeSwipe
+											items={s?.subSubcategories}
+											onItemClick={handleItemPress}
+										/>
+									) : (
+										s?.subSubcategories?.map((subItem, index) => (
+											<CategoryTitle
+												key={`${subItem.title}-${index}`}
+												icon={subItem.icon}
+												hasSubItems={false}
+												title={subItem.title}
+												onClick={() => handleItemPress(subItem)}
+												textClassName='text-sm'
+											/>
+										))
+									)}
+
+									{s?.action && !isSizeSection && (
+										<CategoryTitle
+											icon={s.icon}
+											hasSubItems={false}
+											title={`${t('categoryPageItem.seeAll', 'Ver tudo')}`}
+											onClick={() => goToItem(s)}
+											textClassName='!capitalize !text-red-700 underline'
+										/>
+									)}
+								</View>
+							)
+						})}
 						{/* {item?.action && (
 							<CategoryTitle
 								icon={item.icon}

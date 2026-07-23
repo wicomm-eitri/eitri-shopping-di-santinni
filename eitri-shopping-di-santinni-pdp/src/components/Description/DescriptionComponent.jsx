@@ -1,4 +1,3 @@
-
 export default function DescriptionComponent(props) {
 	const { product } = props
 
@@ -65,9 +64,7 @@ export default function DescriptionComponent(props) {
 
 		if (product?.careInstructions) return product.careInstructions
 
-		const careSpec = specifications.find(spec =>
-			/cuidado|conserva|limpeza|higieniza|manuten/i.test(spec.name)
-		)
+		const careSpec = specifications.find(spec => /cuidado|conserva|limpeza|higieniza|manuten/i.test(spec.name))
 
 		return careSpec ? careSpec.value : null
 	}
@@ -76,8 +73,9 @@ export default function DescriptionComponent(props) {
 
 	const tabs = [
 		{ id: 'description', label: 'Descrição' },
-		{ id: 'especifications', label: 'Especificações' },
-		{ id: 'care', label: 'Cuidados' }
+		{ id: 'especifications', label: 'Especificações' }
+		// { id: 'care', label: 'Cuidados' },
+		//{ id: 'reviews', label: 'Avaliações' }
 	]
 
 	useEffect(() => {
@@ -120,9 +118,7 @@ export default function DescriptionComponent(props) {
 								{tab.label}
 							</Text>
 
-							<View
-								className={isSelected ? 'w-full h-[3px] bg-red-700' : 'w-full h-[3px] bg-white'}
-							/>
+							<View className={isSelected ? 'w-full h-[3px] bg-red-700' : 'w-full h-[3px] bg-white'} />
 						</View>
 					)
 				})}
@@ -145,9 +141,7 @@ export default function DescriptionComponent(props) {
 							<View
 								key={`${spec.name}-${idx}`}
 								className='flex flex-row justify-between border-b border-gray-100 pb-2 gap-4'>
-								<Text className='font-semibold text-gray-700 text-sm min-w-[120px]'>
-									{spec.name}
-								</Text>
+								<Text className='font-semibold text-gray-700 text-sm min-w-[120px]'>{spec.name}</Text>
 								<View className='flex-1 text-right flex justify-end'>
 									<HTMLRender html={spec.value} />
 								</View>
@@ -162,7 +156,8 @@ export default function DescriptionComponent(props) {
 					<HTMLRender html={careContent} />
 				) : (
 					<Text className='text-sm text-gray-600 leading-relaxed'>
-						Para garantir a durabilidade e boa conservação do produto, limpe-o regularmente com pano macio e levemente úmido. Evite o uso de produtos químicos agressivos ou lavar na máquina.
+						Para garantir a durabilidade e boa conservação do produto, limpe-o regularmente com pano macio e
+						levemente úmido. Evite o uso de produtos químicos agressivos ou lavar na máquina.
 					</Text>
 				)
 			default:
@@ -180,4 +175,3 @@ export default function DescriptionComponent(props) {
 		</View>
 	)
 }
-

@@ -35,7 +35,9 @@ function findSelectedSku(skus, attributeKeys, selections) {
 	return skus.find(s => attributeKeys.every(k => s.attributes[k] === selections[k])) || null
 }
 
-const COR_MAP = {
+const COLOR_ATTRIBUTE_NAMES = ['cor', 'color', 'cor do produto', 'cores']
+
+export const COR_MAP = {
 	azul: '#3b5bdb',
 	vermelho: '#e03131',
 	vermelha: '#e03131',
@@ -106,7 +108,7 @@ function OptionChip({ value, selected, status, onClick }) {
 }
 
 export default function SkuSelector(props) {
-	const { product, currentSku, onSkuChange } = props
+	const { product, currentSku, onSkuChange, hideColorAttribute } = props
 
 	const [selections, setSelections] = useState({})
 
@@ -153,7 +155,13 @@ export default function SkuSelector(props) {
 	const attributeKeys = useMemo(() => {
 		if (!skus?.length) return []
 
-		const keys = Object.keys(skus[0].attributes)
+		// Quando há variantes de cor entre produtos (ColorVariants), a troca de cor acontece por lá,
+		// então some com o atributo "Cor" daqui pra não duplicar o seletor
+		let keys = Object.keys(skus[0].attributes)
+
+		if (hideColorAttribute) {
+			keys = keys.filter(key => !COLOR_ATTRIBUTE_NAMES.includes(key.toLowerCase()))
+		}
 
 		// Ensure "Tamanho" (size) appears first when present
 		const idx = keys.indexOf('Tamanho')
@@ -164,7 +172,7 @@ export default function SkuSelector(props) {
 		}
 
 		return keys
-	}, [skus])
+	}, [skus, hideColorAttribute])
 
 	const handleSelect = (key, value) => {
 		const isSame = selections[key] === value
@@ -184,12 +192,7 @@ export default function SkuSelector(props) {
 			{attributeKeys.map(key => {
 				const values = getUniqueValues(skus, key)
 				const statusMap = getOptionStatus(skus, attributeKeys, key, selections)
-				// const isCor = key === 'Cor'
-				const isCor =
-					key.toLowerCase() === 'cor' ||
-					key.toLowerCase() === 'color' ||
-					key.toLowerCase() === 'cor do produto' ||
-					key.toLowerCase() === 'cores'
+				const isCor = COLOR_ATTRIBUTE_NAMES.includes(key.toLowerCase())
 
 				return (
 					<View key={key}>

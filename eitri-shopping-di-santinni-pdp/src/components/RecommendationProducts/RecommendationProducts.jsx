@@ -1,4 +1,5 @@
 import { useTranslation } from 'eitri-i18n'
+import { BottomInset } from 'eitri-shopping-di-santinni-shared'
 import { getProductsRecommendations } from '../../services/productService'
 import ShelfOfProductsCarousel from '../ShelfOfProducts/components/ShelfOfProductsCarousel'
 
@@ -80,6 +81,9 @@ export default function RecommendationProducts(props) {
 					gap={16}
 				/>
 			)}
+
+			<BottomInset />
+			<BottomInset />
 		</View>
 	)
 }

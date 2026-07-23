@@ -85,10 +85,6 @@ export default function Home(props) {
 		sendScreenView('Perfil', 'Home')
 
 		Eitri.navigation.setOnResumeListener(() => init())
-
-		// setTimeout(() => {
-		// 	navigate(PAGES.BECOMEAFRANCHISEE)
-		// }, 1000)
 	}, [])
 
 	const init = async () => {

@@ -61,7 +61,7 @@ export default function SliderHero(props) {
 						{imagesList.map(renderImage)}
 					</Carousel>
 
-					<View className='absolute left-0 right-0 flex justify-center items-center gap-1 bottom-4'>
+					<View className='absolute left-0 right-0 flex justify-center items-center gap-1 bottom-7'>
 						{imagesList.map((_, index) => (
 							<View
 								key={index}

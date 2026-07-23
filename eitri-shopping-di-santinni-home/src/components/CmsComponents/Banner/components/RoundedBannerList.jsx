@@ -1,17 +1,139 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Text, View } from 'eitri-luminus'
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu'
+import { getProductsFacetsService } from '../../../../services/ProductService'
+
+let sizesCache = null
+
+const SIZE_DEPARTMENTS = ['feminino', 'masculino', 'infantil', 'tenis']
+
+const formatSizeLabel = (value, name) => {
+	if (/^\d+([.,]\d+)?$/.test(value)) return value
+
+	if (/^\d+-\d+$/.test(value)) return value
+
+	return (name || value).toUpperCase()
+}
+
+const isFootwearSize = value => {
+	const isNumeric = /^\d+([.,]\d+)?$/.test(value)
+	const isRange = /^\d+-\d+$/.test(value)
+
+	if (!isNumeric && !isRange) return false
+
+	const parts = value.split('-')
+
+	return parts.every(part => {
+		const num = parseFloat(part.replace(',', '.'))
+
+		return !isNaN(num) && num >= 10 && num <= 48
+	})
+}
+
+const fetchDepartmentSizes = async dept => {
+	try {
+		const res = await getProductsFacetsService({ facets: [{ key: 'category-1', value: dept }] })
+		const facet = res?.facets?.find(f => f.key === 'tamanho' || f.name?.toLowerCase() === 'tamanho')
+
+		if (!facet) return []
+
+		return (facet.values || []).map(v => ({
+			value: String(v.value),
+			name: String(v.name ?? v.value)
+		}))
+	} catch (e) {
+		return []
+	}
+}
+
+const fetchAllStoreSizes = async () => {
+	const results = await Promise.all(SIZE_DEPARTMENTS.map(fetchDepartmentSizes))
+	const byValue = new Map()
+
+	for (const list of results) {
+		for (const { value, name } of list) {
+			if (isFootwearSize(value) && !byValue.has(value)) {
+				byValue.set(value, formatSizeLabel(value, name))
+			}
+		}
+	}
+
+	const sorted = Array.from(byValue.entries())
+		.map(([value, text]) => ({
+			title: text,
+			action: {
+				type: 'path',
+				value: `/${encodeURIComponent(value)}?map=tamanho`
+			}
+		}))
+		.sort((a, b) => {
+			const getGroup = title => {
+				const isQuebrado =
+					title.includes('-') || title.includes('/') || title.includes(',') || title.includes('.')
+
+				const numMatch = title.match(/\d+/)
+				const num = numMatch ? parseInt(numMatch[0], 10) : NaN
+
+				if (!isNaN(num)) {
+					const isAdult = num >= 33
+
+					if (isAdult) {
+						return isQuebrado ? 2 : 1
+					} else {
+						return isQuebrado ? 4 : 3
+					}
+				}
+
+				return 5
+			}
+
+			const groupA = getGroup(a.title)
+			const groupB = getGroup(b.title)
+
+			if (groupA !== groupB) {
+				return groupA - groupB
+			}
+
+			const numA = parseFloat(a.title)
+			const numB = parseFloat(b.title)
+
+			if (!Number.isNaN(numA) && !Number.isNaN(numB)) {
+				return numA - numB
+			}
+
+			return a.title.localeCompare(b.title)
+		})
+
+	return sorted
+}
 
 export default function RoundedBannerList(props) {
 	const { data, onClick } = props
 	const { size } = data
 
-	const imagesList = data.images || []
+	const [dynamicImagesList, setDynamicImagesList] = useState(null)
+	const isSizeCarousel = data?.mainTitle?.trim().toLowerCase() === 'compre por tamanho'
 
-	const [currentIndex, setCurrentIndex] = useState(0)
-	const [dragOffset, setDragOffset] = useState(0)
-	const [isDragging, setIsDragging] = useState(false)
-	const [startX, setStartX] = useState(0)
+	useEffect(() => {
+		if (isSizeCarousel) {
+			if (sizesCache) {
+				setDynamicImagesList(sizesCache)
+			} else {
+				fetchAllStoreSizes().then(sizes => {
+					if (sizes.length > 0) {
+						sizesCache = sizes
+						setDynamicImagesList(sizes)
+					} else {
+						setDynamicImagesList(data.images || [])
+					}
+				})
+			}
+		}
+	}, [isSizeCarousel, data.images])
+
+	const imagesList = isSizeCarousel ? dynamicImagesList || data.images || [] : data.images || []
+
+	const scrollRef = useRef(null)
 
 	const paramsObject = Object.fromEntries((data?.params || []).map(item => [item.key, item.value]))
 	const hasMultipleImages = imagesList?.length > 1
@@ -34,55 +156,37 @@ export default function RoundedBannerList(props) {
 
 	const bannerDimensions = getBannerDimensions()
 	const bannerWidth = Number.parseInt(bannerDimensions.width, 10) || 72
-	const bannerStep = bannerWidth + 16 // 16px for gap-4
+	const bannerStep = bannerWidth + 16
+
+	const getScrollElement = () => {
+		if (!scrollRef.current) return null
+
+		return typeof scrollRef.current.getViewElement === 'function'
+			? scrollRef.current.getViewElement()
+			: scrollRef.current
+	}
 
 	const goToSlide = direction => {
-		if (!imagesList?.length) return
+		const element = getScrollElement()
 
-		setDragOffset(0)
-		setIsDragging(false)
+		if (!element) return
 
-		const containerWidth = typeof window !== 'undefined' ? window.innerWidth : 400
-		const itemsVisible = Math.max(1, Math.floor(containerWidth / bannerStep))
-		const maxIndex = Math.max(0, imagesList.length - itemsVisible)
+		const maxScrollLeft = element.scrollWidth - element.clientWidth
 
-		setCurrentIndex(current => {
-			if (direction === 'right') {
-				return current >= maxIndex ? 0 : current + 1
-			}
+		if (direction === 'right') {
+			const nextScrollLeft = element.scrollLeft + bannerStep
 
-			return current <= 0 ? maxIndex : current - 1
-		})
-	}
-
-	const handleDragStart = clientX => {
-		if (!hasMultipleImages) return
-
-		setIsDragging(true)
-		setStartX(clientX)
-		setDragOffset(0)
-	}
-
-	const handleDragMove = clientX => {
-		if (!isDragging) return
-
-		setDragOffset(clientX - startX)
-	}
-
-	const handleDragEnd = () => {
-		if (!isDragging) return
-
-		const threshold = 50
-
-		if (Math.abs(dragOffset) > threshold) {
-			if (dragOffset > 0) {
-				goToSlide('left')
-			} else {
-				goToSlide('right')
-			}
+			element.scrollTo({
+				left: nextScrollLeft >= maxScrollLeft - 1 ? 0 : nextScrollLeft,
+				behavior: 'smooth'
+			})
 		} else {
-			setDragOffset(0)
-			setIsDragging(false)
+			const prevScrollLeft = element.scrollLeft - bannerStep
+
+			element.scrollTo({
+				left: prevScrollLeft <= 0 ? maxScrollLeft : prevScrollLeft,
+				behavior: 'smooth'
+			})
 		}
 	}
 
@@ -97,62 +201,54 @@ export default function RoundedBannerList(props) {
 			)}
 
 			<View className='relative'>
-				<View className='overflow-hidden px-4 pb-2 w-full'>
-					<View
-						className='flex gap-4 transition-transform duration-300 ease-out touch-pan-y justify-start'
-						onTouchStart={e => handleDragStart(e.touches[0].clientX)}
-						onTouchMove={e => handleDragMove(e.touches[0].clientX)}
-						onTouchEnd={handleDragEnd}
-						onMouseDown={e => handleDragStart(e.clientX)}
-						onMouseMove={e => isDragging && handleDragMove(e.clientX)}
-						onMouseUp={handleDragEnd}
-						onMouseLeave={handleDragEnd}
-						style={{
-							transform: `translateX(calc(-${currentIndex * bannerStep}px + ${dragOffset}px))`,
-							transitionDuration: isDragging ? '0ms' : '300ms'
-						}}
-						title={data.mainTitle}>
-						{imagesList.map((slider, index) => {
-							const hasImage = !!slider.imageUrl
-							const labelText = slider?.action?.title || slider?.title
+				<View
+					ref={scrollRef}
+					className='flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory hide-scrollbar px-4 pb-2 justify-start'
+					title={data.mainTitle}>
+					{imagesList.map((slider, index) => {
+						const hasImage = !!slider.imageUrl
+						const labelText = slider?.action?.title || slider?.title
 
-							return (
+						return (
+							<View
+								key={`${slider.imageUrl || slider.id || 'circle'}-${index}`}
+								className='flex flex-col items-center justify-start shrink-0 snap-start'
+								onClick={() => onClick(slider)}>
 								<View
-									key={`${slider.imageUrl || slider.id || 'circle'}-${index}`}
-									className='flex flex-col items-center justify-start shrink-0'
-									onClick={() => onClick(slider)}>
-									<View
-										style={{
-											...bannerDimensions,
-											...(hasImage
-												? {
-														backgroundImage: `url(${slider.imageUrl})`,
-														backgroundSize: 'cover',
-														backgroundPosition: 'center'
-													}
-												: {})
-										}}
-										className={`rounded-full flex items-center justify-center transition-opacity active:opacity-70 ${
-											hasImage
-												? 'shadow-md border-none'
-												: 'border-[1.5px] border-red-700 bg-transparent'
-										}`}>
-										{!hasImage && labelText && (
-											<Text className='font-semibold text-xl text-red-700'>{labelText}</Text>
-										)}
-									</View>
-
-									{hasImage && labelText && (
-										<View className='pt-2 max-w-[80px]'>
-											<Text className='font-bold text-center line-clamp-2 leading-4 text-sm text-neutral-800'>
-												{labelText}
-											</Text>
-										</View>
+									style={{
+										...bannerDimensions,
+										...(hasImage
+											? {
+													backgroundImage: `url(${slider.imageUrl})`,
+													backgroundSize: 'cover',
+													backgroundPosition: 'center'
+												}
+											: {})
+									}}
+									className={`rounded-full flex items-center justify-center transition-opacity active:opacity-70 ${
+										hasImage
+											? 'shadow-md border-none'
+											: 'border-[1.5px] border-red-700 bg-transparent'
+									}`}>
+									{!hasImage && labelText && (
+										<Text
+											className='font-semibold text-red-700'
+											style={{ fontSize: '19px', whiteSpace: 'nowrap' }}>
+											{labelText}
+										</Text>
 									)}
 								</View>
-							)
-						})}
-					</View>
+
+								{hasImage && labelText && (
+									<View className='pt-2 max-w-[80px]'>
+										<Text className='font-bold text-center line-clamp-2 leading-4 text-sm text-neutral-800'>
+											{labelText}
+										</Text>
+									</View>
+								)}
+							</View>
+						)
+					})}
 				</View>
 
 				{hasMultipleImages && showArrows && (

@@ -12,8 +12,12 @@ export default function CategoryTitle(props) {
 						src={icon}
 					/>
 				)}
-				<Text className={`${textClassName || ''} ${(hasSubItems ? 'text-neutral-700' : 'text-neutral-900')} tracking-[0.32px] leading-5`}>{title}</Text>
+				<Text
+					className={`${textClassName || ''} ${hasSubItems ? 'text-neutral-700' : 'text-neutral-900'} tracking-[0.32px] leading-5`}>
+					{title}
+				</Text>
 			</View>
+
 			{hasSubItems && (
 				<svg
 					xmlns='http://www.w3.org/2000/svg'

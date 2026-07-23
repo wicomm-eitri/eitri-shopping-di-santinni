@@ -35,7 +35,7 @@ export default function OrderCard(props) {
 		if (orderDetail) {
 			navigate(PAGES.ORDER_DETAILS, { order: orderDetail })
 		} else {
-			navigate(PAGES.ORDER_DETAILS, { order: order.orderId })
+			navigate(PAGES.ORDER_DETAILS, { orderId: order.orderId })
 		}
 	}
 
@@ -62,7 +62,7 @@ export default function OrderCard(props) {
 		<View className='flex flex-col bg-white rounded shadow-sm border border-gray-100 w-full p-4'>
 			<View className='flex flex-row items-center gap-4 mb-4'>
 				{/* Removido o 'rounded' para deixar quadrado como na imagem */}
-				<View className='w-24 h-24 bg-gray-50 flex items-center justify-center shrink-0'>
+				<View className='w-20 h-20 bg-gray-50 flex items-center justify-center shrink-0'>
 					{loadingDetails ? (
 						<View className='w-full h-full bg-gray-100 animate-pulse' />
 					) : firstItemImage ? (

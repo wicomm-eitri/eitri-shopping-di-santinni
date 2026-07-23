@@ -21,3 +21,15 @@ export const openProduct = async product => {
 		console.error('navigate to cart: Error trying to open cart', e)
 	}
 }
+
+export const openProductVariant = async productId => {
+	try {
+		Eitri.nativeNavigation.open({
+			slug: 'pdp',
+			initParams: { productId },
+			replace: true
+		})
+	} catch (e) {
+		console.error('navigate to product variant: Error trying to open pdp', e)
+	}
+}
