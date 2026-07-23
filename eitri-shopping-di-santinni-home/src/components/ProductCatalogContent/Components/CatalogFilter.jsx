@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'eitri-i18n'
 import { BottomInset, CustomCheckbox } from 'eitri-shopping-di-santinni-shared'
 import { getProductsFacetsService } from '../../../services/ProductService'
+import { normalizeFacets } from '../../../services/helpers/normalizeFacets'
 import CustomModal from '../../CustomModal/CustomModal'
 import PriceRange from './PriceRange'
 
@@ -75,90 +76,7 @@ export default function CatalogFilter(props) {
 			}
 
 			const priceFacet = result.facets.find(f => f.type === 'PRICERANGE')
-			let filteredFacets = result.facets.filter(f => f.type !== 'PRICERANGE' && !f.hidden)
-
-			const uniqueFacetsMap = new Map()
-
-			filteredFacets.forEach(facet => {
-				const name = facet.name?.trim().toLowerCase()
-
-				if (!name) return
-
-				if (name === 'cor') facet.name = 'Cor'
-
-				if (name === 'marca' || name === 'brand') facet.name = 'Marca'
-
-				if (facet.values && Array.isArray(facet.values)) {
-					const uniqueValuesMap = new Map()
-
-					facet.values.forEach(v => {
-						const vName = v.name?.trim().toLowerCase()
-
-						if (!vName) return
-
-						if (!uniqueValuesMap.has(vName)) {
-							uniqueValuesMap.set(vName, v)
-						} else {
-							const existing = uniqueValuesMap.get(vName)
-							const isExistingUpper = existing.name === existing.name?.toUpperCase()
-							const isNewUpper = v.name === v.name?.toUpperCase()
-
-							if (isExistingUpper && !isNewUpper) {
-								v.quantity = Math.max(v.quantity || 0, existing.quantity || 0)
-								uniqueValuesMap.set(vName, v)
-							} else if (
-								(v.quantity || 0) > (existing.quantity || 0) &&
-								!(isNewUpper && !isExistingUpper)
-							) {
-								uniqueValuesMap.set(vName, v)
-							}
-						}
-					})
-					facet.values = Array.from(uniqueValuesMap.values())
-				}
-
-				if (uniqueFacetsMap.has(name)) {
-					const existingFacet = uniqueFacetsMap.get(name)
-
-					if (name === 'marca' || name === 'brand') {
-						if (existingFacet.key === 'brand' && facet.key !== 'brand') {
-							uniqueFacetsMap.set(name, facet)
-						} else if (existingFacet.key !== 'brand' && facet.key !== 'brand') {
-							const mergedValuesMap = new Map()
-
-							;[...existingFacet.values, ...facet.values].forEach(v => {
-								const vName = v.name?.trim().toLowerCase()
-
-								if (vName && !mergedValuesMap.has(vName)) mergedValuesMap.set(vName, v)
-							})
-							existingFacet.values = Array.from(mergedValuesMap.values())
-						}
-					} else {
-						const mergedValuesMap = new Map()
-
-						;[...existingFacet.values, ...facet.values].forEach(v => {
-							const vName = v.name?.trim().toLowerCase()
-
-							if (!mergedValuesMap.has(vName)) {
-								mergedValuesMap.set(vName, v)
-							} else {
-								const existing = mergedValuesMap.get(vName)
-								const isExistingUpper = existing.name === existing.name?.toUpperCase()
-								const isNewUpper = v.name === v.name?.toUpperCase()
-
-								if (isExistingUpper && !isNewUpper) {
-									mergedValuesMap.set(vName, v)
-								}
-							}
-						})
-						existingFacet.values = Array.from(mergedValuesMap.values())
-					}
-				} else {
-					uniqueFacetsMap.set(name, facet)
-				}
-			})
-
-			filteredFacets = Array.from(uniqueFacetsMap.values())
+			const filteredFacets = normalizeFacets(result.facets)
 
 			resolvePriceRangeReceivedFacet(priceFacet)
 
