@@ -88,21 +88,24 @@ export default function ImageCarousel(props) {
 			<View
 				className='relative'
 				onClick={() => setShowModalImagePDP(true)}>
-				<View className='-mx-4 overflow-hidden'>
+				<View className='-mx-4 overflow-hidden bg-[#F6F6F6]'>
 					<CustomCarousel
 						key={mainCarouselKey}
 						gap={0}
 						onSlideChange={onMainSlideChange}>
 						{orderedImages.map((item, index) => (
-							<Image
+							<View
 								key={`${item.imageUrl}-${index}`}
-								pinchZoom
-								zoomMaxScale={8}
-								fadeIn={500}
-								className='mix-blend-multiply'
-								src={item.imageUrl}
-								width='100vw'
-							/>
+								className='w-[100vw] bg-[#F6F6F6] flex items-center justify-center'>
+								<Image
+									pinchZoom
+									zoomMaxScale={8}
+									fadeIn={500}
+									className='mix-blend-multiply w-full object-contain'
+									src={item.imageUrl}
+									width='100vw'
+								/>
+							</View>
 						))}
 					</CustomCarousel>
 				</View>
@@ -123,7 +126,7 @@ export default function ImageCarousel(props) {
 				{images.map((item, index) => (
 					<View
 						key={`${item.imageUrl}-${index}`}
-						className={`flex w-16 h-16 shrink-0 snap-start justify-center items-center border border-gray-500 ${
+						className={`flex w-16 h-16 shrink-0 snap-start justify-center items-center bg-[#F6F6F6] rounded-md border border-gray-500 ${
 							index === currentSlide ? 'border-2' : ''
 						}`}
 						onClick={() => onChange(index)}>
