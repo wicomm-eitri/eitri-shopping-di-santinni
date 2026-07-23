@@ -42,10 +42,12 @@ export default function CategoryPageItem({ item, goToItem }) {
 	return (
 		<>
 			<CategoryTitle
-				icon={item.icon}
+				icon={item.icon || item.imageUrl || item.image || item.thumbnail}
 				title={item.title}
 				hasSubItems={item.subcategories && item.subcategories.length > 0}
 				onClick={() => handleItemPress(item)}
+				isCard={true}
+				color={item.color}
 			/>
 			<View
 				className={`flex flex-col min-h-screen h-screen w-screen fixed ${showSubItems ? 'left-0 ' : 'left-[100vw]'} top-0 transition-left duration-300 z-[9999]`}>

@@ -1,15 +1,41 @@
+import { Text, View } from 'eitri-luminus'
+
 export default function CategoryTitle(props) {
-	const { onClick, title, icon, hasSubItems, textClassName } = props
+	const { onClick, title, icon, hasSubItems, textClassName, isCard, color } = props
+	const imgSrc = icon || props.imageUrl || props.thumbnail || props.image
+
+	if (isCard) {
+		return (
+			<View
+				onClick={onClick}
+				className='relative rounded-xl overflow-hidden bg-[#C5C5C5] h-[115px] w-full flex items-center justify-center p-2 cursor-pointer transition-opacity active:opacity-80'
+				style={{ backgroundColor: color || '#C5C5C5' }}>
+				{imgSrc && (
+					<View className='flex items-center justify-center h-full pb-4 pt-1 w-full'>
+						<Image
+							className='max-h-[70px] max-w-[85%] object-contain'
+							src={imgSrc}
+						/>
+					</View>
+				)}
+				{title && (
+					<Text className='absolute bottom-2.5 left-3 font-bold text-white text-base leading-tight drop-shadow-sm'>
+						{title}
+					</Text>
+				)}
+			</View>
+		)
+	}
 
 	return (
 		<View
 			onClick={onClick}
 			className='flex justify-between items-center bg-white'>
 			<View className='flex items-center gap-4'>
-				{icon && (
+				{imgSrc && (
 					<Image
 						className='max-w-[30px]'
-						src={icon}
+						src={imgSrc}
 					/>
 				)}
 				<Text
