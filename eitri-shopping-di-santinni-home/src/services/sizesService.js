@@ -30,8 +30,7 @@ export const isFootwearSize = value => {
 export const sortSizes = sizeList => {
 	return [...sizeList].sort((a, b) => {
 		const getGroup = title => {
-			const isQuebrado =
-				title.includes('-') || title.includes('/') || title.includes(',') || title.includes('.')
+			const isQuebrado = title.includes('-') || title.includes('/') || title.includes(',') || title.includes('.')
 
 			const numMatch = title.match(/\d+/)
 			const num = numMatch ? parseInt(numMatch[0], 10) : NaN

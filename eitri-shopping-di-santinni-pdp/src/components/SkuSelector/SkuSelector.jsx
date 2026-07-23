@@ -62,7 +62,7 @@ function ColorSwatch({ color, selected, status, onClick }) {
 		<View
 			onClick={onClick}
 			className={`
-				relative w-6 h-6 rounded-full cursor-pointer transition-all duration-200
+				relative w-6 h-6 rounded-full  transition-all duration-200
 				flex items-center justify-center scale-110
 				${selected ? 'ring-1 ring-primary' : 'ring-1 ring-[#D5D5D5]'}
 				${unavailable && !inexistent ? 'opacity-50' : ''}
@@ -87,7 +87,7 @@ function OptionChip({ value, selected, status, onClick }) {
 			onClick={!inexistent ? onClick : undefined}
 			className={`
 				relative flex justify-center items-center min-w-8 min-h-8 p-[8px] rounded border text-sm font-medium transition-all duration-200 select-none
-				${inexistent ? 'opacity-20 cursor-not-allowed border-gray-200 text-gray-400' : 'cursor-pointer'}
+				${inexistent ? 'opacity-20 cursor-not-allowed border-gray-200 text-gray-400' : ''}
 				${
 					selected
 						? 'bg-gray-100 border-red-700 text-red-700'

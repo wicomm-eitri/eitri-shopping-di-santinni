@@ -97,7 +97,7 @@ export default function CatalogSort(props) {
 						<Text className='text-lg font-semibold  text-red-700'>{t('lists.title', 'Ordenar por')}</Text>
 						<View
 							onClick={() => handleCancel()}
-							className='cursor-pointer flex items-center justify-center'>
+							className=' flex items-center justify-center'>
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
 								width='24'
@@ -130,7 +130,7 @@ export default function CatalogSort(props) {
 							<View
 								key={option.value}
 								onClick={() => setSelectedSort(option.value)}
-								className='flex flex-row items-center gap-3 p-4 cursor-pointer border border-gray-200 rounded'>
+								className='flex flex-row items-center gap-3 p-4  border border-gray-200 rounded'>
 								<View
 									className={`flex items-center justify-center w-5 h-5 rounded-full border-2 ${
 										selectedSort === option.value ? 'border-red-700 bg-red-700' : 'border-red-300'

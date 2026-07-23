@@ -88,7 +88,7 @@ export default function ProductTilesHighlights(props) {
 							<View
 								key={shelf.title}
 								onClick={() => onChooseShelf(shelf)}
-								className='pb-2 min-w-fit cursor-pointer transition-all'
+								className='pb-2 min-w-fit  transition-all'
 								style={{
 									borderBottomWidth: '2px',
 									borderBottomStyle: 'solid',
@@ -122,7 +122,7 @@ export default function ProductTilesHighlights(props) {
 					isLoading={isLoadingProducts}
 					products={currentProducts}
 					params={paramsObject}
-					paddingLeft="16px"
+					paddingLeft='16px'
 				/>
 			) : (
 				<View className='flex overflow-x-auto gap-2 px-4 py-2 mt-2'>

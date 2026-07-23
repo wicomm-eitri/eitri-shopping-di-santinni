@@ -156,9 +156,11 @@ export default function BannerList(props) {
 		}
 	}
 
+	const isComprePorCategorias = data?.mainTitle?.trim().toLowerCase() === 'compre por categorias'
+
 	return (
 		<View
-			className={`flex flex-col gap-2 ${data?.isHideBanner ? 'hidden' : 'block'} ${isBannerTrio ? 'mb-[20px]' : ''}`}>
+			className={`flex flex-col gap-2 ${data?.isHideBanner ? 'hidden' : 'block'} ${isBannerTrio ? 'mb-[20px]' : ''} ${isComprePorCategorias ? 'mb-8' : ''}`}>
 			{data?.mainTitle && (
 				<View className='px-4 mb-8'>
 					<Text className='font-semibold text-2xl text-[#0C0C0C]'>{data.mainTitle}</Text>
