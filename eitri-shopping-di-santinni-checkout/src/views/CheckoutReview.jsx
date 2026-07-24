@@ -100,8 +100,15 @@ export default function CheckoutReview() {
 
 			const captchaToken = await recaptchaRef?.current?.getRecaptchaToken()
 
+			const formattedFields = cardInfo
+				? {
+						...cardInfo,
+						...(cardInfo.document ? { document: cardInfo.document.replace(/\D/g, '') } : {})
+					}
+				: cardInfo
+
 			const payload = {
-				fields: cardInfo,
+				fields: formattedFields,
 				captchaToken: captchaToken,
 				captchaSiteKey: recaptchaSiteKey,
 				savePersonalData: true,
