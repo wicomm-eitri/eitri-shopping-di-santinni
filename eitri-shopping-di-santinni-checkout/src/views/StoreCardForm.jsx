@@ -332,7 +332,13 @@ export default function StoreCardForm(props) {
 				return cardData?.dueDate || ''
 			})()
 
-			setCardInfo({ ...cardData, dueDate: formattedDueDate })
+			const cleanDocument = cardData?.document?.replace(/\D/g, '') || ''
+
+			setCardInfo({
+				...cardData,
+				document: cleanDocument,
+				dueDate: formattedDueDate
+			})
 			navigate('CheckoutReview')
 			setIsLoading(false)
 		} catch (e) {
