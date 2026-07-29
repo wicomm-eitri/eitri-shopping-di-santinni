@@ -144,12 +144,16 @@ export default function Home() {
 
 		// PARA TESTE, DEVE VIR DA API
 		badges.push({
-			textBold: '5%',
-			textRegular: 'PIX'
+			textBold: '',
+			textRegular: 'Frete grátis a partir de R$ 190'
 		})
 		badges.push({
-			textBold: '5%',
-			textRegular: 'Cartão DS'
+			textBold: '',
+			textRegular: 'Até 5x sem juros sem parcela mínima no Cartão DS'
+		})
+		badges.push({
+			textBold: '',
+			textRegular: '10% off na primeira compra: BOASVINDAS'
 		})
 
 		product?.productCluster?.map(cluster => {

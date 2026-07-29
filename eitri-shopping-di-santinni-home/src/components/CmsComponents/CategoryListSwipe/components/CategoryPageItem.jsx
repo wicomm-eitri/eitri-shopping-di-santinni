@@ -8,8 +8,8 @@ import {
 	HeaderCart,
 	HeaderSearchIcon
 } from 'eitri-shopping-di-santinni-shared'
-import { goToCart, goToSearch } from '../../../../utils/utils'
 import { fetchCategorySizes } from '../../../../services/sizesService'
+import { goToCart, goToSearch } from '../../../../utils/utils'
 import CategoryGroupTitle from './CategoryGroupTitle'
 import CategorySizeSwipe from './CategorySizeSwipe'
 import CategoryTitle from './CategoryTitle'
