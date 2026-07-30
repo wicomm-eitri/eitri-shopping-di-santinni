@@ -20,7 +20,7 @@ import Recaptcha from '../services/Recaptcha'
 import { trackAddPaymentInfo, trackScreenView, trackShippingInfo } from '../services/Tracking'
 import { clearCart, startPayment } from '../services/cartService'
 import { navigate } from '../services/navigationService'
-import { ERROR_MAP } from '../utils/vtexErrorMap'
+import { ERROR_MAP, extractGatewayMessage } from '../utils/vtexErrorMap'
 
 let selectedShipping = null
 let selectedPayment = null

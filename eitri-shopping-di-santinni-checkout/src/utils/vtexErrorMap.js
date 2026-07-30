@@ -12,7 +12,15 @@ export const extractGatewayMessage = (errorMessage) => {
 
 	const match = errorMessage.match(/Message:(.+)$/);
 	if (match && match[1]) {
-		return match[1].trim();
+		const extracted = match[1].trim();
+		
+		// Se a mensagem do gateway for de timeout, retornamos null 
+		// para que o CheckoutReview exiba a mensagem padrão/genérica.
+		if (extracted.toLowerCase().includes('timeout')) {
+			return null;
+		}
+		
+		return extracted;
 	}
 	return null;
 }
