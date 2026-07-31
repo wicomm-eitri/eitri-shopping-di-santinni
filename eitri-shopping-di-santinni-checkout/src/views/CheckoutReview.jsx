@@ -274,7 +274,7 @@ export default function CheckoutReview() {
 			</View>
 
 			{error.message && (
-				<View className='fixed bottom-[90px] left-0 w-full z-50'>
+				<View className='fixed bottom-[90px] left-0 w-full z-50 px-4'>
 					<View className='p-4 bg-red-50 border border-red-200 rounded'>
 						<Text className='text-sm text-red-600 font-medium'>
 							{error.message || t('checkoutReview.errorClosingOrder', 'Houve um erro ao fechar o pedido')}
