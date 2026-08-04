@@ -75,7 +75,7 @@ export default function OrderList(props) {
 								{orders && orders.length >= 1 ? (
 									<InfiniteScroll
 										onScrollEnd={handleOrders}
-										className={'flex flex-col gap-4'}>
+										className={'flex flex-col gap-3'}>
 										{orders.map((item, key) => (
 											<OrderCard
 												key={item.orderId}

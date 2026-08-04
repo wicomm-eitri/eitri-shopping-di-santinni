@@ -1,5 +1,5 @@
 export default function OrderStatusBadge(props) {
-	const { statusId, statusDescription, ...rest } = props
+	const { statusId, statusDescription, solid, className, ...rest } = props
 
 	// Mapeamento de status para classes de estilo do Tailwind CSS.
 	// Isso centraliza a lógica de estilo e torna o JSX mais limpo.
@@ -48,15 +48,58 @@ export default function OrderStatusBadge(props) {
 			wrapper: 'bg-blue-100 border-blue-200',
 			text: 'text-blue-700'
 		},
+		'invoiced': {
+			wrapper: 'bg-blue-100 border-blue-200',
+			text: 'text-blue-700'
+		},
+		'shipped': {
+			wrapper: 'bg-green-100 border-green-200',
+			text: 'text-green-700'
+		},
+		'handling': {
+			wrapper: 'bg-green-100 border-green-200',
+			text: 'text-green-700'
+		},
 		'order-created': {
 			wrapper: 'bg-blue-100 border-blue-200',
 			text: 'text-blue-700'
 		}
 	}
 
+	const SOLID_STATUS_STYLES = {
+		'cancel': 'bg-red-600',
+		'canceled': 'bg-red-600',
+		'request-cancel': 'bg-red-600',
+		'window-to-cancel': 'bg-red-600',
+		'on-order-completed': 'bg-[#8BC34A]',
+		'payment-approved': 'bg-[#8BC34A]',
+		'shipped': 'bg-[#8BC34A]',
+		'handling': 'bg-[#8BC34A]',
+		'delivered': 'bg-[#8BC34A]',
+		'payment-pending': 'bg-yellow-500',
+		'waiting-for-authorization': 'bg-blue-600',
+		'authorize-fulfillment': 'bg-blue-600',
+		'ready-for-invoicing': 'bg-blue-600',
+		'invoice': 'bg-blue-600',
+		'invoiced': 'bg-blue-600',
+		'order-created': 'bg-blue-600'
+	}
+
 	const DEFAULT_STYLES = {
 		wrapper: 'bg-gray-100 border-gray-200',
 		text: 'text-gray-700'
+	}
+
+	if (solid) {
+		const wrapper = SOLID_STATUS_STYLES[statusId] || 'bg-gray-500'
+
+		return (
+			<View
+				className={`inline-flex items-center justify-center text-center px-3 py-2 rounded-md ${wrapper} ${className || ''}`}
+				{...rest}>
+				<Text className='text-xs font-bold text-white leading-tight'>{statusDescription}</Text>
+			</View>
+		)
 	}
 
 	const styles = STATUS_STYLES[statusId] || DEFAULT_STYLES
@@ -65,7 +108,7 @@ export default function OrderStatusBadge(props) {
 		// O badge agora usa classes do Tailwind para um estilo consistente e responsivo.
 		// 'inline-flex' garante que o badge se ajuste ao tamanho do conteúdo.
 		<View
-			className={`inline-flex items-center justify-center px-2 py-1 border rounded-md ${styles.wrapper}`}
+			className={`inline-flex items-center justify-center px-2 py-1 border rounded-md ${styles.wrapper} ${className || ''}`}
 			{...rest}>
 			<Text className={`text-xs font-bold whitespace-nowrap ${styles.text}`}>{statusDescription}</Text>
 		</View>

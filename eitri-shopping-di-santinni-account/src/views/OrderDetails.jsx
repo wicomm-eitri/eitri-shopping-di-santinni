@@ -9,16 +9,58 @@ import {
 	Loading
 } from 'eitri-shopping-di-santinni-shared'
 import ImageCard from '../components/Image/ImageCard'
+import InfoCircleIcon from '../components/Icons/InfoCircleIcon'
+import StepCurrentIcon from '../components/Icons/StepCurrentIcon'
+import StepDoneIcon from '../components/Icons/StepDoneIcon'
+import OrderStatusBadge from '../components/OrderStatusBadge/OrderStatusBadge'
 import ProtectedView from '../components/ProtectedView/ProtectedView'
 import { getOrderById } from '../services/CustomerService'
 import { sendScreenView } from '../services/TrackingService'
 import { addonUserTappedActiveTabListener } from '../utils/backToTopListener'
-import { formatPriceInCents } from '../utils/utils'
+import { formatDateDaysMonthYear, formatPriceInCents } from '../utils/utils'
+
+const CONFIRMED_STATUSES = [
+	'order-created',
+	'payment-approved',
+	'handling',
+	'ready-for-handling',
+	'invoiced',
+	'ready-for-invoicing',
+	'shipped',
+	'dispatched',
+	'delivered',
+	'on-order-completed'
+]
+const PAID_STATUSES = [
+	'payment-approved',
+	'handling',
+	'ready-for-handling',
+	'invoiced',
+	'ready-for-invoicing',
+	'shipped',
+	'dispatched',
+	'delivered',
+	'on-order-completed'
+]
+const PREPARED_STATUSES = [
+	'handling',
+	'ready-for-handling',
+	'invoiced',
+	'ready-for-invoicing',
+	'shipped',
+	'dispatched',
+	'delivered',
+	'on-order-completed'
+]
+const SHIPPING_STATUSES = ['invoiced', 'shipped', 'dispatched', 'delivered', 'on-order-completed']
+const DELIVERED_STATUSES = ['delivered', 'on-order-completed']
+const CANCELED_STATUSES = ['cancel', 'canceled', 'request-cancel', 'window-to-cancel']
 
 export default function OrderDetails(props) {
 	const [order, setOrder] = useState(null)
 	const [isLoading, setIsLoading] = useState(false)
 	const [showAllItems, setShowAllItems] = useState(false)
+	const [showPaymentDetails, setShowPaymentDetails] = useState(false)
 
 	const { t } = useTranslation()
 
@@ -54,35 +96,26 @@ export default function OrderDetails(props) {
 		}
 	}
 
-	const formatOrderDateTime = isoString => {
-		if (!isoString) return ''
+	const formatQuantity = quantity => {
+		const qty = quantity || 1
 
-		const date = new Date(isoString)
-		const day = String(date.getDate()).padStart(2, '0')
-		const month = String(date.getMonth() + 1).padStart(2, '0')
-		const year = date.getFullYear()
-		const hours = String(date.getHours()).padStart(2, '0')
-		const minutes = String(date.getMinutes()).padStart(2, '0')
-
-		return `${day}/${month}/${year} às ${hours}:${minutes}`
+		return `${qty} ${qty === 1 ? t('orderDetails.unit', 'unidade') : t('orderDetails.units', 'unidades')}`
 	}
 
-	const getDeliveryDateText = () => {
-		const info = order?.shippingData?.logisticsInfo?.[0]
+	const getAddress = () => {
+		const address = order?.shippingData?.address
 
-		if (!info) return ''
+		if (!address) return null
 
-		if (info.shippingEstimateDate) {
-			const date = new Date(info.shippingEstimateDate)
-			const day = String(date.getDate()).padStart(2, '0')
-			const month = date.toLocaleString('pt-BR', { month: 'short' }).replace('.', '')
-
-			return `${day} ${month}`
-		} else if (info.shippingEstimate) {
-			return info.shippingEstimate.replace(/[a-zA-Z]/g, '') + ' dias úteis'
+		return {
+			receiverName: address.receiverName,
+			formattedAddress: `${address.street || ''}${address.number ? `, ${address.number}` : ''}`,
+			neighborhood: address.neighborhood,
+			city: address.city,
+			state: address.state,
+			country: address.country === 'BRA' ? 'Brasil' : address.country,
+			postalCode: address.postalCode
 		}
-
-		return ''
 	}
 
 	const getPaymentDetails = () => {
@@ -92,10 +125,16 @@ export default function OrderDetails(props) {
 
 		return {
 			name: payment.paymentSystemName,
-			installments: payment.installments > 1 ? `em ${payment.installments}x sem juros` : 'à vista',
+			installments: payment.installments || 1,
 			value: payment.value,
-			isCreditCard: payment.paymentSystem !== '6'
+			cardLastDigits: payment.cardLastDigits,
+			tid: payment.tid,
+			isCreditCard: payment.group === 'creditCardPaymentGroup' || payment.paymentSystem !== '6'
 		}
+	}
+
+	const getTotalByGroup = groupId => {
+		return order?.totals?.find(total => total.id === groupId)?.value || 0
 	}
 
 	const getTotalValue = () => {
@@ -120,12 +159,29 @@ export default function OrderDetails(props) {
 
 	if (!order) return null
 
+	const address = getAddress()
 	const payInfo = getPaymentDetails()
+	const hasPaymentAdditionalInfo = Boolean(order?.authorizedDate || payInfo?.tid)
 	const itemsToShow = showAllItems ? order.items : order.items.slice(0, 2)
 
 	const status = order?.status
-	const isDispatched = status === 'dispatched' || status === 'delivered'
-	const isDelivered = status === 'delivered'
+	const isCanceled = CANCELED_STATUSES.includes(status)
+
+	const stepsDone = [
+		{ label: t('orderDetails.steps.confirmed', 'Pedido confirmado'), done: CONFIRMED_STATUSES.includes(status) },
+		{ label: t('orderDetails.steps.paid', 'Pagamento aprovado'), done: PAID_STATUSES.includes(status) },
+		{ label: t('orderDetails.steps.prepared', 'Pedido preparado'), done: PREPARED_STATUSES.includes(status) },
+		{ label: t('orderDetails.steps.shipping', 'Enviando pedido'), done: SHIPPING_STATUSES.includes(status) },
+		{ label: t('orderDetails.steps.delivered', 'Entregar pedido'), done: DELIVERED_STATUSES.includes(status) }
+	]
+
+	const lastDoneIndex = stepsDone.reduce((acc, step, index) => (step.done ? index : acc), -1)
+	const isFullyDelivered = lastDoneIndex === stepsDone.length - 1
+
+	const steps = stepsDone.map((step, index) => ({
+		...step,
+		isCurrent: step.done && index === lastDoneIndex && !isFullyDelivered
+	}))
 
 	return (
 		<ProtectedView
@@ -137,119 +193,206 @@ export default function OrderDetails(props) {
 					<HeaderText text={t('orderDetails.title', 'Meus pedidos')} />
 				</HeaderContentWrapper>
 
-				<View className='p-4 bg-gray-50 flex-1 flex flex-col w-full'>
+				<View className='p-4 bg-gray-50 flex-1 flex flex-col w-full gap-3 mt-3'>
 					{/* Header infos */}
-					<View className='flex flex-col items-center justify-center gap-2 pt-2'>
-						<Text className='text-red-700 font-bold text-sm mb-1'>{`Nº do pedido: ${order?.orderId}`}</Text>
+					<View className='flex flex-col gap-1 bg-white p-4 rounded-sm border-2 border-[#E3E4E6]'>
+						<Text className='text-red-700 font-semibold text-sm'>{`# ${order?.orderId}`}</Text>
 
-						<Text className='text-gray-500 text-xs mb-3'>
-							{`Realizado em: ${formatOrderDateTime(order?.creationDate)}`}
+						<View className='flex flex-row items-center justify-between gap-3'>
+							<Text className='text-black text-sm'>{formatDateDaysMonthYear(order?.creationDate)}</Text>
+
+							<OrderStatusBadge
+								solid
+								statusId={status}
+								statusDescription={order?.statusDescription}
+								className='shrink-0'
+							/>
+						</View>
+					</View>
+
+					{/* Endereço */}
+					{address && (
+						<View className='bg-white p-4 rounded-sm border-2 border-[#E3E4E6] flex flex-col'>
+							<Text className='text-sm font-bold text-black uppercase tracking-wide mb-3'>
+								{t('orderDetails.address.title', 'Endereço')}
+							</Text>
+
+							<View className='flex flex-col mb-[6px]'>
+								<Text className='text-sm font-semibold text-black mb-[6px]'>{address.receiverName}</Text>
+
+								<Text className='text-xs text-black font-semibold'>
+									{t('orderDetails.address.label', 'Endereço')}
+								</Text>
+								<Text className='text-xs text-gray-700'>{address.formattedAddress}</Text>
+							</View>
+
+							<View className='flex flex-row justify-between gap-5'>
+								<View className='flex flex-col gap-2'>
+									<Text className='text-xs font-semibold text-black uppercase tracking-wide'>
+										{t('orderDetails.address.neighborhood', 'Bairro')}
+									</Text>
+									<Text className='text-xs text-gray-700'>{address.neighborhood}</Text>
+								</View>
+
+								<View className='flex flex-col gap-2'>
+									<Text className='text-xs font-semibold text-black uppercase tracking-wide'>
+										{t('orderDetails.address.city', 'Cidade')}
+									</Text>
+									<Text className='text-xs text-gray-700'>{address.city}</Text>
+								</View>
+
+								<View className='flex flex-col gap-2'>
+									<Text className='text-xs font-semibold text-black uppercase tracking-wide'>
+										{t('orderDetails.address.country', 'País')}
+									</Text>
+									<Text className='text-xs text-gray-700'>{address.country}</Text>
+								</View>
+
+								<View className='flex flex-col gap-2'>
+									<Text className='text-xs font-semibold text-black uppercase tracking-wide'>
+										{t('orderDetails.address.postalCode', 'CEP')}
+									</Text>
+									<Text className='text-xs text-gray-700'>{address.postalCode}</Text>
+								</View>
+							</View>
+						</View>
+					)}
+
+					{/* Forma de pagamento */}
+					{payInfo && (
+						<View className='bg-white p-4 rounded-sm border-2 border-[#E3E4E6] flex flex-col'>
+							<Text className='text-sm font-bold text-black uppercase tracking-wide mb-3'>
+								{t('orderDetails.payment.title', 'Forma de pagamento')}
+							</Text>
+
+							<View className='flex flex-col mb-[6px]'>
+								<Text className='text-sm font-semibold text-black mb-[6px]'>{payInfo.name}</Text>
+
+								{payInfo.cardLastDigits && (
+									<Text className='text-xs text-gray-700'>
+										{t('orderDetails.payment.finalDigits', 'final')} {payInfo.cardLastDigits}
+									</Text>
+								)}
+
+								<Text className='text-xs text-gray-700'>
+									{formatPriceInCents(payInfo.value)} ({payInfo.installments}x)
+								</Text>
+							</View>
+
+							{hasPaymentAdditionalInfo && (
+								<>
+									<View
+										className='flex flex-row items-center gap-1 mt-2'
+										onClick={() => setShowPaymentDetails(!showPaymentDetails)}>
+										<InfoCircleIcon />
+										<Text className='text-xs text-gray-700'>
+											{t('orderDetails.payment.additionalInfo', 'Informações adicionais')}
+										</Text>
+									</View>
+
+									{showPaymentDetails && (
+										<View className='flex flex-col gap-1 mt-1 pt-2 border-t border-gray-100'>
+											{order?.authorizedDate && (
+												<Text className='text-xs text-gray-500'>
+													{t('orderDetails.payment.authorizedDate', 'Aprovado em')}:{' '}
+													{formatDateDaysMonthYear(order.authorizedDate)}
+												</Text>
+											)}
+											{payInfo.tid && (
+												<Text className='text-xs text-gray-500'>
+													{t('orderDetails.payment.transactionId', 'Nº da transação')}: {payInfo.tid}
+												</Text>
+											)}
+										</View>
+									)}
+								</>
+							)}
+						</View>
+					)}
+
+					{/* Resumo */}
+					<View className='bg-white p-4 rounded-sm border-2 border-[#E3E4E6] flex flex-col'>
+						<Text className='text-sm font-bold text-black uppercase tracking-wide mb-3'>
+							{t('orderDetails.summary.title', 'Resumo')}
 						</Text>
 
-						<Text className='text-gray-500 text-sm'>
-							{`Data prevista para a entrega: `}
-							<Text className='font-semibold text-gray-700'>{getDeliveryDateText()}</Text>
-						</Text>
+						<View className='flex flex-row justify-between pb-[6px]'>
+							<Text className='text-xs text-gray-700'>{t('orderDetails.summary.subtotal', 'Subtotal')}</Text>
+							<Text className='text-xs text-gray-700'>{formatPriceInCents(getTotalByGroup('Items'))}</Text>
+						</View>
+
+						<View className='flex flex-row justify-between py-[6px] border-b border-t border-gray-300'>
+							<Text className='text-xs text-gray-700'>{t('orderDetails.summary.shipping', 'Entrega')}</Text>
+							<Text className='text-xs text-gray-700'>{formatPriceInCents(getTotalByGroup('Shipping'))}</Text>
+						</View>
+
+						<View className='flex flex-row justify-between pt-[6px]'>
+							<Text className='text-sm font-semibold text-black'>{t('orderDetails.summary.total', 'Total')}</Text>
+							<Text className='text-sm font-semibold text-black'>{formatPriceInCents(getTotalValue())}</Text>
+						</View>
 					</View>
 
 					{/* Timeline / Status */}
-					<View className='flex items-start justify-center w-full mb-8 mt-6'>
-						<View className='flex flex-col items-center w-[85px]'>
-							<svg
-								width={28}
-								height={28}
-								viewBox='0 0 24 24'
-								fill='none'
-								stroke='currentColor'
-								strokeWidth='1.5'
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								className={`mb-2 ${isDispatched ? 'text-red-700' : 'text-gray-300'}`}>
-								<path d='M11 21.73C11.304 21.9055 11.6489 21.9979 12 21.9979C12.3511 21.9979 12.696 21.9055 13 21.73L20 17.73C20.3037 17.5546 20.556 17.3025 20.7315 16.9988C20.9071 16.6952 20.9996 16.3507 21 16V8C20.9996 7.64927 20.9071 7.30481 20.7315 7.00116C20.556 6.69751 20.3037 6.44536 20 6.27L13 2.27C12.696 2.09446 12.3511 2.00205 12 2.00205C11.6489 2.00205 11.304 2.09446 11 2.27L4 6.27C3.69626 6.44536 3.44398 6.69751 3.26846 7.00116C3.09294 7.30481 3.00036 7.64927 3 8V16C3.00036 16.3507 3.09294 16.6952 3.26846 16.9988C3.44398 17.3025 3.69626 17.5546 4 17.73L11 21.73Z' />
-								<path d='M12 22V12' />
-								<path d='M3.28906 7L11.9991 12L20.7091 7' />
-								<path d='M7.5 4.27L16.5 9.42' />
-							</svg>
+					{!isCanceled && (
+						<View className='bg-white p-4 rounded-sm border-2 border-[#E3E4E6]'>
+							<View className='flex flex-row items-center w-full pb-8'>
+								{steps.map((step, index) => {
+									const isFirst = index === 0
+									const isLast = index === steps.length - 1
+									const labelPosition = isFirst
+										? 'left-0 text-left'
+										: isLast
+											? 'right-0 text-right'
+											: 'left-1/2 -translate-x-1/2 text-center'
 
-							<Text
-								className={`text-[10px] text-center leading-tight ${isDispatched ? 'text-red-700 font-bold' : 'text-gray-300 font-medium'}`}>
-								Enviado
-							</Text>
+									return (
+										<View
+											key={step.label}
+											className={`flex flex-row items-center ${index < steps.length - 1 ? 'flex-1' : ''}`}>
+											<View className='relative flex items-center justify-center h-[14px] shrink-0'>
+												{step.isCurrent ? (
+													<StepCurrentIcon />
+												) : step.done ? (
+													<StepDoneIcon />
+												) : (
+													<View className='w-[10px] h-[10px] rounded-full bg-gray-300' />
+												)}
+
+												<Text
+													className={`absolute top-full mt-[13px] w-[64px] text-[10px] text-gray-700 leading-tight ${labelPosition}`}>
+													{step.label}
+												</Text>
+											</View>
+
+											{index < steps.length - 1 && (
+												<View
+													className={`flex-1 h-[2px] mx-[6px] ${steps[index + 1].done ? 'bg-[#8BC34A]' : 'bg-gray-300'}`}
+												/>
+											)}
+										</View>
+									)
+								})}
+							</View>
 						</View>
-
-						<View
-							className={`h-[2px] w-[50px] mt-3 -mx-4 z-0 ${isDispatched ? 'bg-[#E2002B]' : 'bg-gray-300'}`}
-						/>
-
-						<View className='flex flex-col items-center w-[85px]'>
-							<svg
-								width={28}
-								height={28}
-								viewBox='0 0 24 24'
-								fill='none'
-								stroke='currentColor'
-								strokeWidth='1.5'
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								className={`mb-2 ${isDelivered ? 'text-red-700' : 'text-gray-300'}`}>
-								<path d='M14 18V6C14 5.46957 13.7893 4.96086 13.4142 4.58579C13.0391 4.21071 12.5304 4 12 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V17C2 17.2652 2.10536 17.5196 2.29289 17.7071C2.48043 17.8946 2.73478 18 3 18H5' />
-								<path d='M15 18H9' />
-								<path d='M19 18H21C21.2652 18 21.5196 17.8946 21.7071 17.7071C21.8946 17.5196 22 17.2652 22 17V13.35C21.9996 13.1231 21.922 12.903 21.78 12.726L18.3 8.376C18.2065 8.25888 18.0878 8.16428 17.9528 8.0992C17.8178 8.03412 17.6699 8.00021 17.52 8H14' />
-								<path d='M17 20C18.1046 20 19 19.1046 19 18C19 16.8954 18.1046 16 17 16C15.8954 16 15 16.8954 15 18C15 19.1046 15.8954 20 17 20Z' />
-								<path d='M7 20C8.10457 20 9 19.1046 9 18C9 16.8954 8.10457 16 7 16C5.89543 16 5 16.8954 5 18C5 19.1046 5.89543 20 7 20Z' />
-							</svg>
-
-							<Text
-								className={`text-[10px] text-center leading-tight ${isDelivered ? 'text-red-700 font-bold' : 'text-gray-300 font-medium'}`}>
-								Saiu para entrega
-							</Text>
-						</View>
-
-						<View
-							className={`h-[2px] w-[50px] mt-3 -mx-4 z-0 ${isDelivered ? 'bg-[#E2002B]' : 'bg-gray-300'}`}
-						/>
-
-						<View className='flex flex-col items-center w-[85px]'>
-							<svg
-								width={28}
-								height={28}
-								viewBox='0 0 24 24'
-								fill='none'
-								stroke='currentColor'
-								strokeWidth='1.5'
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								className={`mb-2 ${isDelivered ? 'text-red-700' : 'text-gray-300'}`}>
-								<path d='M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z' />
-								<path d='M7.5 12.1668L10.6667 15.3335L17 9.00016' />
-							</svg>
-
-							<Text
-								className={`text-[10px] text-center leading-tight ${isDelivered ? 'text-red-700 font-bold' : 'text-gray-300 font-medium'}`}>
-								Entregue
-							</Text>
-						</View>
-					</View>
+					)}
 
 					{/* Items */}
-					<View className='flex flex-col gap-4 mb-6'>
+					<View className='flex flex-col gap-3'>
 						{itemsToShow.map(item => (
 							<View
 								key={item.uniqueId}
-								className='bg-white p-3 flex flex-row gap-4 items-center rounded-lg shadow-sm border border-transparent'>
-								<View className='bg-[#F4F4F4] p-2 rounded-md h-[90px] w-[90px] flex items-center justify-center'>
+								className='bg-white px-3 py-4 flex flex-row gap-4 items-center rounded-sm border border-[#E3E4E6]'>
+								<View className='bg-gray-100 p-2 h-[102px] w-[84px] flex items-center justify-center'>
 									<ImageCard
 										imageUrl={item.imageUrl}
 										className='w-[80px] h-[80px] object-contain mix-blend-multiply'
 									/>
 								</View>
 
-								<View className='flex flex-col flex-1 justify-center'>
-									<Text className='text-xs text-black mb-2 leading-tight'>{item.name}</Text>
-
-									<Text className='text-xs text-gray-500'>
-										{`Valor: ${formatPriceInCents(item.price)}`}
-									</Text>
+								<View className='flex flex-col flex-1 justify-center gap-1'>
+									<Text className='text-xs text-black leading-tight'>{item.name}</Text>
+									<Text className='text-xs text-gray-500'>{formatQuantity(item.quantity)}</Text>
+									<Text className='text-xs text-gray-500'>{formatPriceInCents(item.price)}</Text>
 								</View>
 							</View>
 						))}
@@ -266,31 +409,6 @@ export default function OrderDetails(props) {
 							</View>
 						)}
 					</View>
-
-					{/* Payment Info */}
-					{payInfo && (
-						<View className='bg-white p-4 rounded-lg shadow-sm mb-6 border border-transparent'>
-							<View className='flex flex-row justify-between items-center mb-4'>
-								<Text className='text-red-700 font-semibold'>{payInfo.name}</Text>
-							</View>
-
-							<Text className='text-gray-500 text-sm mb-4 leading-relaxed'>
-								{order?.status === 'payment-pending'
-									? 'O pagamento do seu pedido está em análise. Aguarde a confirmação para darmos sequência ao envio.'
-									: order?.status === 'canceled' || order?.status === 'request-cancel'
-										? 'O pedido e o seu pagamento foram cancelados.'
-										: payInfo.isCreditCard
-											? 'O pagamento via cartão de crédito foi aprovado e já foi processado com sucesso. Sua compra está confirmada e será concluída em ambiente seguro.'
-											: 'O seu pedido está confirmado. Acompanhe o status do pagamento e a entrega.'}
-							</Text>
-
-							<View className='flex flex-row justify-between items-center mt-4'>
-								<Text className='text-red-700 font-medium text-sm'>
-									{`Valor total pago: ${formatPriceInCents(getTotalValue())} ${payInfo.installments}`}
-								</Text>
-							</View>
-						</View>
-					)}
 				</View>
 
 				<BottomInset />
