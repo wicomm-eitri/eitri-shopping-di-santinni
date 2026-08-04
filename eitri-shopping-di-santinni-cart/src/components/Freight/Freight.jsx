@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'eitri-i18n'
-import { CustomButton, CustomInput, shippingResolver } from 'eitri-shopping-di-santinni-shared'
+import { CustomButton, CustomInput, cartShippingResolver } from 'eitri-shopping-di-santinni-shared'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { loadPostalCodeFromStorage, savePostalCodeOnStorage } from '../../services/customerService'
 
 export default function Freight(props) {
-	const { cart, setNewAddress } = useLocalShoppingCart()
+	const { cart, setNewAddress, setFreight } = useLocalShoppingCart()
 	const { t } = useTranslation()
 
 	const [zipCode, setZipCode] = useState('')
-	const [messagesError, setMessagesError] = useState([])
 	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState(false)
 	const [isEditingZipCode, setIsEditingZipCode] = useState(false)
@@ -32,6 +31,8 @@ export default function Freight(props) {
 
 	const onInputZipCode = e => setZipCode(e.target.value)
 
+	const formatZipCode = zipCode => zipCode?.replace(/^(\d{5})-?(\d{3}).*$/, '$1-$2')
+
 	const onPressZipCodeChange = async () => {
 		try {
 			if (!zipCode) return
@@ -42,6 +43,7 @@ export default function Freight(props) {
 				return
 			}
 
+			setError(false)
 			fetchFreight(zipCode)
 		} catch (e) {
 			console.error('Error onPressZipCodeChange', e)
@@ -63,6 +65,8 @@ export default function Freight(props) {
 			savePostalCodeOnStorage(zipCode)
 
 			await setNewAddress(cart, zipCode)
+
+			setIsEditingZipCode(false)
 		} catch (error) {
 			console.error('Error fetching freight', error)
 			setError(t('freight.errorCalcFreight', 'Não foi possível calcular o frete'))
@@ -71,25 +75,66 @@ export default function Freight(props) {
 		}
 	}
 
-	const getMessageError = label => {
-		const message = messagesError.find(item => item.code === 'cannotBeDelivered')
+	const handleOptionSelect = async option => {
+		try {
+			setIsLoading(true)
 
-		return (
-			<View className='w-full px-2'>
-				<Text className='font-bold'>{label}</Text>
-				{message && <Text className='text-xs text-tertiary-700'>{message.fields.skuName}</Text>}
-			</View>
-		)
+			const payload = {
+				clearAddressIfPostalCodeNotFound: true,
+				logisticsInfo: option?.slas?.map(sla => {
+					return {
+						itemIndex: sla.itemIndex,
+						selectedDeliveryChannel: sla.deliveryChannel,
+						selectedSla: sla.id
+					}
+				}),
+				selectedAddresses: cart?.shippingData?.selectedAddresses
+			}
+
+			await setFreight(payload)
+		} catch (e) {
+			console.error('Error handleOptionSelect', e)
+			setError(t('freight.errorEditFreight', 'Não foi possível modificar o frete'))
+		} finally {
+			setIsLoading(false)
+		}
 	}
 
 	if (!cart) return null
 
-	const shipping = shippingResolver(cart)
+	const shipping = cartShippingResolver(cart)
 	const deliveryOptions = shipping?.options?.filter(option => !option.isPickupInPoint) || []
+	const pickupOptions = shipping?.options?.filter(option => option.isPickupInPoint) || []
+
+	const renderOption = (item, index) => (
+		<View
+			key={item?.slas?.map(sla => sla.id).join('-') || item?.label || index}
+			className='flex items-center w-full'>
+			<View className='flex items-center w-full gap-2'>
+				<Radio
+					className='!w-4 !h-4 checked:!bg-red-700 !border-gray-400'
+					checked={item.isCurrent}
+					name='freight-option'
+					value={item?.label}
+					onChange={() => handleOptionSelect(item)}
+				/>
+
+				<View className='w-full flex flex-col flex-1'>
+					<Text className='text-xs font-semibold'>{item?.label}</Text>
+
+					<Text className='text-xs text-gray-500'>{item?.shippingEstimate}</Text>
+
+					{item.isPickupInPoint && <Text className='text-xs text-gray-500'>{item?.formatedPickAddress}</Text>}
+				</View>
+
+				<Text className='text-sm text-red-700 font-semibold'>{item?.price}</Text>
+			</View>
+		</View>
+	)
 
 	return (
 		<View className='px-4'>
-			{cart?.canEditData || isEditingZipCode ? (
+			{isEditingZipCode || !zipCode ? (
 				<View className='flex justify-between mt-2 items-center w-full'>
 					<View className='w-2/3'>
 						<CustomInput
@@ -117,7 +162,7 @@ export default function Freight(props) {
 			) : (
 				<View className='mt-2 flex items-center justify-between gap-4'>
 					<Text className='text-sm font-medium'>
-						{`${t('freight.receiveAt', 'Receber em')} ${shipping?.postalCode}`}
+						{`${t('freight.receiveAt', 'Receber em')} ${formatZipCode(zipCode)}`}
 					</Text>
 
 					<View onClick={onPressEditZipCode}>
@@ -163,20 +208,40 @@ export default function Freight(props) {
 				</View>
 			)}
 
-			{/* Remover talvez */}
 			{isLoading && <View className={`mt-4 w-full h-[120px] bg-gray-200 rounded animate-pulse`} />}
 
 			{!isLoading && shipping && shipping?.options.length > 0 && (
 				<>
 					{deliveryOptions.length > 0 && (
-						<View className='py-2'>
-							<Text className='text-sm text-gray-500'>
-								{deliveryOptions[0]?.formattedShippingEstimate}{' '}
-								<Text className='text-sm text-red-700'>{deliveryOptions[0]?.formatedPrice}</Text>
+						<View className='flex flex-col mt-4'>
+							<Text className='text-sm font-semibold'>
+								{t('freight.tabDelivery', 'Opções de Entrega')}
 							</Text>
+
+							<View className='flex flex-col p-3 mt-2 border border-gray-300 rounded items-center justify-between gap-3'>
+								{deliveryOptions.map(renderOption)}
+							</View>
+						</View>
+					)}
+
+					{pickupOptions.length > 0 && (
+						<View className='flex flex-col mt-4'>
+							<Text className='text-sm font-semibold'>
+								{t('freight.tabPickup', 'Opções de Retirada')}
+							</Text>
+
+							<View className='flex flex-col p-3 mt-2 border border-gray-300 rounded items-center justify-between gap-3'>
+								{pickupOptions.map(renderOption)}
+							</View>
 						</View>
 					)}
 				</>
+			)}
+
+			{error && (
+				<View className='mt-1'>
+					<Text className='text-sm text-red-600 font-medium'>{error}</Text>
+				</View>
 			)}
 		</View>
 	)

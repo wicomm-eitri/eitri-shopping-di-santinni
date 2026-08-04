@@ -11,6 +11,7 @@ const handleSearchAction = value => {
 }
 const formatBrandSlug = val => {
 	if (!val) return ''
+
 	let slug = String(val)
 		.trim()
 		.toLowerCase()
@@ -26,26 +27,28 @@ const formatBrandSlug = val => {
 	return slug
 }
 
-const handleCollectionAction = action => {
-	console.log('[DEBUG] Raw action received in handleCollectionAction:', action)
+const handleCollectionAction = (action, fallbackTitle) => {
 	const rawValue = String(action?.value || '').trim()
 	const rawTitle = String(action?.title || '').trim()
+	const displayTitle = rawTitle || String(fallbackTitle || '').trim()
 	const isNumeric = /^\d+$/.test(rawValue)
 
 	let facets = []
+
 	if (isNumeric) {
 		facets = [{ key: 'productClusterIds', value: rawValue }]
+
 		if (rawTitle && rawTitle.toLowerCase() !== 'marcas') {
 			const brandSlug = formatBrandSlug(rawTitle)
+
 			facets.push({ key: 'brand', value: brandSlug })
 		}
 	} else {
 		const targetName = rawTitle || rawValue
 		const brandSlug = formatBrandSlug(targetName)
+
 		facets = [{ key: 'brand', value: brandSlug }]
 	}
-
-	console.log('[DEBUG] Navigating handleCollectionAction with facets:', facets)
 
 	Eitri.navigation.navigate({
 		path: 'ProductCatalog',
@@ -54,7 +57,7 @@ const handleCollectionAction = action => {
 				facets,
 				sort: action?.sort || ''
 			},
-			title: rawTitle || rawValue,
+			title: displayTitle,
 			banner: action?.banner || ''
 		}
 	})
@@ -116,7 +119,7 @@ export const processActions = sliderData => {
 			handleSearchAction(action.value)
 			break
 		case 'collection':
-			handleCollectionAction(action)
+			handleCollectionAction(action, sliderData?.title)
 			break
 		case 'page':
 			handlePageAction(action.value)

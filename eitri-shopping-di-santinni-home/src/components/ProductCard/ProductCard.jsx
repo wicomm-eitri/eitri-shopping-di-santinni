@@ -1,10 +1,11 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'eitri-i18n'
-import { ProductCardDefault, ProductCardFullImage } from 'eitri-shopping-di-santinni-shared'
+import { ModalSkuSelector, ProductCardDefault, ProductCardFullImage } from 'eitri-shopping-di-santinni-shared'
 import { App, EventBus } from 'eitri-shopping-vtex-shared'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { addToWishlist, productOnWishlist, removeItemFromWishlist } from '../../services/CustomerService'
 import { openCart, openProduct } from '../../services/NavigationService'
+import { getColorVariants } from '../../services/ProductService'
 import { formatPrice } from '../../utils/utils'
 
 // ========== Hooks Customizados ==========
@@ -182,6 +183,8 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 	const { addItem, removeItem, updateItemQuantity, cart } = useLocalShoppingCart()
 
 	const [loadingCartOp, setLoadingCartOp] = useState(false)
+	const [showSkuSelector, setShowSkuSelector] = useState(false)
+	const [colorVariants, setColorVariants] = useState([])
 
 	// Extrai dados do produto
 	const item = useMemo(() => {
@@ -341,7 +344,7 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 		wishlist.toggle(item?.name, item?.itemId)
 	}, [wishlist, item])
 
-	const handleCartButtonPress = useCallback(() => {
+	const handleCartButtonPress = useCallback(async () => {
 		if (loadingCartOp) return
 
 		if (itemInCart) {
@@ -358,12 +361,41 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 			return
 		}
 
+		if (product?.items?.length > 1) {
+			try {
+				setLoadingCartOp(true)
+				const variants = await getColorVariants(product)
+
+				setColorVariants(Array.isArray(variants) ? variants : [])
+				setShowSkuSelector(true)
+			} catch (error) {
+				console.error('Error preparing SKU selector:', error)
+				setColorVariants([])
+				setShowSkuSelector(true)
+			} finally {
+				setLoadingCartOp(false)
+			}
+
+			return
+		}
+
 		if (typeof openModal === 'function') {
 			openModal(product)
 		}
 
 		handleAddToCart()
 	}, [loadingCartOp, itemInCart, product, handleAddToCart, openModal])
+
+	const handleSkuConfirm = useCallback(
+		async (selectedSku, selectedProduct) => {
+			await addItem({ ...selectedSku, quantity: 1 })
+
+			if (typeof openModal === 'function') {
+				openModal(selectedProduct || product)
+			}
+		},
+		[addItem, openModal, product]
+	)
 
 	// ========== Renderização ==========
 
@@ -407,5 +439,17 @@ export default function ProductCard({ product, className, actionButtonCustomColo
 	const cardStyle = App?.configs?.appConfigs?.productCard?.style
 	const Implementation = implementations[cardStyle] || ProductCardDefault
 
-	return React.createElement(Implementation, params)
+	return (
+		<>
+			{React.createElement(Implementation, params)}
+
+			<ModalSkuSelector
+				product={product}
+				show={showSkuSelector}
+				onClose={() => setShowSkuSelector(false)}
+				onConfirm={handleSkuConfirm}
+				initialColorVariants={colorVariants}
+			/>
+		</>
+	)
 }
