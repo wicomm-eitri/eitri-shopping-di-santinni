@@ -43,6 +43,7 @@ export default function MainHeader(props) {
 					<Image
 						src={HeaderLogo}
 						alt='Logo'
+						className='h-6 w-auto'
 					/>
 				</View>
 

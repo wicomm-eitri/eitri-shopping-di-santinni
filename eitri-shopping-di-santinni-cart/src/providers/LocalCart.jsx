@@ -57,8 +57,8 @@ export default function CartProvider({ children }) {
 		return executeCartOperation(setNewAddress, cart, zipCode)
 	}
 
-	const _setFreight = async (cart, zipCode) => {
-		return executeCartOperation(setFreight, cart, zipCode)
+	const _setFreight = async payload => {
+		return executeCartOperation(setFreight, payload)
 	}
 
 	const _removeCoupon = async () => {

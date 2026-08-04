@@ -49,40 +49,7 @@ export default function FreightSelector(props) {
 	const shippingOptions = cartShippingResolver(cart)
 	const deliveryOptions = (shippingOptions?.options || []).filter(opt => !opt.isPickupInPoint)
 
-	const getServiceTitle = item => {
-		const label = (item?.label || '').toLowerCase()
-		const slas = Array.isArray(item?.slas) ? item.slas : []
-
-		if (
-			slas.some(
-				sla =>
-					(sla.courierId || '').toString().toLowerCase().includes('sedex') ||
-					(sla.courierName || '').toString().toLowerCase().includes('sedex') ||
-					sla.isFaster
-			)
-		) {
-			return 'Sedex'
-		}
-
-		if (slas.some(sla => sla.isCheaper)) return 'Econômica'
-
-		if (label.includes('sedex') || label.includes('expresso') || label.includes('express')) return 'Sedex'
-
-		if (
-			label.includes('econ') ||
-			label.includes('econôm') ||
-			label.includes('econômica') ||
-			label.includes('econonica')
-		) {
-			return 'Econômica'
-		}
-
-		if (item?.shippingEstimate && /hora|h|dia|dias|dias úteis|úteis/i.test(item.shippingEstimate)) {
-			return /hora|h/i.test(item.shippingEstimate) ? 'Sedex' : 'Econômica'
-		}
-
-		return item?.label || 'Econômica'
-	}
+	const getServiceTitle = item => item?.label || 'Entrega'
 
 	const parseDateFromString = str => {
 		if (!str) return null
@@ -146,9 +113,7 @@ export default function FreightSelector(props) {
 			return `Receba em até ${diffDays} ${diffDays === 1 ? 'dia' : 'dias'}`
 		}
 
-		const title = getServiceTitle(item)
-
-		return title.toLowerCase().includes('sedex') ? 'o mais rápido' : 'o mais lerdo'
+		return item?.shippingEstimate || ''
 	}
 
 	return (
