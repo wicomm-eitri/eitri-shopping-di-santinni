@@ -5,6 +5,7 @@ import { getOrderById } from '../../services/CustomerService'
 import { navigate, PAGES } from '../../services/NavigationService'
 import { formatPriceInCents } from '../../utils/utils'
 import ImageCard from '../Image/ImageCard'
+import OrderStatusBadge from '../OrderStatusBadge/OrderStatusBadge'
 
 export default function OrderCard(props) {
 	const { order } = props
@@ -52,49 +53,77 @@ export default function OrderCard(props) {
 		return `${day}/${month}/${year} às ${hours}:${minutes}`
 	}
 
-	const firstItemImage = orderDetail?.items?.[0]?.imageUrl
+	const formatQuantity = quantity => {
+		const qty = quantity || 1
 
-	// ... (imports e lógica do componente mantidos)
+		return `${qty} ${qty === 1 ? t('orderCard.unit', 'unidade') : t('orderCard.units', 'unidades')}`
+	}
 
-	// ... (imports e lógica do componente mantidos)
+	const firstItem = orderDetail?.items?.[0]
 
 	return (
-		<View className='flex flex-col bg-white rounded shadow-sm border border-gray-100 w-full p-4'>
-			<View className='flex flex-row items-center gap-4 mb-4'>
-				{/* Removido o 'rounded' para deixar quadrado como na imagem */}
+		<View className='flex flex-col bg-white rounded-sm shadow-sm border border-[#E3E4E6] w-full overflow-hidden'>
+			<View className='flex flex-col gap-[6px] bg-[#F9F9F9] p-3'>
+				<Text className='text-sm font-semibold text-red-700'>{`# ${order?.orderId}`}</Text>
+
+				<View className='flex flex-row items-center justify-between gap-3'>
+					<View className='flex flex-row gap-8'>
+						<View className='flex flex-col gap-1'>
+							<Text className='text-xs font-normal text-gray-500 uppercase tracking-wide'>
+								{t('orderCard.orderDateLabel', 'Data do pedido')}
+							</Text>
+							<Text className='text-xs font-semibold text-gray-500'>{formatDateTime(order?.creationDate)}</Text>
+						</View>
+
+						<View className='flex flex-col gap-1'>
+							<Text className='text-xs font-normal text-gray-500 uppercase tracking-wide'>
+								{t('orderCard.totalLabel', 'Total')}
+							</Text>
+							<Text className='text-xs font-semibold text-gray-500'>
+								{formatPriceInCents(order?.totalValue)}
+							</Text>
+						</View>
+					</View>
+
+					<OrderStatusBadge
+						solid
+						statusId={order?.status}
+						statusDescription={order?.statusDescription}
+						className='shrink-0'
+					/>
+				</View>
+			</View>
+
+			<View className='flex flex-row items-center gap-4 p-4'>
 				<View className='w-20 h-20 bg-gray-50 flex items-center justify-center shrink-0'>
 					{loadingDetails ? (
 						<View className='w-full h-full bg-gray-100 animate-pulse' />
-					) : firstItemImage ? (
+					) : firstItem?.imageUrl ? (
 						<ImageCard
-							imageUrl={firstItemImage}
+							imageUrl={firstItem.imageUrl}
 							className='w-full h-full object-contain mix-blend-multiply p-1'
 						/>
 					) : (
 						<View className='w-full h-full bg-gray-50' />
 					)}
 				</View>
-				<View className='flex flex-col flex-1 gap-2 justify-center'>
-					<Text className='text-sm font-semibold text-red-700'>
-						{t('orderCard.orderLabel', 'Nº do pedido:')} {order?.orderId}
-					</Text>
-					<Text className='text-xs text-gray-500 mt-2'>
-						{t('orderCard.realizedAt', 'Realizado em:')} {formatDateTime(order?.creationDate)}
-					</Text>
-					<Text className='text-xs text-gray-500 mt-1'>
-						{t('orderCard.value', 'Valor:')} {formatPriceInCents(order?.totalValue)}
-					</Text>
+				<View className='flex flex-col flex-1 gap-1 justify-center'>
+					<Text className='text-sm text-gray-800'>{firstItem?.name}</Text>
+					<Text className='text-xs text-gray-500'>{formatQuantity(firstItem?.quantity ?? order?.totalItems)}</Text>
+					<Text className='text-xs text-gray-500'>{formatPriceInCents(firstItem?.price)}</Text>
 				</View>
 			</View>
 
-			<CustomButton
-				width='100%'
-				variant='outlined'
-				className='!border-red-700 !rounded-full !h-[36px]'
-				textClassName='!text-red-700 font-bold text-xs uppercase tracking-wide'
-				label={t('orderCard.viewOrderDetails', 'Ver detalhes')}
-				onPress={openOrderDetails}
-			/>
+			<View className='px-4 pb-4'>
+				<CustomButton
+					width='100%'
+					variant='outlined'
+					className='!border-red-700 !rounded-full !h-[36px]'
+					textClassName='!text-red-700 font-bold text-xs uppercase tracking-wide'
+					label={t('orderCard.viewOrderDetails', 'Ver detalhes')}
+					onPress={openOrderDetails}
+				/>
+			</View>
 		</View>
 	)
 }
