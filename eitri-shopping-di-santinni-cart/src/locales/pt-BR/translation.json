@@ -1,6 +1,7 @@
 {
 	"home": {
-		"title": "Sacola"
+		"title": "Sacola",
+		"labelContinueShopping": "Continuar comprando"
 	},
 	"cart": {
 		"labelGiftWrapping": "Embalagem de presente",
