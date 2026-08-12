@@ -17,6 +17,7 @@ export default function Home(props) {
 
 	const [appIsLoading, setAppIsLoading] = useState(true)
 	const [openWithBottomBar, setOpenWithBottomBar] = useState(false)
+	const [hasFreightError, setHasFreightError] = useState(false)
 
 	useEffect(() => {
 		startHome()
@@ -79,12 +80,12 @@ export default function Home(props) {
 
 						<Coupon />
 
-						<Freight />
+						<Freight onErrorChange={setHasFreightError} />
 
 						<CartSummary />
 					</View>
 
-					<ActionButton />
+					<ActionButton disabled={hasFreightError} />
 				</>
 			)}
 		</Page>

@@ -1,11 +1,12 @@
 import { useTranslation } from 'eitri-i18n'
 import { BottomInset } from 'eitri-shopping-di-santinni-shared'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
+import { requestLogin } from '../../services/customerService'
 import { navigateToCheckout } from '../../services/navigationService'
 import { formatAmountInCents } from '../../utils/utils'
-import { requestLogin } from '../../services/customerService'
 
 export default function ActionButton(props) {
+	const { disabled } = props
 	const { cart } = useLocalShoppingCart()
 	const { t } = useTranslation()
 
@@ -23,6 +24,8 @@ export default function ActionButton(props) {
 	}
 
 	const isValidToProceed = () => {
+		if (disabled) return false
+
 		if (!cart) return false
 
 		if (!cart?.items) return false
@@ -50,11 +53,11 @@ export default function ActionButton(props) {
 				<View className='p-4'>
 					<View
 						onClick={() => {
-							if (isValidToProceed) {
+							if (isValidToProceed()) {
 								goToCheckout()
 							}
 						}}
-						className={`flex justify-between items-center py-4 px-6 rounded-[100px] ${isValidToProceed ? 'bg-red-700' : 'bg-gray-300'}`}>
+						className={`flex justify-between items-center py-4 px-6 rounded-[100px] ${isValidToProceed() ? 'bg-red-700' : 'bg-gray-300'}`}>
 						<Text className='text-sm text-white'>FINALIZAR</Text>
 
 						{total > 0 && (
