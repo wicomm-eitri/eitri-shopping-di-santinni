@@ -5,6 +5,7 @@ import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { loadPostalCodeFromStorage, savePostalCodeOnStorage } from '../../services/customerService'
 
 export default function Freight(props) {
+	const { onErrorChange } = props
 	const { cart, setNewAddress, setFreight } = useLocalShoppingCart()
 	const { t } = useTranslation()
 
@@ -12,6 +13,12 @@ export default function Freight(props) {
 	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState(false)
 	const [isEditingZipCode, setIsEditingZipCode] = useState(false)
+
+	const updateError = value => {
+		setError(value)
+
+		if (typeof onErrorChange === 'function') onErrorChange(!!value)
+	}
 
 	useEffect(() => {
 		if (cart) {
@@ -38,12 +45,12 @@ export default function Freight(props) {
 			if (!zipCode) return
 
 			if (!(zipCode.length == 8 || zipCode.length == 9)) {
-				setError(t('freight.errorCep', 'Digite um CEP válido'))
+				updateError(t('freight.errorCep', 'Digite um CEP válido'))
 
 				return
 			}
 
-			setError(false)
+			updateError(false)
 			fetchFreight(zipCode)
 		} catch (e) {
 			console.error('Error onPressZipCodeChange', e)
@@ -53,14 +60,14 @@ export default function Freight(props) {
 	const onPressEditZipCode = () => {
 		setIsEditingZipCode(true)
 		setZipCode('')
-		setError('')
+		updateError('')
 	}
 
 	const fetchFreight = async zipCode => {
 		setIsLoading(true)
 
 		try {
-			setError('')
+			updateError('')
 
 			savePostalCodeOnStorage(zipCode)
 
@@ -69,7 +76,7 @@ export default function Freight(props) {
 			setIsEditingZipCode(false)
 		} catch (error) {
 			console.error('Error fetching freight', error)
-			setError(t('freight.errorCalcFreight', 'Não foi possível calcular o frete'))
+			updateError(t('freight.errorCalcFreight', 'Não foi possível calcular o frete'))
 		} finally {
 			setIsLoading(false)
 		}
@@ -94,7 +101,7 @@ export default function Freight(props) {
 			await setFreight(payload)
 		} catch (e) {
 			console.error('Error handleOptionSelect', e)
-			setError(t('freight.errorEditFreight', 'Não foi possível modificar o frete'))
+			updateError(t('freight.errorEditFreight', 'Não foi possível modificar o frete'))
 		} finally {
 			setIsLoading(false)
 		}
@@ -105,6 +112,7 @@ export default function Freight(props) {
 	const shipping = cartShippingResolver(cart)
 	const deliveryOptions = shipping?.options?.filter(option => !option.isPickupInPoint) || []
 	const pickupOptions = shipping?.options?.filter(option => option.isPickupInPoint) || []
+	const hasAppliedZipCode = !!cart?.shippingData?.address?.postalCode
 
 	const renderOption = (item, index) => (
 		<View
@@ -134,7 +142,7 @@ export default function Freight(props) {
 
 	return (
 		<View className='px-4'>
-			{isEditingZipCode || !zipCode ? (
+			{isEditingZipCode || !hasAppliedZipCode ? (
 				<View className='flex justify-between mt-2 items-center w-full'>
 					<View className='w-2/3'>
 						<CustomInput
@@ -168,6 +176,12 @@ export default function Freight(props) {
 					<View onClick={onPressEditZipCode}>
 						<Text className='text-sm font-semibold underline'>{t('freight.change', 'Alterar')}</Text>
 					</View>
+				</View>
+			)}
+
+			{error && (
+				<View className='mt-1'>
+					<Text className='text-sm text-red-600 font-medium'>{error}</Text>
 				</View>
 			)}
 
@@ -236,12 +250,6 @@ export default function Freight(props) {
 						</View>
 					)}
 				</>
-			)}
-
-			{error && (
-				<View className='mt-1'>
-					<Text className='text-sm text-red-600 font-medium'>{error}</Text>
-				</View>
 			)}
 		</View>
 	)
