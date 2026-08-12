@@ -17,7 +17,7 @@ export default function HeaderReturn(props) {
 
 	return (
 		<View
-			className={`flex items-center ${className}`}
+			className={`flex items-center justify-center p-[18px] m-[-18px] ${className}`}
 			onClick={onBack}>
 			<svg
 				xmlns='http://www.w3.org/2000/svg'
