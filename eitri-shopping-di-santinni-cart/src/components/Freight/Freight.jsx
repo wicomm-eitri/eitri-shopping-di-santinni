@@ -171,6 +171,12 @@ export default function Freight(props) {
 				</View>
 			)}
 
+			{error && (
+				<View className='mt-1'>
+					<Text className='text-sm text-red-600 font-medium'>{error}</Text>
+				</View>
+			)}
+
 			{!zipCode && (
 				<View
 					className='flex items-center gap-1 w-fit mt-2'
@@ -236,12 +242,6 @@ export default function Freight(props) {
 						</View>
 					)}
 				</>
-			)}
-
-			{error && (
-				<View className='mt-1'>
-					<Text className='text-sm text-red-600 font-medium'>{error}</Text>
-				</View>
 			)}
 		</View>
 	)
