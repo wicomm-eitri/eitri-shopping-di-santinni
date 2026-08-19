@@ -3,7 +3,7 @@ import { sortSku } from '../../utils/skuSort'
 
 // Get unique values per attribute
 function getUniqueValues(skus, key) {
-	return [...new Set(skus.map(s => s.attributes[key]))]
+	return [...new Set(skus.map(s => s.attributes[key]).filter(value => value != null))]
 }
 
 // Given current selections (excluding the key being evaluated),
