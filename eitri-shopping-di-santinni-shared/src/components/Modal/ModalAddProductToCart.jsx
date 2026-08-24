@@ -267,6 +267,7 @@ export default function ModalAddProductToCart(props) {
 
 		const optimisticSubtotal = normalizedCart?.items?.reduce((acc, item, idx) => {
 			const qty = localQuantities[idx] ?? item.quantity
+
 			return acc + item.price * qty
 		}, 0) || 0
 
@@ -275,6 +276,7 @@ export default function ModalAddProductToCart(props) {
 
 		if (discountsTotalizer) {
 			calculatedDiscount = discountsTotalizer.value
+
 			if (discountsTotalizer.value !== 0) {
 				formattedDiscounts = formatAmountInCents(Math.abs(discountsTotalizer.value))
 			}

@@ -9,15 +9,55 @@ const handleSearchAction = value => {
 		}
 	})
 }
-const handleCollectionAction = action => {
+const formatBrandSlug = val => {
+	if (!val) return ''
+
+	let slug = String(val)
+		.trim()
+		.toLowerCase()
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.replace(/[^a-z0-9\s-]/g, '')
+		.replace(/\s+/g, '-')
+
+	if (slug === 'disantinni' || slug === 'di-santini' || slug === 'disantini') {
+		return 'di-santinni'
+	}
+
+	return slug
+}
+
+const handleCollectionAction = (action, fallbackTitle) => {
+	const rawValue = String(action?.value || '').trim()
+	const rawTitle = String(action?.title || '').trim()
+	const displayTitle = rawTitle || String(fallbackTitle || '').trim()
+	const isNumeric = /^\d+$/.test(rawValue)
+
+	let facets = []
+
+	if (isNumeric) {
+		facets = [{ key: 'productClusterIds', value: rawValue }]
+
+		if (rawTitle && rawTitle.toLowerCase() !== 'marcas') {
+			const brandSlug = formatBrandSlug(rawTitle)
+
+			facets.push({ key: 'brand', value: brandSlug })
+		}
+	} else {
+		const targetName = rawTitle || rawValue
+		const brandSlug = formatBrandSlug(targetName)
+
+		facets = [{ key: 'brand', value: brandSlug }]
+	}
+
 	Eitri.navigation.navigate({
 		path: 'ProductCatalog',
 		state: {
 			params: {
-				facets: [{ key: 'productClusterIds', value: action?.value }],
+				facets,
 				sort: action?.sort || ''
 			},
-			title: action?.title || '',
+			title: displayTitle,
 			banner: action?.banner || ''
 		}
 	})
@@ -79,7 +119,7 @@ export const processActions = sliderData => {
 			handleSearchAction(action.value)
 			break
 		case 'collection':
-			handleCollectionAction(action)
+			handleCollectionAction(action, sliderData?.title)
 			break
 		case 'page':
 			handlePageAction(action.value)

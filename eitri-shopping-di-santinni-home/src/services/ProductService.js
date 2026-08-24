@@ -1,8 +1,96 @@
 import { App, Vtex } from 'eitri-shopping-vtex-shared'
 import { resolveSortParam } from './helpers/resolveSortParam'
 
+const colorVariantsCache = new Map()
+
 export const autocompleteSuggestions = async value => {
 	return await Vtex.catalog.autoCompleteSuggestions(value)
+}
+
+const fetchColorVariants = async product => {
+	const reference = String(product?.productReference || '').trim()
+	const prefix = reference.slice(0, -2)
+	let variants = []
+
+	if (/^\d{4,}$/.test(prefix)) {
+		try {
+			const result = await Vtex.searchGraphql.productSearch({
+				fullText: prefix,
+				from: 0,
+				to: 49,
+				hideUnavailableItems: true
+			})
+
+			variants = (result?.products || []).filter(p => {
+				const candidateReference = String(p?.productReference || '').trim()
+
+				return (
+					candidateReference.length === reference.length &&
+					candidateReference.startsWith(prefix) &&
+					String(p?.productId) !== String(product?.productId)
+				)
+			})
+		} catch (error) {
+			console.error('Error fetching color variants by reference', error)
+		}
+	}
+
+	if (variants.length === 0) {
+		try {
+			variants = (await Vtex.catalog.getSimilarProducts(product?.productId)) || []
+		} catch (error) {
+			console.error('Error fetching similar products', error)
+		}
+	}
+
+	return Promise.all(
+		variants.map(async variant => {
+			if (variant?.items?.length) return variant
+
+			try {
+				const fullProduct = await Vtex.catalog.getProductById(variant?.productId)
+
+				return Array.isArray(fullProduct) ? fullProduct[0] : fullProduct
+			} catch (error) {
+				console.error('Error hydrating color variant', error)
+
+				return variant
+			}
+		})
+	)
+}
+
+export const getColorVariants = product => {
+	const reference = String(product?.productReference || '').trim()
+	const referencePrefix = reference.slice(0, -2)
+	const cacheKey = /^\d{4,}$/.test(referencePrefix) ? referencePrefix : String(product?.productId || '')
+
+	if (!cacheKey) return Promise.resolve([])
+
+	if (!colorVariantsCache.has(cacheKey)) {
+		colorVariantsCache.set(
+			cacheKey,
+			fetchColorVariants(product).catch(error => {
+				colorVariantsCache.delete(cacheKey)
+				throw error
+			})
+		)
+	}
+
+	return colorVariantsCache.get(cacheKey)
+}
+
+export const getCollectionName = async collectionId => {
+	try {
+		const result = await Vtex.catalog.getProductsByFacets(`productClusterIds/${collectionId}`, { count: 1 })
+		const clusters = result?.products?.[0]?.productClusters
+
+		return clusters?.find(cluster => String(cluster.id) === String(collectionId))?.name || ''
+	} catch (error) {
+		console.error('Error fetching collection name', error)
+
+		return ''
+	}
 }
 
 /*

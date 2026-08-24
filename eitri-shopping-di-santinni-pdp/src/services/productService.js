@@ -17,12 +17,6 @@ export const getWhoSawAlsoSaw = async productId => {
 	return Vtex.catalog.getWhoSawAlsoSaw(productId)
 }
 
-export const getWhoBoughtAlsoBought = async productId => {
-	const result = await VtexCaller.get(`api/catalog_system/pub/products/crossselling/whoboughtalsobought/${productId}`)
-
-	return result?.data
-}
-
 export const getProductsRecommendations = async productId => {
 	return Vtex.searchGraphql.productRecommendations({
 		identifier: { field: 'id', value: productId },
@@ -32,6 +26,44 @@ export const getProductsRecommendations = async productId => {
 
 export const getSimilarProducts = async productId => {
 	return Vtex.catalog.getSimilarProducts(productId)
+}
+
+const getSpecificationValue = (product, specName) => {
+	const fromProperties = product?.properties?.find(p => p.name === specName)
+
+	if (fromProperties) return fromProperties.values?.[0]
+
+	// Quando o produto vem através do intelligenceSearch a forma de pegar as especificações é diferente
+	const group = product?.specificationGroups?.find(g => g.originalName === 'allSpecifications')
+	const spec = group?.specifications?.find(s => s.name === specName)
+
+	return spec?.values?.[0]
+}
+
+// Produtos de outras cores do mesmo modelo, agrupados pela especificação "Agrupador"
+// Usa o mesmo endpoint do Intelligent Search que o resolver agrupadorProducts do site (FastStore)
+export const getGroupedVariants = async product => {
+	const agrupadorValue = getSpecificationValue(product, 'Agrupador')
+
+	if (!agrupadorValue) return []
+
+	const result = await Vtex.catalog.getProductsByFacets(`Agrupador/${encodeURIComponent(agrupadorValue)}`)
+
+	return (result?.products || []).map(p => {
+		const firstImage = p.items?.[0]?.images?.[0]
+		const corProp = (p.properties || []).find(prop => prop.name === 'COR' || prop.originalName === 'COR')
+
+		return {
+			productId: p.productId,
+			productName: p.productName,
+			linkText: p.linkText,
+			imageUrl: firstImage?.imageUrl,
+			imageAlt: firstImage?.imageText || p.productName,
+			cor: corProp?.values?.[0] ?? null,
+			isAvailable:
+				p.items?.some(item => item.sellers?.some(s => s.commertialOffer?.AvailableQuantity > 0)) ?? false
+		}
+	})
 }
 
 export const markLastViewedProduct = async product => {

@@ -32,7 +32,17 @@
 	"mainDescription": {
 		"txtUntil": "or up to",
 		"txtOf": "of",
-		"txtWithoutInterest": "without interest"
+		"txtWithoutInterest": "without interest",
+		"txtPaymentMethods": "Payment methods"
+	},
+	"paymentMethods": {
+		"txtTitle": "Payment Methods",
+		"txtCreditCard": "Credit Card",
+		"txtDSCard": "Di Santinni Card",
+		"txtPix": "PIX",
+		"txtWithoutInterest": "without interest",
+		"txtWithInterest": "with interest",
+		"txtOff": "OFF"
 	},
 	"modalComponent": {
 		"txtProductAdded": "Product added to cart",

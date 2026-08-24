@@ -57,7 +57,7 @@ export default function OrderList(props) {
 
 	return (
 		<ProtectedView afterLoginRedirectTo={'OrderList'}>
-			<Page>
+			<Page title='Meus pedidos'>
 				<HeaderContentWrapper>
 					<HeaderReturn />
 					<HeaderText text={t('orderList.myOrders', 'Meus Pedidos')} />
@@ -75,7 +75,7 @@ export default function OrderList(props) {
 								{orders && orders.length >= 1 ? (
 									<InfiniteScroll
 										onScrollEnd={handleOrders}
-										className={'flex flex-col gap-4'}>
+										className={'flex flex-col gap-3'}>
 										{orders.map((item, key) => (
 											<OrderCard
 												key={item.orderId}

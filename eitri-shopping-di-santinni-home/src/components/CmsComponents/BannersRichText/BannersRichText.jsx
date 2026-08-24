@@ -28,7 +28,7 @@ export default function BannersRichText(props) {
 				{parsed?.blocks?.map((block, i) => (
 					<Text
 						key={i}
-						className='text-white text-xs font-medium text-center py-1.5'>
+						className='text-white  font-medium text-center py-1.5'>
 						{block.text}
 					</Text>
 				))}

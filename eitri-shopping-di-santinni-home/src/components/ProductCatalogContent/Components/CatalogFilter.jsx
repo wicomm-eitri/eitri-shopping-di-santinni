@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'eitri-i18n'
 import { BottomInset, CustomCheckbox } from 'eitri-shopping-di-santinni-shared'
 import { getProductsFacetsService } from '../../../services/ProductService'
+import { normalizeFacets } from '../../../services/helpers/normalizeFacets'
 import CustomModal from '../../CustomModal/CustomModal'
 import PriceRange from './PriceRange'
 
@@ -14,6 +15,7 @@ const CollapsableFilterSection = ({ title, children }) => {
 				onClick={() => setCollapsed(!collapsed)}
 				className='flex flex-row justify-between items-center cursor-pointer hover:bg-gray-100 p-2 rounded transition-colors'>
 				<Text className='text-base font-medium'>{title}</Text>
+
 				<svg
 					viewBox='0 0 24 24'
 					width='20'
@@ -30,6 +32,7 @@ const CollapsableFilterSection = ({ title, children }) => {
 					/>
 				</svg>
 			</View>
+
 			{!collapsed && <View>{children}</View>}
 		</View>
 	)
@@ -75,90 +78,7 @@ export default function CatalogFilter(props) {
 			}
 
 			const priceFacet = result.facets.find(f => f.type === 'PRICERANGE')
-			let filteredFacets = result.facets.filter(f => f.type !== 'PRICERANGE' && !f.hidden)
-
-			const uniqueFacetsMap = new Map()
-
-			filteredFacets.forEach(facet => {
-				const name = facet.name?.trim().toLowerCase()
-
-				if (!name) return
-
-				if (name === 'cor') facet.name = 'Cor'
-
-				if (name === 'marca' || name === 'brand') facet.name = 'Marca'
-
-				if (facet.values && Array.isArray(facet.values)) {
-					const uniqueValuesMap = new Map()
-
-					facet.values.forEach(v => {
-						const vName = v.name?.trim().toLowerCase()
-
-						if (!vName) return
-
-						if (!uniqueValuesMap.has(vName)) {
-							uniqueValuesMap.set(vName, v)
-						} else {
-							const existing = uniqueValuesMap.get(vName)
-							const isExistingUpper = existing.name === existing.name?.toUpperCase()
-							const isNewUpper = v.name === v.name?.toUpperCase()
-
-							if (isExistingUpper && !isNewUpper) {
-								v.quantity = Math.max(v.quantity || 0, existing.quantity || 0)
-								uniqueValuesMap.set(vName, v)
-							} else if (
-								(v.quantity || 0) > (existing.quantity || 0) &&
-								!(isNewUpper && !isExistingUpper)
-							) {
-								uniqueValuesMap.set(vName, v)
-							}
-						}
-					})
-					facet.values = Array.from(uniqueValuesMap.values())
-				}
-
-				if (uniqueFacetsMap.has(name)) {
-					const existingFacet = uniqueFacetsMap.get(name)
-
-					if (name === 'marca' || name === 'brand') {
-						if (existingFacet.key === 'brand' && facet.key !== 'brand') {
-							uniqueFacetsMap.set(name, facet)
-						} else if (existingFacet.key !== 'brand' && facet.key !== 'brand') {
-							const mergedValuesMap = new Map()
-
-							;[...existingFacet.values, ...facet.values].forEach(v => {
-								const vName = v.name?.trim().toLowerCase()
-
-								if (vName && !mergedValuesMap.has(vName)) mergedValuesMap.set(vName, v)
-							})
-							existingFacet.values = Array.from(mergedValuesMap.values())
-						}
-					} else {
-						const mergedValuesMap = new Map()
-
-						;[...existingFacet.values, ...facet.values].forEach(v => {
-							const vName = v.name?.trim().toLowerCase()
-
-							if (!mergedValuesMap.has(vName)) {
-								mergedValuesMap.set(vName, v)
-							} else {
-								const existing = mergedValuesMap.get(vName)
-								const isExistingUpper = existing.name === existing.name?.toUpperCase()
-								const isNewUpper = v.name === v.name?.toUpperCase()
-
-								if (isExistingUpper && !isNewUpper) {
-									mergedValuesMap.set(vName, v)
-								}
-							}
-						})
-						existingFacet.values = Array.from(mergedValuesMap.values())
-					}
-				} else {
-					uniqueFacetsMap.set(name, facet)
-				}
-			})
-
-			filteredFacets = Array.from(uniqueFacetsMap.values())
+			const filteredFacets = normalizeFacets(result.facets)
 
 			resolvePriceRangeReceivedFacet(priceFacet)
 
@@ -272,6 +192,7 @@ export default function CatalogFilter(props) {
 					strokeLinejoin='round'>
 					<path d='M22 3H2l8 9.46V19l4 2v-8.54L22 3z' />
 				</svg>
+
 				<Text className='text-xs uppercase text-gray-500'>{t('categoryPageModal.title', 'Filtros')}</Text>
 			</View>
 
@@ -289,7 +210,7 @@ export default function CatalogFilter(props) {
 						<View className='flex flex-col gap-4 mt-4'>
 							{filterFacets.map(facet => (
 								<CollapsableFilterSection
-									key={facet.key}
+									key={facet.name}
 									title={facet.name}>
 									<View className='flex flex-col gap-4 mt-2'>
 										{facet.values.map((value, index) => (
@@ -306,6 +227,7 @@ export default function CatalogFilter(props) {
 									</View>
 								</CollapsableFilterSection>
 							))}
+
 							<CollapsableFilterSection
 								key='price'
 								title='Faixa de preço'>
@@ -333,6 +255,7 @@ export default function CatalogFilter(props) {
 										</Text>
 									</View>
 								</View>
+
 								<View className='flex-1'>
 									<View
 										onClick={onApplyFilters}
@@ -343,6 +266,7 @@ export default function CatalogFilter(props) {
 									</View>
 								</View>
 							</View>
+
 							<BottomInset />
 						</View>
 
