@@ -1,17 +1,28 @@
+import { CustomCarousel } from 'eitri-shopping-di-santinni-shared'
 import zoom from '../../assets/images/zoom.svg'
 import ModalImagesPDP from './ModalImagesPDP'
 
 export default function ImageCarousel(props) {
 	const { currentSku } = props
 
-	const [currentSlide, setCurrentSlide] = useState(0)
+	const [baseIndex, setBaseIndex] = useState(0)
+	const [localIndex, setLocalIndex] = useState(0)
 	const [carouselProgressPercentage, setCarouselProgressPercentage] = useState(0)
 	const [showProgressBar, setShowProgressBar] = useState(false)
 	const [showModalImagePDP, setShowModalImagePDP] = useState(false)
+	const [mainCarouselKey, setMainCarouselKey] = useState(0)
 
 	const viewScrollRef = useRef(null)
 
 	const images = currentSku?.images || []
+
+	const currentSlide = images.length > 0 ? (baseIndex + localIndex) % images.length : 0
+
+	const orderedImages = useMemo(() => {
+		if (images.length === 0) return []
+
+		return [...images.slice(baseIndex), ...images.slice(0, baseIndex)]
+	}, [images, baseIndex])
 
 	useEffect(() => {
 		if (viewScrollRef?.current) {
@@ -29,13 +40,21 @@ export default function ImageCarousel(props) {
 	}, [currentSku])
 
 	useEffect(() => {
-		setCurrentSlide(0)
+		setBaseIndex(0)
+		setLocalIndex(0)
 		setCarouselProgressPercentage(0)
+		setMainCarouselKey(previous => previous + 1)
 	}, [currentSku])
 
-	const onChange = index => {
-		setCurrentSlide(index)
+	const goToSlide = index => {
+		setBaseIndex(index)
+		setLocalIndex(0)
+		setMainCarouselKey(previous => previous + 1)
 	}
+
+	const onChange = index => goToSlide(index)
+
+	const onMainSlideChange = newLocalIndex => setLocalIndex(newLocalIndex)
 
 	const onThumbnailsScroll = event => {
 		const target = event?.currentTarget
@@ -66,17 +85,32 @@ export default function ImageCarousel(props) {
 
 	return (
 		<View className='mx-4'>
-			<View className='relative'>
-				<Image
-					pinchZoom
-					zoomMaxScale={8}
-					fadeIn={500}
-					src={images[currentSlide]?.imageUrl}
-					width='100vw'
-				/>
-				<View
-				onClick={() => setShowModalImagePDP(true)}
-				className='absolute top-2.5 right-[18px] p-1.5 rounded-full bg-primary flex items-center justify-center'>
+			<View
+				className='relative'
+				onClick={() => setShowModalImagePDP(true)}>
+				<View className='-mx-4 overflow-hidden bg-[#F6F6F6]'>
+					<CustomCarousel
+						key={mainCarouselKey}
+						gap={0}
+						onSlideChange={onMainSlideChange}>
+						{orderedImages.map((item, index) => (
+							<View
+								key={`${item.imageUrl}-${index}`}
+								className='w-[100vw] bg-[#F6F6F6] flex items-center justify-center'>
+								<Image
+									pinchZoom
+									zoomMaxScale={8}
+									fadeIn={500}
+									className='mix-blend-multiply w-full object-contain'
+									src={item.imageUrl}
+									width='100vw'
+								/>
+							</View>
+						))}
+					</CustomCarousel>
+				</View>
+
+				<View className='absolute top-2.5 right-[18px] p-1.5 rounded-full bg-primary flex items-center justify-center'>
 					<Image
 						src={zoom}
 						width='19px'
@@ -92,10 +126,13 @@ export default function ImageCarousel(props) {
 				{images.map((item, index) => (
 					<View
 						key={`${item.imageUrl}-${index}`}
-						className='flex w-16 h-16 shrink-0 snap-start justify-center items-center'
+						className={`flex w-16 h-16 shrink-0 snap-start justify-center items-center bg-[#F6F6F6] rounded-md border border-gray-500 ${
+							index === currentSlide ? 'border-2' : ''
+						}`}
 						onClick={() => onChange(index)}>
 						<Image
 							fadeIn={500}
+							className='mix-blend-multiply'
 							src={item.imageUrl}
 							width='64px'
 							height='64px'
@@ -103,6 +140,7 @@ export default function ImageCarousel(props) {
 					</View>
 				))}
 			</View>
+
 			{showProgressBar && (
 				<View className='relative w-full h-1.5 mt-2 rounded overflow-hidden'>
 					<View
@@ -113,6 +151,7 @@ export default function ImageCarousel(props) {
 					/>
 				</View>
 			)}
+
 			<ModalImagesPDP
 				images={images}
 				showModal={showModalImagePDP}

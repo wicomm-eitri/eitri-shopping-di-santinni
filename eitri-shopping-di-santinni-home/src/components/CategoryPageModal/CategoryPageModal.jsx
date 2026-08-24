@@ -1,6 +1,7 @@
 import { useTranslation } from 'eitri-i18n'
 import { Text, View, Radio } from 'eitri-luminus'
 import { Loading } from 'eitri-shopping-di-santinni-shared'
+import { normalizeFacets } from '../../services/helpers/normalizeFacets'
 import CollapsableView from './components/CollapsableView'
 import SelectableTouchable from './components/SelectableTouchable'
 
@@ -138,7 +139,7 @@ export default function CategoryPageModal(props) {
 								</CollapsableView>
 							)}
 							{facets &&
-								facets.map(facet => (
+								normalizeFacets(facets).map(facet => (
 									<CollapsableView
 										key={facet.key}
 										title={facet.name}

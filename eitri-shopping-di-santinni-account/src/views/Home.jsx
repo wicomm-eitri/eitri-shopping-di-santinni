@@ -64,13 +64,15 @@ export default function Home(props) {
 			label: t('home.labelSupport', 'Suporte'),
 			icon: suporteIcon,
 			isVisible: true,
-			onClick: () => navigate(PAGES.SUPPORT)
+			onClick: () =>
+				Eitri.openBrowser({ url: 'https://www.disantinni.com.br/institucional/fale-conosco', inApp: true })
 		},
 		{
 			label: t('home.labelStores', 'Nossas lojas'),
 			icon: nossasLojasIcon,
 			isVisible: true,
-			onClick: () => navigate(PAGES.NOSSASLOJAS)
+			onClick: () =>
+				Eitri.openBrowser({ url: 'https://www.disantinni.com.br/institucional/nossas-lojas', inApp: true })
 		},
 		{
 			label: t('home.labelSocialNetworks', 'Redes Sociais'),
@@ -85,10 +87,6 @@ export default function Home(props) {
 		sendScreenView('Perfil', 'Home')
 
 		Eitri.navigation.setOnResumeListener(() => init())
-
-		// setTimeout(() => {
-		// 	navigate(PAGES.BECOMEAFRANCHISEE)
-		// }, 1000)
 	}, [])
 
 	const init = async () => {

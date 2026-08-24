@@ -20,7 +20,7 @@ import Recaptcha from '../services/Recaptcha'
 import { trackAddPaymentInfo, trackScreenView, trackShippingInfo } from '../services/Tracking'
 import { clearCart, startPayment } from '../services/cartService'
 import { navigate } from '../services/navigationService'
-import { ERROR_MAP } from '../utils/vtexErrorMap'
+import { ERROR_MAP, extractGatewayMessage } from '../utils/vtexErrorMap'
 
 let selectedShipping = null
 let selectedPayment = null
@@ -100,8 +100,15 @@ export default function CheckoutReview() {
 
 			const captchaToken = await recaptchaRef?.current?.getRecaptchaToken()
 
+			const formattedFields = cardInfo
+				? {
+					...cardInfo,
+					...(cardInfo.document ? { document: cardInfo.document.replace(/\D/g, '') } : {})
+				}
+				: cardInfo
+
 			const payload = {
-				fields: cardInfo,
+				fields: formattedFields,
 				captchaToken: captchaToken,
 				captchaSiteKey: recaptchaSiteKey,
 				savePersonalData: true,
@@ -158,6 +165,7 @@ export default function CheckoutReview() {
 			setError({
 				state: true,
 				message:
+					extractGatewayMessage(error.response?.data?.error?.message) ||
 					ERROR_MAP[errorCode] ||
 					error.response?.data?.error?.message ||
 					t('checkoutReview.errorClosingOrder', 'Houve um erro ao fechar pedido')
@@ -266,7 +274,7 @@ export default function CheckoutReview() {
 			</View>
 
 			{error.message && (
-				<View className='fixed bottom-[90px] left-0 w-full'>
+				<View className='fixed bottom-[90px] left-0 w-full z-50 px-4'>
 					<View className='p-4 bg-red-50 border border-red-200 rounded'>
 						<Text className='text-sm text-red-600 font-medium'>
 							{error.message || t('checkoutReview.errorClosingOrder', 'Houve um erro ao fechar o pedido')}

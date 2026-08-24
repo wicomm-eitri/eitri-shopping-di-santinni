@@ -144,7 +144,7 @@ export default function ModalImagesPDP(props) {
 							{orderedImages.map((item, index) => (
 								<View
 									key={`${item.imageUrl}-${index}`}
-									className='relative w-screen min-w-screen h-screen overflow-hidden flex items-center justify-center p-0 m-0'>
+									className='relative w-screen min-w-screen h-screen overflow-hidden flex items-center justify-center p-0 m-0 bg-[#F6F6F6]'>
 									<View className='relative w-full h-full overflow-hidden flex items-center justify-center'>
 										<View
 											ref={element => registerZoomElement(index, element)}
@@ -153,11 +153,11 @@ export default function ModalImagesPDP(props) {
 											onTouchEnd={event => handleImageTouchEnd(index, event)}
 											onTouchCancel={event => handleImageTouchEnd(index, event)}
 											style={getZoomStyle(index)}
-											className='relative flex items-center justify-center'>
+											className='relative flex items-center justify-center bg-[#F6F6F6]'>
 											<Image
 												src={item.imageUrl?.replace(/\?.*/, '')}
 												alt={`Imagem ${getOriginalIndex(index) + 1}`}
-												className='block max-h-[90%] object-contain select-none'
+												className='block max-h-[90%] object-contain select-none mix-blend-multiply'
 												draggable={false}
 											/>
 										</View>

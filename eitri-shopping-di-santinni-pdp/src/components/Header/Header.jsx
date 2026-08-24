@@ -1,6 +1,7 @@
 import Eitri from 'eitri-bifrost'
 import { HeaderCart, HeaderContentWrapper, HeaderReturn, HeaderSearchIcon } from 'eitri-shopping-di-santinni-shared'
 import { Vtex } from 'eitri-shopping-vtex-shared'
+import headerLogo from '../../assets/images/logoHeader.png'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
 import { addToWishlist, productOnWishlist, removeItemFromWishlist } from '../../services/customerService'
 
@@ -90,10 +91,19 @@ export default function Header(props) {
 	return (
 		<HeaderContentWrapper
 			containerClassName='bg-white'
-			className='bg-white justify-between'>
+			className='relative bg-white justify-between'>
 			<View className='flex gap-3'>
 				<HeaderReturn />
 			</View>
+
+			<View className='absolute left-[50%] translate-x-[-50%] flex items-center justify-center'>
+				<Image
+					src={headerLogo}
+					alt='Logo'
+					className='h-6 w-auto'
+				/>
+			</View>
+
 			<View className='flex gap-4'>
 				{/* <HeaderWishList
 					filled={itemOnWishlist}

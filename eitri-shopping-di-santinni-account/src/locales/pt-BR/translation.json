@@ -162,7 +162,8 @@
 			"getOrder": "Erro ao pegar detalhes do pedido:",
 			"cancelOrder": "Erro ao cancelar pedido"
 		},
-		"unit": "un."
+		"unit": "unidade",
+		"units": "unidades"
 	},
 	"orderCard": {
 		"loadDetailsError": "Falha ao carregar detalhes do pedido:",
@@ -172,7 +173,8 @@
 		"items": "itens",
 		"item": "item",
 		"loadingProducts": "Carregando produtos...",
-		"unit": "un",
+		"unit": "unidade",
+		"units": "unidades",
 		"viewOrderDetails": "Ver detalhes"
 	},
 	"productCard": {

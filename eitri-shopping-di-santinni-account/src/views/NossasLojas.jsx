@@ -206,7 +206,12 @@ export default function NossasLojas() {
 
 		if (userLocation) {
 			result = result.map(s => {
-				const dist = calculateDistance(userLocation.lat, userLocation.lon, parseFloat(s.latitude), parseFloat(s.longitude))
+				const dist = calculateDistance(
+					userLocation.lat,
+					userLocation.lon,
+					parseFloat(s.latitude),
+					parseFloat(s.longitude)
+				)
 
 				return { ...s, distance: dist }
 			})
@@ -371,14 +376,10 @@ export default function NossasLojas() {
 										<Text className='text-[11px] font-medium text-black mb-3'>{store.phone}</Text>
 									) : null}
 
-									<Text className='text-[11px] font-medium text-black mb-8'>
-										Entre em contato com a loja
-									</Text>
-
 									<View
 										className='bg-[#C8102E] rounded-[30px] py-[14px] items-center h-10 flex justify-center max-w-[200px]'
 										onClick={() => {
-											console.log("CURRENT GOOGLE MAPS LINK ", store.googleMaps);
+											console.log('CURRENT GOOGLE MAPS LINK ', store.googleMaps)
 
 											if (store.googleMaps) {
 												try {
@@ -388,9 +389,7 @@ export default function NossasLojas() {
 												}
 											}
 										}}>
-										<Text className='text-white font-bold text-sm tracking-wide'>
-											VER NO MAPA
-										</Text>
+										<Text className='text-white font-bold text-sm tracking-wide'>VER NO MAPA</Text>
 									</View>
 								</View>
 							)

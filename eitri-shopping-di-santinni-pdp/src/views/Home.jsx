@@ -3,19 +3,19 @@ import { useTranslation } from 'eitri-i18n'
 import { BottomInset, Loading } from 'eitri-shopping-di-santinni-shared'
 import ActionButton from '../components/ActionButton/ActionButton'
 import Badges from '../components/Badges/Badges'
+import ColorVariants from '../components/ColorVariants/ColorVariants'
 import DescriptionComponent from '../components/Description/DescriptionComponent'
 import Freight from '../components/Freight/Freight'
 import Header from '../components/Header/Header'
 import ImageCarousel from '../components/ImageCarousel/ImageCarousel'
 import MainDescription from '../components/MainDescription/MainDescription'
 import RecommendationProducts from '../components/RecommendationProducts/RecommendationProducts'
-import RenderVideo from '../components/RenderVideo/RenderVideo'
 import SkuSelector from '../components/SkuSelector/SkuSelector'
 import { useLocalShoppingCart } from '../providers/LocalCart'
 import { startConfigure } from '../services/AppService'
 import { saveCartIdOnStorage } from '../services/cartService'
 import { productOnWishlist } from '../services/customerService'
-import { getProductById, getProductBySlug, markLastViewedProduct } from '../services/productService'
+import { getGroupedVariants, getProductById, getProductBySlug, markLastViewedProduct } from '../services/productService'
 import { crashLog, sendScreenView, sendViewItem } from '../services/trackingService'
 
 export default function Home() {
@@ -27,6 +27,7 @@ export default function Home() {
 	const [configLoaded, setConfigLoaded] = useState(false)
 	const [currentSku, setCurrentSku] = useState(null)
 	const [wishlistInfo, setWishlistInfo] = useState(null)
+	const [colorVariants, setColorVariants] = useState([])
 
 	useEffect(() => {
 		window.scroll(0, 0)
@@ -54,12 +55,15 @@ export default function Home() {
 		if (product) {
 			setProduct(product)
 			setCurrentSku(findAvailableSKU(product))
+			setColorVariants([])
 
 			const wlInfo = await productOnWishlist(product.productId)
 
 			setWishlistInfo(wlInfo)
 
 			setIsLoading(false)
+
+			loadColorVariants(product)
 		}
 
 		await loadCart(startParams)
@@ -68,6 +72,20 @@ export default function Home() {
 		sendViewItem(product)
 		markLastViewedProduct(product)
 	}
+
+	const loadColorVariants = async product => {
+		try {
+			const variants = await getGroupedVariants(product)
+
+			setColorVariants(variants)
+		} catch (e) {
+			console.error('loadColorVariants: Error', e)
+		}
+	}
+
+	// Mesma regra de renderização do ColorVariants: se ele não for aparecer,
+	// o SkuSelector volta a exibir o atributo "Cor"
+	const showColorVariants = colorVariants?.length > 1 && colorVariants.some(variant => variant.isAvailable)
 
 	const findAvailableSKU = product => {
 		const availableSku = product.items.find(item =>
@@ -126,12 +144,16 @@ export default function Home() {
 
 		// PARA TESTE, DEVE VIR DA API
 		badges.push({
-			textBold: '5%',
-			textRegular: 'PIX'
+			textBold: '',
+			textRegular: 'Frete grátis a partir de R$ 190'
 		})
 		badges.push({
-			textBold: '5%',
-			textRegular: 'Cartão DS'
+			textBold: '',
+			textRegular: 'Até 5x sem juros sem parcela mínima no Cartão DS'
+		})
+		badges.push({
+			textBold: '',
+			textRegular: '10% off na primeira compra: BOASVINDAS'
 		})
 
 		product?.productCluster?.map(cluster => {
@@ -149,16 +171,14 @@ export default function Home() {
 			}
 		})
 
-		console.log('Badges:', badges)
-
 		return badges
 	}
 
 	return (
 		<Page
 			statusBarTextColor='black'
-			// className='bg-[#F2F2F2]'
-			title={t('home.pageTitle', 'Página de produto')}>
+			title={t('home.pageTitle', 'Página de produto')}
+			bottomInset>
 			<Header
 				product={product}
 				configLoaded={configLoaded}
@@ -187,7 +207,14 @@ export default function Home() {
 									currentSku={currentSku}
 									product={product}
 									onSkuChange={onSkuChange}
+									hideColorAttribute={showColorVariants}
 								/>
+
+								<ColorVariants
+									currentProductId={product.productId}
+									variants={colorVariants}
+								/>
+
 								<ActionButton currentSku={currentSku} />
 							</View>
 							{/* TODO: Esconder scrollbar no iOS quando a Eitri lançar o CSS */}
@@ -203,10 +230,6 @@ export default function Home() {
 							</View>
 
 							{configLoaded && <Freight currentSku={currentSku} />}
-							<RenderVideo
-								isMocked
-								videoUrl={'https://shoulder.com.br/cdn/ecommerce/lps/2024/lpgetbeemob.mp4'}
-							/>
 							{/*<RichContent product={product} />*/}
 
 							<DescriptionComponent product={product} />

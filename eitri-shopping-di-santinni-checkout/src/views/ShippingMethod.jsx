@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'eitri-i18n'
 import {
 	BottomInset,
@@ -23,7 +23,6 @@ export default function ShippingMethod(props) {
 	const { t } = useTranslation()
 	const { cart, setFreight, setLogisticInfo } = useLocalShoppingCart()
 	const [selectedAddress, setSelectedAddress] = useState(null)
-	const [sessionAddresses, setSessionAddresses] = useState([])
 
 	const [isLoading, setIsLoading] = useState(false)
 
@@ -64,47 +63,9 @@ export default function ShippingMethod(props) {
 
 	const currentOrFirstPickUpOption = pickUpOptions?.find(p => p.isCurrent) || pickUpOptions?.[0]
 
-	useEffect(() => {
-		try {
-			const stored = JSON.parse(localStorage.getItem('session_addresses') || '[]')
-
-			setSessionAddresses(Array.isArray(stored) ? stored : [])
-		} catch (e) {
-			setSessionAddresses([])
-		}
-	}, [cart])
-
-	const addressesToShow = (() => {
-		const list = []
-
-		for (let i = 0; i < sessionAddresses.length; i++) {
-			const a = sessionAddresses[i]
-
-			list.push({
-				...a,
-				_source: 'session',
-				_id: `session-${i}`
-			})
-		}
-
-		if (shippingOptions?.address) {
-			const sa = shippingOptions.address
-
-			const dup = list.find(
-				x => x.postalCode === sa.postalCode && x.street === sa.street && x.number === sa.number
-			)
-
-			if (!dup) {
-				list.push({
-					...sa,
-					_source: 'server',
-					_id: sa.addressId || 'server-0'
-				})
-			}
-		}
-
-		return list.slice(0, 2)
-	})()
+	const addressesToShow = (cart?.shippingData?.availableAddresses || [])
+		.filter(addr => addr.addressType === 'residential')
+		.map(addr => ({ ...addr, _id: addr.addressId }))
 
 	const handleSelectAddressFactory = addr => async () => {
 		try {
@@ -128,19 +89,6 @@ export default function ShippingMethod(props) {
 		} finally {
 			setIsLoading(false)
 		}
-	}
-
-	const handleRemoveAddress = addr => {
-		if (addr._source !== 'session') return
-
-		setSessionAddresses(prev => {
-			const index = Number(addr._id.split('-')[1])
-			const updatedAddresses = prev.filter((_, i) => i !== index)
-
-			localStorage.setItem('session_addresses', JSON.stringify(updatedAddresses))
-
-			return updatedAddresses
-		})
 	}
 
 	return (
@@ -169,7 +117,7 @@ export default function ShippingMethod(props) {
 						</Text>
 					</View>
 
-					{addressesToShow.map((addr, idx) => {
+					{addressesToShow.map(addr => {
 						const id = addr._id || addr.addressId || `${addr.postalCode}-${addr.number}`
 						const display = `${addr.street || ''}${addr.number ? ', ' + addr.number : ''} - ${addr.neighborhood || ''}`
 
@@ -180,11 +128,8 @@ export default function ShippingMethod(props) {
 								selectable={true}
 								checked={selectedAddress === id}
 								onSelect={handleSelectAddressFactory(addr)}
-								onRemove={() => handleRemoveAddress(addr)}
 								secondaryActionHandler={goToAddressSelector}
-								secondaryActionTitle={
-									addr._source === 'session' ? 'Editar' : 'Trocar endereço de entrega'
-								}>
+								secondaryActionTitle={'Trocar endereço de entrega'}>
 								<View className='mb-2'>
 									<Text className='text-gray-500 text-xs '>{display}</Text>
 								</View>

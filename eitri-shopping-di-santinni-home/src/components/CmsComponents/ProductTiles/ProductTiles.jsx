@@ -80,7 +80,7 @@ export default function ProductTiles(props) {
 								<View
 									key={shelf.title}
 									onClick={() => onChooseShelf(shelf)}
-									className={`pb-2 min-w-fit cursor-pointer transition-all border-b-[2px]`}
+									className={`pb-2 min-w-fit  transition-all border-b-[2px]`}
 									style={{
 										borderColor: isActive ? '#DC2626' : 'transparent',
 										marginBottom: -2
