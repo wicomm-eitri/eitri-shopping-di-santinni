@@ -54,7 +54,7 @@ export const COR_MAP = {
 }
 
 function ColorSwatch({ color, selected, status, onClick }) {
-	const hex = COR_MAP[color.toLowerCase()] || color
+	const hex = COR_MAP[color?.toLowerCase()] || color
 	const unavailable = !status.availableExists
 	const inexistent = !status.exists
 
