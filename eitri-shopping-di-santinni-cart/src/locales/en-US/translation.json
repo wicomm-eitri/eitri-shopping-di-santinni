@@ -1,6 +1,7 @@
 {
 	"home": {
-		"title": "Cart"
+		"title": "Cart",
+		"labelContinueShopping": "Continue shopping"
 	},
 	"cart": {
 		"labelGiftWrapping": "Gift wrapping",

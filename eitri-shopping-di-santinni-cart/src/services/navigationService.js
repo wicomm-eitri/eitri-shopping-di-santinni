@@ -6,3 +6,9 @@ export const navigateToCheckout = orderFormId => {
 		initParams: { orderFormId }
 	})
 }
+
+export const navigateToHome = () => {
+	Eitri.nativeNavigation.open({
+		slug: 'home'
+	})
+}

@@ -1,9 +1,9 @@
 import { useTranslation } from 'eitri-i18n'
 import { BottomInset } from 'eitri-shopping-di-santinni-shared'
 import { useLocalShoppingCart } from '../../providers/LocalCart'
-import { navigateToCheckout } from '../../services/navigationService'
-import { formatAmountInCents } from '../../utils/utils'
 import { requestLogin } from '../../services/customerService'
+import { navigateToCheckout, navigateToHome } from '../../services/navigationService'
+import { formatAmountInCents } from '../../utils/utils'
 
 export default function ActionButton(props) {
 	const { cart } = useLocalShoppingCart()
@@ -61,12 +61,20 @@ export default function ActionButton(props) {
 							<Text className='text-sm text-white font-bold'>{formatAmountInCents(total)}</Text>
 						)}
 					</View>
+
+					<View
+						onClick={navigateToHome}
+						className='flex justify-center items-center py-4 px-6 mt-3 rounded-[100px] border border-red-700 bg-white'>
+						<Text className='text-sm text-red-700 font-bold'>
+							{t('home.labelContinueShopping', 'Continuar comprando')}
+						</Text>
+					</View>
 				</View>
 
 				<BottomInset />
 			</View>
 
-			<View className={'h-[77px]'} />
+			<View className={'h-[140px]'} />
 
 			<BottomInset />
 		</>
