@@ -5,7 +5,7 @@ module.exports = {
 	'eitri-luminus': '2.22.6',
 	'eitri-bifrost': '5.1.0',
 	'eitri-commons': '2.2.1',
-	'version': '0.1.25',
+	'version': '0.1.26',
 	'versionMessage': 'Correção no botão ver mais de categorias',
 	'public-key': '4bc06d45-1a2b-4c41-a29e-1224bed83e5a',
 	'applicationId': 'f0301a60-5a72-487b-8855-a4fbd21d1f39',

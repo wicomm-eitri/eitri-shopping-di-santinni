@@ -181,7 +181,6 @@ export default function CategoryPageItem({ item, goToItem }) {
 
 						{item?.action && (
 							<CategoryTitle
-								icon={item.icon}
 								hasSubItems={false}
 								title={`${t('categoryPageItem.seeAllIn', 'Ver tudo em')} ${item.title}`}
 								onClick={() => handleSeeAllIn()}
