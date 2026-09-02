@@ -9,7 +9,7 @@ import {
 	HeaderSearchIcon
 } from 'eitri-shopping-di-santinni-shared'
 import { fetchCategorySizes } from '../../../../services/sizesService'
-import { goToCart, goToSearch } from '../../../../utils/utils'
+import { goToCart, goToSearch, formatSlug } from '../../../../utils/utils'
 import CategoryGroupTitle from './CategoryGroupTitle'
 import CategorySizeSwipe from './CategorySizeSwipe'
 import CategoryTitle from './CategoryTitle'
@@ -63,6 +63,30 @@ export default function CategoryPageItem({ item, goToItem }) {
 
 		return titleLower === SIZE_SECTION_TITLE || titleLower.includes('tamanho')
 	})
+
+	const handleSeeAllIn = () => {
+		const titleLower = item.title?.trim().toLowerCase() || ''
+		const slug = formatSlug(item.title)
+
+		switch (titleLower) {
+			case 'feminino':
+			case 'feminina':
+			case 'masculino':
+			case 'acessórios':
+			case 'infantil':
+				goToItem({
+					title: item.title,
+					action: {
+						type: 'path',
+						value: `/${slug}`
+					}
+				})
+				break
+			default:
+				goToItem(item)
+				break
+		}
+	}
 
 	return (
 		<>
@@ -142,7 +166,7 @@ export default function CategoryPageItem({ item, goToItem }) {
 										))
 									)}
 
-									{s?.action && !isSizeSection && (
+									{s?.action && !isSizeSection && s?.action.value != 0 && (
 										<CategoryTitle
 											icon={s.icon}
 											hasSubItems={false}
@@ -160,7 +184,7 @@ export default function CategoryPageItem({ item, goToItem }) {
 								icon={item.icon}
 								hasSubItems={false}
 								title={`${t('categoryPageItem.seeAllIn', 'Ver tudo em')} ${item.title}`}
-								onClick={() => goToItem(item)}
+								onClick={() => handleSeeAllIn()}
 								textClassName='!capitalize !text-red-700 underline'
 							/>
 						)}

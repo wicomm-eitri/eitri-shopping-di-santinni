@@ -43,3 +43,21 @@ export const goToSearch = () => {
 		path: '/Search'
 	})
 }
+
+export const formatSlug = val => {
+	if (!val) return ''
+
+	let slug = String(val)
+		.trim()
+		.toLowerCase()
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.replace(/[^a-z0-9\s-]/g, '')
+		.replace(/\s+/g, '-')
+
+	if (slug === 'disantinni' || slug === 'di-santini' || slug === 'disantini' || slug === 'di-santinni') {
+		return 'di-santinni'
+	}
+
+	return slug
+}

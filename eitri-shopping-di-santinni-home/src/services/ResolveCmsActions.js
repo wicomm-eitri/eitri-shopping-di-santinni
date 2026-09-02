@@ -1,4 +1,5 @@
 import Eitri from 'eitri-bifrost'
+import { formatSlug } from '../utils/utils'
 import { openProductById, openProductBySlug, resolveNavigation } from './NavigationService'
 
 const handleSearchAction = value => {
@@ -8,23 +9,6 @@ const handleSearchAction = value => {
 			searchTerm: value
 		}
 	})
-}
-const formatBrandSlug = val => {
-	if (!val) return ''
-
-	let slug = String(val)
-		.trim()
-		.toLowerCase()
-		.normalize('NFD')
-		.replace(/[\u0300-\u036f]/g, '')
-		.replace(/[^a-z0-9\s-]/g, '')
-		.replace(/\s+/g, '-')
-
-	if (slug === 'disantinni' || slug === 'di-santini' || slug === 'disantini') {
-		return 'di-santinni'
-	}
-
-	return slug
 }
 
 const handleCollectionAction = (action, fallbackTitle) => {
@@ -39,13 +23,13 @@ const handleCollectionAction = (action, fallbackTitle) => {
 		facets = [{ key: 'productClusterIds', value: rawValue }]
 
 		if (rawTitle && rawTitle.toLowerCase() !== 'marcas') {
-			const brandSlug = formatBrandSlug(rawTitle)
+			const brandSlug = formatSlug(rawTitle)
 
 			facets.push({ key: 'brand', value: brandSlug })
 		}
 	} else {
 		const targetName = rawTitle || rawValue
-		const brandSlug = formatBrandSlug(targetName)
+		const brandSlug = formatSlug(targetName)
 
 		facets = [{ key: 'brand', value: brandSlug }]
 	}
