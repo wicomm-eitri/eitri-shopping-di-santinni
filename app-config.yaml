@@ -5,18 +5,18 @@ bottom-tab-view-simulation:
           initialization-params:
               type: 'string'
               value: 'tabIndex=0'
-        - slug: 'account'
-          title: 'Favoritos'
-          initialization-params:
-              type: 'string'
-              value: 'tabIndex=1&route=Wishlist'
         - slug: 'home'
           title: 'Categorias'
           initialization-params:
               type: 'string'
-              value: 'tabIndex=2&route=Categories'
+              value: 'tabIndex=1&route=Categories'
         - slug: 'cart'
           title: 'Sacola'
+          initialization-params:
+              type: 'string'
+              value: 'tabIndex=2'
+        - slug: 'cartao'
+          title: 'Cartão'
           initialization-params:
               type: 'string'
               value: 'tabIndex=3'
@@ -35,6 +35,11 @@ eitri-apps:
     - path: ./eitri-shopping-di-santinni-cart
       workspace: eitri-shopping-di-santinni-cart
       alias: cart
+      focus: false
+      shared: false
+    - path: ./eitri-shopping-di-santinni-cartao
+      workspace: eitri-shopping-di-santinni-cartao
+      alias: cartao
       focus: false
       shared: false
     - path: ./eitri-shopping-di-santinni-checkout
