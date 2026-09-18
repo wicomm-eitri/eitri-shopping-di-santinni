@@ -3,8 +3,8 @@ import { Page, View, Text, Image } from 'eitri-luminus'
 import { BottomInset, CustomButton, Loading } from 'eitri-shopping-di-santinni-shared'
 import Eitri from 'eitri-bifrost'
 import CardHeader from '../components/CardHeader/CardHeader'
+import InvoiceGauge from '../components/InvoiceGauge/InvoiceGauge'
 import EyeIcon from '../assets/icons/eye-white.svg'
-import InvoiceArc from '../assets/images/invoice-arc.svg'
 import LimitsIcon from '../assets/icons/limits.svg'
 import CardsIcon from '../assets/icons/cards.svg'
 import InvoicesIcon from '../assets/icons/invoices.svg'
@@ -118,30 +118,28 @@ export default function Invoices() {
 							</View>
 						</View>
 
-						<View className='relative w-[201px] h-[170px] mt-[17px]'>
-							<Image
-								src={InvoiceArc}
-								alt=''
-								className='absolute top-0 left-0 w-[201px] h-[167px]'
-							/>
+						<View className='mt-[17px]'>
+							<InvoiceGauge
+								invoice={summary.currentInvoice}
+								availableLimit={summary.availableLimit}>
+								<View className='absolute top-[41px] left-0 right-0 flex flex-col items-center'>
+									<Text className='text-sm font-semibold leading-6 tracking-[0.28px] text-white'>
+										Sua Fatura atual
+									</Text>
 
-							<View className='absolute top-[41px] left-0 right-0 flex flex-col items-center'>
-								<Text className='text-sm font-semibold leading-6 tracking-[0.28px] text-white'>
-									Sua Fatura atual
-								</Text>
+									<Text className='mt-3 text-2xl font-bold leading-6 tracking-[0.48px] text-white'>
+										{displayPrice(summary.currentInvoice)}
+									</Text>
 
-								<Text className='mt-3 text-2xl font-bold leading-6 tracking-[0.48px] text-white'>
-									{displayPrice(summary.currentInvoice)}
-								</Text>
+									<Text className='mt-6 text-xs font-semibold leading-6 tracking-[0.24px] text-white'>
+										Limite disponível
+									</Text>
 
-								<Text className='mt-6 text-xs font-semibold leading-6 tracking-[0.24px] text-white'>
-									Limite disponível
-								</Text>
-
-								<Text className='text-xs font-semibold leading-6 tracking-[0.24px] text-white'>
-									{displayPrice(summary.availableLimit)}
-								</Text>
-							</View>
+									<Text className='text-xs font-semibold leading-6 tracking-[0.24px] text-white'>
+										{displayPrice(summary.availableLimit)}
+									</Text>
+								</View>
+							</InvoiceGauge>
 						</View>
 
 						<CustomButton
@@ -206,7 +204,7 @@ export default function Invoices() {
 						className='flex justify-center px-10 mt-5'
 						onClick={onPressDoubleLimit}>
 						<Text className='text-xs leading-6 tracking-[0.24px] text-center text-black underline'>
-							Compre em 12x fixas com a 1a em até 70 dias e dobre o seu limite para{' '}
+							Compre em 12x fixas com a 1a em até 70 dias e dobre o seu limite para{' '} 
 							{displayPrice(summary.doubledLimit)}
 						</Text>
 					</View>
