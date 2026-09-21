@@ -11,6 +11,7 @@ import InvoicesIcon from '../assets/icons/invoices.svg'
 import HelpIcon from '../assets/icons/help.svg'
 import AddShortcutIcon from '../assets/icons/add-shortcut.svg'
 import { getCardSummary } from '../services/CardService'
+import { navigate, PAGES } from '../services/NavigationService'
 import { formatPrice } from '../utils/utils'
 
 
@@ -20,7 +21,7 @@ const HIDDEN_CARD_DIGITS = '●●●●'
 
 // TODO: definir destino (link/rota) dos atalhos
 const SHORTCUTS = [
-	{ label: 'Limites', icon: LimitsIcon, onPress: () => {} },
+	{ label: 'Limites', icon: LimitsIcon, onPress: () => navigate(PAGES.CARD_LIMIT) },
 	{ label: 'Meus\nCartões', icon: CardsIcon, onPress: () => {} },
 	{ label: 'Minhas\nFaturas', icon: InvoicesIcon, onPress: () => {} },
 	{ label: 'Me Ajuda', icon: HelpIcon, onPress: () => {} },

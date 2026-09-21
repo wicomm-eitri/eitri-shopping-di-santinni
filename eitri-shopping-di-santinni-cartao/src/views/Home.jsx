@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { Page, View, Text, Image, Carousel } from 'eitri-luminus'
+import { Carousel, Image, Page, Text, View } from 'eitri-luminus'
 import { BottomInset, CustomButton } from 'eitri-shopping-di-santinni-shared'
 import CardHeader from '../components/CardHeader/CardHeader'
-import CheckIcon from '../assets/icons/check.svg'
 import { goHome, navigate, PAGES } from '../services/NavigationService'
+import CheckIcon from '../assets/icons/check.svg'
 
 const CARD_IMAGE =
 	'https://disantinni.vtexassets.com/assets/vtex.file-manager-graphql/images/2463d653-3097-4671-ad37-bb5df4c844b5___af21fc87cdaa1a97f88a2279dbd71b74.png'

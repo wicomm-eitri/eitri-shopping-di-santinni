@@ -66,3 +66,14 @@ export const getCardSummary = async () => {
 		doubledLimit: 5000
 	}
 }
+
+export const getCardLimit = async () => {
+	await new Promise(resolve => setTimeout(resolve, MOCK_DELAY))
+
+	return {
+		totalLimit: 1910,
+		usedLimit: 206.47,
+		doubledLimit: 3820,
+		autoLimitIncrease: true
+	}
+}
