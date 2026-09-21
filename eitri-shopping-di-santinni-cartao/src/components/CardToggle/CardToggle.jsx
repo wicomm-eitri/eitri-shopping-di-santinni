@@ -1,12 +1,8 @@
-import { View } from 'eitri-luminus'
-
 export default function CardToggle(props) {
 	const { checked, onChange } = props
 
 	const onToggle = () => {
-		if (typeof onChange === 'function') {
-			onChange(!checked)
-		}
+		if (typeof onChange === 'function') onChange(!checked)
 	}
 
 	return (
