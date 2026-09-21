@@ -1,5 +1,26 @@
 {
 	"home": {
 		"title": "Di Santinni Card"
+	},
+	"help": {
+		"pageTitle": "Help",
+		"privacyAndTransparency": "Privacy and Transparency",
+		"customerService": "Customer Service",
+		"talkToCleo": "Talk to Cleo",
+		"talkToAgents": "Talk to one of our agents:",
+		"contacts": {
+			"capitals": {
+				"title": "Capitals and Metropolitan Areas",
+				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+			},
+			"sac": {
+				"title": "Questions and Customer Support",
+				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+			},
+			"ombudsman": {
+				"title": "Ombudsman",
+				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+			}
+		}
 	}
 }
