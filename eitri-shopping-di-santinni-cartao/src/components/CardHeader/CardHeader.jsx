@@ -10,8 +10,7 @@ export default function CardHeader(props) {
 	return (
 		<HeaderContentWrapper
 			scrollEffect={false}
-			className='justify-between'
-			containerClassName='!bg-snow'>
+			className='justify-between !bg-snow'>
 			<HeaderReturn
 				className='w-6 h-6'
 				onClick={onBack}

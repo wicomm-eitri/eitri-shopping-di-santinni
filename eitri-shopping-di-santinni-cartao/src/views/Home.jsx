@@ -94,8 +94,7 @@ export default function Home() {
 				<View className='flex flex-col gap-[10px] w-full'>
 					<CustomButton
 						label='Já tenho um cartão'
-						className='!h-[34px]'
-						textClassName='text-xs uppercase tracking-[0.24px]'
+						className='!h-[34px] text-xs uppercase tracking-[0.24px]'
 						onPress={onPressHaveCard}
 					/>
 
