@@ -5,7 +5,6 @@ on:
         types:
             - closed
         branches:
-            - develop
             - main
 
 env:
@@ -18,16 +17,9 @@ env:
 jobs:
     publish:
         runs-on: ubuntu-latest
+        if: github.event.pull_request.merged == true
 
         steps:
-            - name: Check if PR was merged
-              run: |
-                  if [ "${{ github.event.pull_request.merged }}" != "true" ]; then
-                    echo "❌ PR foi fechado sem merge. Encerrando pipeline."
-                    exit 0
-                  fi
-                  echo "☑️ PR foi mergeado. Continuando pipeline..."
-
             - name: Checkout repository
               uses: actions/checkout@v4
               with:
@@ -63,7 +55,7 @@ jobs:
 
                   for config_file in $(find . -name 'eitri-app.conf.js'); do
                     module_dir=$(dirname "$config_file")
-                    
+
                     echo " "
                     echo "🔍🔍 Analisando módulo: $module_dir"
 
@@ -121,70 +113,29 @@ jobs:
                       echo "📌 versionMessage encontrada: $VERSION_MESSAGE"
                     fi
 
-
-                    # ---------- Detecta ENV ----------
-                    ENV_IDS=""
-
-                    if [[ "${{ github.base_ref }}" == "develop" ]]; then
-                      ENV_IDS="${{ env.DEV_ENVID }}"
-
-                    elif [[ "${{ github.base_ref }}" == "main" && "${{ github.head_ref }}" == "develop" ]]; then
-                      ENV_IDS="${{ env.PROD_ENVID }}"
-
-                    elif [[ "${{ github.base_ref }}" == "main" && "${{ github.head_ref }}" != "develop" ]]; then
-                      ENV_IDS="${{ env.DEV_ENVID }} ${{ env.PROD_ENVID }}"
-                    fi
-
-                    # ---------- Valida ENV ----------
-                    if [[ -z "$ENV_IDS" ]]; then
-                       echo "::warning::Nenhuma ENV_ID cadastrada para este fluxo ⚠️"
-                    fi
-
                     pushd "$module" > /dev/null
-
 
                     # ---------- push-version ----------
                     VERSION_CREATED="true"
 
-                    if [[ "${{ github.base_ref }}" == "develop" ]]; then
-                      echo " "
-                      echo "🔗 Criando versão"
+                    echo " "
+                    echo "🔗 Criando versão"
 
-                      if [[ "$shared_flag" == "true" ]]; then
-                        echo "🔗 Executando 'eitri push-version --shared --message \"$VERSION_MESSAGE\"'"
-                        
-                        eitri push-version --shared --message "$VERSION_MESSAGE" || { echo " ::warning::Houve um erro, provavelmente a versão já existe! ⚠️"; VERSION_CREATED="false"; }
-                      else
-                        echo "🔗 Executando 'eitri push-version --message \"$VERSION_MESSAGE\"'"
+                    if [[ "$shared_flag" == "true" ]]; then
+                      echo "🔗 Executando 'eitri push-version --shared --message \"$VERSION_MESSAGE\"'"
 
-                        eitri push-version --message "$VERSION_MESSAGE" || { echo " ::warning::Houve um erro, provavelmente a versão já existe! ⚠️"; VERSION_CREATED="false"; }
-                      fi
-
-                    elif [[ "${{ github.base_ref }}" == "main" && "${{ github.head_ref }}" != "develop" ]]; then
-                      echo " "
-                      echo "🔗 Criando versão"
-                      echo "::warning::Atenção, você está subindo alterações direto na main ⚠️"
-
-                      if [[ "$shared_flag" == "true" ]]; then
-                        echo "🔗 Executando 'eitri push-version --shared --message \"$VERSION_MESSAGE\"'"
-
-                        eitri push-version --shared --message "$VERSION_MESSAGE" || { echo " ::warning::Houve um erro, provavelmente a versão já existe! ⚠️"; VERSION_CREATED="false"; }
-                      else
-                        echo "🔗 Executando 'eitri push-version --message \"$VERSION_MESSAGE\"'"
-
-                        eitri push-version --message "$VERSION_MESSAGE" || { echo " ::warning::Houve um erro, provavelmente a versão já existe! ⚠️"; VERSION_CREATED="false"; }
-                      fi
+                      eitri push-version --shared --message "$VERSION_MESSAGE" || { echo "::warning::Houve um erro, provavelmente a versão já existe! ⚠️"; VERSION_CREATED="false"; }
                     else
-                      echo "⏭️ Ignorando push-version (já gerado via develop)"
-                    fi
+                      echo "🔗 Executando 'eitri push-version --message \"$VERSION_MESSAGE\"'"
 
+                      eitri push-version --message "$VERSION_MESSAGE" || { echo "::warning::Houve um erro, provavelmente a versão já existe! ⚠️"; VERSION_CREATED="false"; }
+                    fi
 
                     # ---------- publish ----------
                     if [[ "$VERSION_CREATED" == "true" ]]; then
-                      for ENV_ID in $ENV_IDS; do
-                        echo "🚀 Publicando módulo $module com 'eitri publish -e $ENV_ID'"
-                        eitri publish -e $ENV_ID
-                      done
+                      echo "🚀 Publicando módulo $module com 'eitri publish -e ${{ env.DEV_ENVID }}'"
+
+                      eitri publish -e ${{ env.DEV_ENVID }}
 
                       PUBLISHED_MODULES="${PUBLISHED_MODULES}${module}\n"
                     else
@@ -199,27 +150,19 @@ jobs:
                     echo " "
                   }
 
-
                   if [[ -n "${{ steps.detect.outputs.shared_modules }}" ]]; then
-                    echo "================================"
                     echo "================================"
                     echo "🚀 Publicando módulos SHARED"
                     echo "================================"
-                    echo "================================"
-
                     for module in ${{ steps.detect.outputs.shared_modules }}; do
                       publish_module "$module" "true"
                     done
                   fi
 
-
                   if [[ -n "${{ steps.detect.outputs.non_shared_modules }}" ]]; then
-                    echo "================================"
                     echo "================================"
                     echo "🚀 Publicando módulos NON SHARED"
                     echo "================================"
-                    echo "================================"
-
                     for module in ${{ steps.detect.outputs.non_shared_modules }}; do
                       publish_module "$module" "false"
                     done
