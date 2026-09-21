@@ -130,8 +130,7 @@ export default function SignIn() {
 					<CustomButton
 						label='Entrar'
 						disabled={!canSubmit}
-						className='!h-[34px]'
-						textClassName='!text-white text-xs uppercase tracking-[0.24px]'
+						className='!h-[34px] text-xs uppercase tracking-[0.24px]'
 						onPress={handleLogin}
 					/>
 

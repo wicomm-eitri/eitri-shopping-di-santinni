@@ -12,6 +12,7 @@ import HelpIcon from '../assets/icons/help.svg'
 import AddShortcutIcon from '../assets/icons/add-shortcut.svg'
 import { getCardSummary } from '../services/CardService'
 import { formatPrice } from '../utils/utils'
+import { navigate, PAGES } from '../services/NavigationService'
 
 
 const HIDDEN_VALUE = '●●●●●●●'
@@ -56,7 +57,7 @@ export default function Invoices() {
 	// TODO: definir destino (link/rota) dos botões
 	const onPressSeeInvoices = () => {}
 
-	const onPressSimulate = () => {}
+	const onPressSimulate = () => navigate(PAGES.LOAN)
 
 	const onPressDoubleLimit = () => {}
 
@@ -175,7 +176,7 @@ export default function Invoices() {
 					<View className='flex flex-col gap-[5px] px-4 mt-5'>
 						<Text className='text-xs font-semibold leading-6 tracking-[0.24px] text-black'>Para você</Text>
 
-						<View className='flex items-end justify-between px-6 py-8 rounded-lg bg-base-100 drop-shadow-[0px_4px_3px_rgba(0,0,0,0.25)]'>
+						<View className='flex items-end justify-between px-6 py-3 rounded-lg bg-base-100 drop-shadow-[0px_4px_3px_rgba(0,0,0,0.25)]'>
 							<View className='flex flex-col gap-[5px]'>
 								<Text className='text-xs font-semibold leading-6 tracking-[0.24px] text-black'>
 									Empréstimo pessoal
@@ -192,9 +193,8 @@ export default function Invoices() {
 							</View>
 
 							<CustomButton
-								className='!h-[25px] !w-[86px]'
-								textClassName='!text-base-100 !font-semibold text-[10px] uppercase tracking-[0.2px]'
 								label='Simular'
+								className='!h-[25px] !w-[86px] text-[10px] uppercase tracking-[0.2px]'
 								onPress={onPressSimulate}
 							/>
 						</View>
