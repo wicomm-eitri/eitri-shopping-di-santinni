@@ -23,7 +23,7 @@ const HIDDEN_CARD_DIGITS = '●●●●'
 const SHORTCUTS = [
 	{ label: 'Limites', icon: LimitsIcon, onPress: () => navigate(PAGES.CARD_LIMIT) },
 	{ label: 'Meus\nCartões', icon: CardsIcon, onPress: () => {} },
-	{ label: 'Minhas\nFaturas', icon: InvoicesIcon, onPress: () => {} },
+	{ label: 'Minhas\nFaturas', icon: InvoicesIcon, onPress: () => navigate(PAGES.MY_INVOICES) },
 	{ label: 'Me Ajuda', icon: HelpIcon, onPress: () => navigate(PAGES.HELP) },
 	{ label: 'Adicionar\nAtalho', icon: AddShortcutIcon, onPress: () => {}, highlight: true }
 ]

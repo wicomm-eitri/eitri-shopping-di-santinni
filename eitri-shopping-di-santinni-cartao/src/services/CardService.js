@@ -97,3 +97,24 @@ export const getLoanInstallments = async amount => {
 		}
 	})
 }
+
+// TODO: substituir pelo retorno real da API de faturas
+export const getInvoice = async (year, month) => {
+	await new Promise(resolve => setTimeout(resolve, MOCK_DELAY))
+
+	return {
+		year,
+		month,
+		status: 'Fechada',
+		totalValue: 108.57,
+		dueDate: '10 de Junho',
+		maxInstallments: 12,
+		installmentValue: 15.94,
+		cardholders: [{ name: 'Renata', isHolder: true, totalValue: 108.57 }],
+		transactions: [
+			{ id: '1', cardholder: 'Renata', description: 'Cartão protegido Di Santinni', date: '28/05', value: 5.17, type: 'service' },
+			{ id: '2', cardholder: 'Renata', description: 'Odonto Di Santinni', date: '28/05', value: 25.89, type: 'service' },
+			{ id: '3', cardholder: 'Renata', description: 'Di Santinni', date: '28/05', value: 32.64, type: 'purchase' }
+		]
+	}
+}
