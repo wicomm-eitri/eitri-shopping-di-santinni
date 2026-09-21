@@ -1,5 +1,26 @@
 {
 	"home": {
 		"title": "Cartão Di Santinni"
+	},
+	"help": {
+		"pageTitle": "Me Ajuda",
+		"privacyAndTransparency": "Privacidade e Transparência",
+		"customerService": "Central de Atendimento",
+		"talkToCleo": "Falar com cleo",
+		"talkToAgents": "Fale com um dos nossos atendentes:",
+		"contacts": {
+			"capitals": {
+				"title": "Capitais e Regiões Metropolitanas",
+				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+			},
+			"sac": {
+				"title": "Dúvidas e SAC",
+				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+			},
+			"ombudsman": {
+				"title": "Ouvidoria",
+				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+			}
+		}
 	}
 }
