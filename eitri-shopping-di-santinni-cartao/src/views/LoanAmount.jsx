@@ -6,6 +6,7 @@ import CardHeader from '../components/CardHeader/CardHeader'
 import LoanProgress from '../components/LoanProgress/LoanProgress'
 import InfoIcon from '../assets/icons/info.svg'
 import { formatPrice } from '../utils/utils'
+import { navigate, PAGES } from '../services/NavigationService'
 
 const MIN_LOAN_AMOUNT = 275
 
@@ -31,8 +32,7 @@ export default function LoanAmount(props) {
 
 	const onChangeAmount = e => setAmount(parseAmount(e.target ? e.target.value : e))
 
-	// TODO: definir próxima fase do empréstimo
-	const onPressConfirm = () => {}
+	const onPressConfirm = () => navigate(PAGES.LOAN_INSTALLMENTS, { amount })
 
 	return (
 		<Page

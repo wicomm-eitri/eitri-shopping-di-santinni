@@ -77,3 +77,23 @@ export const getCardLimit = async () => {
 		autoLimitIncrease: true
 	}
 }
+
+// TODO: substituir pela taxa/condições reais retornadas pela API
+const MOCK_LOAN_MONTHLY_RATE = 0.035
+const LOAN_MAX_INSTALLMENTS = 12
+
+export const getLoanInstallments = async amount => {
+	await new Promise(resolve => setTimeout(resolve, MOCK_DELAY))
+
+	return Array.from({ length: LOAN_MAX_INSTALLMENTS }, (_, index) => {
+		const installments = LOAN_MAX_INSTALLMENTS - index
+		const factor = Math.pow(1 + MOCK_LOAN_MONTHLY_RATE, installments)
+		const installmentValue = Math.round(((amount * MOCK_LOAN_MONTHLY_RATE * factor) / (factor - 1)) * 100) / 100
+
+		return {
+			installments,
+			installmentValue,
+			totalValue: Math.round(installmentValue * installments * 100) / 100
+		}
+	})
+}
