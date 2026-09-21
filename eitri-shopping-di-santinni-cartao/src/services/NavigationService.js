@@ -3,7 +3,8 @@ import Eitri from 'eitri-bifrost'
 export const PAGES = {
 	HOME: '/Home',
 	SIGNIN: '/SignIn',
-	INVOICES: '/Invoices'
+	INVOICES: '/Invoices',
+	CARD_LIMIT: '/CardLimit'
 }
 
 export const navigate = (page, state = {}, replace = false) => {
