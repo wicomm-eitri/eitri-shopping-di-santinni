@@ -84,7 +84,7 @@ export default function CardLimit() {
 							</Text>
 
 							<Text className='text-xs font-semibold tracking-[0.24px] text-[#8C8C8C]'>
-								Limite Total
+								Limite Disponível
 							</Text>
 						</View>
 
@@ -101,7 +101,7 @@ export default function CardLimit() {
 							</Text>
 
 							<Text className='text-xs font-semibold tracking-[0.24px] text-primary'>
-								{formatPrice(limit.totalLimit)}
+								{formatPrice(availableLimit)}
 							</Text>
 						</View>
 					</View>
