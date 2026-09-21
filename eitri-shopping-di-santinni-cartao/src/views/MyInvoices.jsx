@@ -187,7 +187,7 @@ export default function MyInvoices() {
 									outlined
 									className='!h-[34px] !border-0'
 									onPress={onPressInvoicePdf}>
-									<Text className='text-xs font-bold uppercase tracking-[0.24px] text-[#595959]'>
+									<Text className='text-xs font-bold uppercase tracking-[0.24px] text-[#595959] underline'>
 										Fatura em PDF
 									</Text>
 								</CustomButton>
