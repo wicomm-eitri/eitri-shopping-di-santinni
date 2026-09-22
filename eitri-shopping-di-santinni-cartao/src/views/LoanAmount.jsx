@@ -4,7 +4,7 @@ import { Page, View, Text, Image } from 'eitri-luminus'
 import { BottomInset, CustomButton, CustomInput } from 'eitri-shopping-di-santinni-shared'
 import CardHeader from '../components/CardHeader/CardHeader'
 import LoanProgress from '../components/LoanProgress/LoanProgress'
-import InfoIcon from '../assets/icons/info.svg'
+import InfoGrayIcon from '../assets/icons/info-gray.svg'
 import { formatPrice } from '../utils/utils'
 import { navigate, PAGES } from '../services/NavigationService'
 
@@ -78,7 +78,7 @@ export default function LoanAmount(props) {
 
 					<View className='flex items-center gap-[10px] p-[10px] rounded-lg bg-[#F5E8EB] drop-shadow-[0px_4px_3px_rgba(0,0,0,0.1)]'>
 						<Image
-							src={InfoIcon}
+							src={InfoGrayIcon}
 							alt=''
 							className='shrink-0 w-[22px] h-[22px]'
 						/>

@@ -3,3 +3,9 @@ export const formatPrice = price => {
 
 	return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
+
+export const formatDate = date => {
+	if (!(date instanceof Date)) return ''
+
+	return date.toLocaleDateString('pt-BR')
+}

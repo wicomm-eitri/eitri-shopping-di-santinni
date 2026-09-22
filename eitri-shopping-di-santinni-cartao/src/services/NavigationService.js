@@ -8,6 +8,8 @@ export const PAGES = {
 	LOAN: '/Loan',
 	LOAN_AMOUNT: '/LoanAmount',
 	LOAN_INSTALLMENTS: '/LoanInstallments',
+	LOAN_DETAILS: '/LoanDetails',
+	LOAN_BANK: '/LoanBank',
 	HELP: '/Help',
 	MY_INVOICES: '/MyInvoices',
 	ANNUITY: '/Annuity',

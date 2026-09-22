@@ -120,6 +120,41 @@ export const getLoanInstallments = async amount => {
 	})
 }
 
+// TODO: substituir pelas taxas reais retornadas pela API
+export const LOAN_INTEREST_INFO = [
+	'Juros: 9.99% ao mês',
+	'Taxa de Juros: 213.5 ao ano',
+	'IOF: 0.38% + 0.0082% por dia',
+	'Custo Efetivo Total (CET): 10.4% ao mês e 227.82% ao ano'
+]
+
+const FIRST_INSTALLMENT_DAYS = 30
+
+// TODO: substituir pela data real da primeira parcela retornada pela API
+export const getFirstInstallmentDate = () => {
+	const date = new Date()
+
+	date.setDate(date.getDate() + FIRST_INSTALLMENT_DAYS)
+
+	return date
+}
+
+// TODO: substituir pela lista real de instituições retornada pela API
+const BANKS = [
+	{ code: '001', name: 'Banco do Brasil S.A' },
+	{ code: '033', name: 'Banco Santander Brasil' },
+	{ code: '077', name: 'Banco Inter S.A' },
+	{ code: '104', name: 'Caixa Econômica Federal' },
+	{ code: '212', name: 'Banco Original S.A' },
+	{ code: '237', name: 'Bradesco S.A' }
+]
+
+export const getBanks = async () => {
+	await new Promise(resolve => setTimeout(resolve, MOCK_DELAY))
+
+	return BANKS
+}
+
 // TODO: substituir pelo retorno real da API de faturas
 export const getInvoice = async (year, month) => {
 	await new Promise(resolve => setTimeout(resolve, MOCK_DELAY))
@@ -134,8 +169,22 @@ export const getInvoice = async (year, month) => {
 		installmentValue: 15.94,
 		cardholders: [{ name: 'Renata', isHolder: true, totalValue: 108.57 }],
 		transactions: [
-			{ id: '1', cardholder: 'Renata', description: 'Cartão protegido Di Santinni', date: '28/05', value: 5.17, type: 'service' },
-			{ id: '2', cardholder: 'Renata', description: 'Odonto Di Santinni', date: '28/05', value: 25.89, type: 'service' },
+			{
+				id: '1',
+				cardholder: 'Renata',
+				description: 'Cartão protegido Di Santinni',
+				date: '28/05',
+				value: 5.17,
+				type: 'service'
+			},
+			{
+				id: '2',
+				cardholder: 'Renata',
+				description: 'Odonto Di Santinni',
+				date: '28/05',
+				value: 25.89,
+				type: 'service'
+			},
 			{ id: '3', cardholder: 'Renata', description: 'Di Santinni', date: '28/05', value: 32.64, type: 'purchase' }
 		]
 	}

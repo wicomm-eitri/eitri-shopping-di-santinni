@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react'
 import Eitri from 'eitri-bifrost'
 import { Page, View, Text, Image } from 'eitri-luminus'
-import { BottomInset, CustomButton, Loading } from 'eitri-shopping-di-santinni-shared'
+import { BottomInset, Loading } from 'eitri-shopping-di-santinni-shared'
 import CardHeader from '../components/CardHeader/CardHeader'
 import LoanProgress from '../components/LoanProgress/LoanProgress'
-import ChevronIcon from '../assets/icons/chevron-left.svg'
 import { getLoanInstallments } from '../services/CardService'
+import { navigate, PAGES } from '../services/NavigationService'
+import ChevronIcon from '../assets/icons/chevron-left.svg'
 import { formatPrice } from '../utils/utils'
 
 export default function LoanInstallments(props) {
 	const amount = props?.location?.state?.amount || 0
 
 	const [installmentOptions, setInstallmentOptions] = useState(null)
-	const [selectedOption, setSelectedOption] = useState(null)
 
 	useEffect(() => {
 		loadInstallments()
@@ -30,8 +30,7 @@ export default function LoanInstallments(props) {
 
 	const onBack = () => Eitri.navigation.back()
 
-	// TODO: definir próxima fase do empréstimo
-	const onPressContinue = () => {}
+	const onPressOption = option => navigate(PAGES.LOAN_DETAILS, { amount, installments: option.installments })
 
 	return (
 		<Page
@@ -53,42 +52,31 @@ export default function LoanInstallments(props) {
 
 				{installmentOptions && (
 					<View className='flex flex-col gap-[10px]'>
-						{installmentOptions.map(option => {
-							const isSelected = selectedOption?.installments === option.installments
+						{installmentOptions.map(option => (
+							<View
+								key={option.installments}
+								className='flex items-center justify-between h-16 px-[10px] rounded-lg bg-[#FAFAF8] drop-shadow-[0px_4px_3px_rgba(0,0,0,0.1)] active:opacity-80'
+								onClick={() => onPressOption(option)}>
+								<View className='flex flex-col gap-1'>
+									<Text className='text-xs font-semibold leading-5 tracking-[0.24px] text-black'>
+										{option.installments} {option.installments === 1 ? 'parcela' : 'parcelas'} de{' '}
+										{formatPrice(option.installmentValue)}
+									</Text>
 
-							return (
-								<View
-									key={option.installments}
-									className={`flex items-center justify-between h-16 px-[10px] rounded-lg border bg-[#FAFAF8] drop-shadow-[0px_4px_3px_rgba(0,0,0,0.1)] ${isSelected ? 'border-red-700' : 'border-transparent'}`}
-									onClick={() => setSelectedOption(option)}>
-									<View className='flex flex-col gap-1'>
-										<Text className='text-xs font-semibold leading-5 tracking-[0.24px] text-black'>
-											{option.installments} {option.installments === 1 ? 'parcela' : 'parcelas'} de{' '}
-											{formatPrice(option.installmentValue)}
-										</Text>
-
-										<Text className='text-xs leading-5 tracking-[0.24px] text-[#888888]'>
-											Total a pagar de {formatPrice(option.totalValue)}
-										</Text>
-									</View>
-
-									<Image
-										src={ChevronIcon}
-										alt=''
-										className='w-5 h-5 rotate-180'
-									/>
+									<Text className='text-xs leading-5 tracking-[0.24px] text-[#888888]'>
+										Total a pagar de {formatPrice(option.totalValue)}
+									</Text>
 								</View>
-							)
-						})}
+
+								<Image
+									src={ChevronIcon}
+									alt=''
+									className='w-5 h-5 rotate-180'
+								/>
+							</View>
+						))}
 					</View>
 				)}
-
-				<CustomButton
-					label='Continuar'
-					disabled={!selectedOption}
-					className='!h-[34px] text-xs uppercase tracking-[0.24px]'
-					onPress={onPressContinue}
-				/>
 
 				<BottomInset />
 			</View>
