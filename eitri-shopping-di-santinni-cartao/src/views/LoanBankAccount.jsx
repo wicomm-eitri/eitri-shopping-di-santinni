@@ -5,6 +5,7 @@ import { BottomInset, CustomButton, CustomInput } from 'eitri-shopping-di-santin
 import CardHeader from '../components/CardHeader/CardHeader'
 import LoanProgress from '../components/LoanProgress/LoanProgress'
 import RadioOption from '../components/RadioOption/RadioOption'
+import { navigate, PAGES } from '../services/NavigationService'
 import ChevronIcon from '../assets/icons/chevron-left.svg'
 import InfoGrayIcon from '../assets/icons/info-gray.svg'
 
@@ -19,6 +20,8 @@ export default function LoanBankAccount(props) {
 	const state = props?.location?.state || {}
 
 	const bank = state.bank || null
+	const amount = state.amount || 0
+	const installments = state.installments || 0
 
 	const [accountType, setAccountType] = useState(ACCOUNT_TYPES[0].id)
 	const [agency, setAgency] = useState('')
@@ -31,8 +34,19 @@ export default function LoanBankAccount(props) {
 
 	const onChangeField = setter => e => setter(onlyNumbers(e?.target ? e.target.value : e))
 
-	// TODO: definir próxima fase do empréstimo, enviando conta e parcelamento escolhidos
-	const onPressContinue = () => {}
+	const onPressContinue = () => {
+		const selectedType = ACCOUNT_TYPES.find(type => type.id === accountType)
+
+		navigate(PAGES.LOAN_SUMMARY, {
+			amount,
+			installments,
+			bank,
+			accountTypeLabel: selectedType ? selectedType.label : '',
+			agency,
+			account,
+			digit
+		})
+	}
 
 	return (
 		<Page

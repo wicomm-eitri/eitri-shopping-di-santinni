@@ -9,3 +9,11 @@ export const formatDate = date => {
 
 	return date.toLocaleDateString('pt-BR')
 }
+
+export const maskDocument = document => {
+	const digits = (document || '').replace(/\D/g, '')
+
+	if (digits.length !== 11) return ''
+
+	return `***.${digits.slice(3, 6)}.${digits.slice(6, 9)}-**`
+}

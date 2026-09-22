@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { View } from 'eitri-luminus'
 
-export const LOAN_TOTAL_STEPS = 7
+export const LOAN_TOTAL_STEPS = 9
 
 export default function LoanProgress(props) {
 	const { currentStep, totalSteps = LOAN_TOTAL_STEPS } = props
