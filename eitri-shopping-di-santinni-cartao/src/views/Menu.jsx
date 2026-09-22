@@ -30,7 +30,7 @@ const MENU_SECTIONS = [
 		title: 'Cartão DS',
 		items: [
 			{ label: 'Ver Fatura', icon: InvoiceIcon, onPress: () => navigate(PAGES.MY_INVOICES) },
-			{ label: 'Pagar Fatura', icon: PayInvoiceIcon, onPress: () => {} },
+			{ label: 'Pagar Fatura', icon: PayInvoiceIcon, onPress: () => navigate(PAGES.PAY_INVOICE) },
 			{ label: 'Cartão Digital', icon: DigitalCardIcon, iconClassName: 'w-5 h-5', onPress: () => {} },
 			{
 				label: 'Limite de\nCartão',
