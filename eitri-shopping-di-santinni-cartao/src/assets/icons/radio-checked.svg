@@ -1,0 +1,17 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="_Checkbox base">
+<rect x="0.5" y="0.5" width="15" height="15" rx="7.5" fill="white"/>
+<rect x="0.5" y="0.5" width="15" height="15" rx="7.5" stroke="url(#paint0_linear_0_44)"/>
+<circle id="Check" cx="8" cy="8" r="3" fill="url(#paint1_linear_0_44)"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_44" x1="0" y1="0" x2="18.644" y2="4.16513" gradientUnits="userSpaceOnUse">
+<stop stop-color="#E23D58"/>
+<stop offset="1" stop-color="#C8102E"/>
+</linearGradient>
+<linearGradient id="paint1_linear_0_44" x1="5" y1="5" x2="11.9915" y2="6.56192" gradientUnits="userSpaceOnUse">
+<stop stop-color="#E23D58"/>
+<stop offset="1" stop-color="#C8102E"/>
+</linearGradient>
+</defs>
+</svg>

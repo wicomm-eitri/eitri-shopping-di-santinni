@@ -22,5 +22,18 @@
 				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 			}
 		}
+	},
+	"annuity": {
+		"pageTitle": "Anuidade",
+		"heading": "Escolha a opção que mais combina com você",
+		"rewardsTitle": "Transforme anuidade em recompensas!",
+		"rewardsDescription": "A cada fatura paga, o valor do +Bônus vira crédito para aproveitar benefícios, recompensas e experiências do seu jeito.",
+		"learnMore": "Saiba mais",
+		"confirm": "Confirmar",
+		"perMonth": "/mês",
+		"options": {
+			"bonus": "+ Bônus",
+			"differentiated": "Diferenciada"
+		}
 	}
 }

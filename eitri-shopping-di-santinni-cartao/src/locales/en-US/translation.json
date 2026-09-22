@@ -22,5 +22,18 @@
 				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 			}
 		}
+	},
+	"annuity": {
+		"pageTitle": "Annual fee",
+		"heading": "Choose the option that suits you best",
+		"rewardsTitle": "Turn your annual fee into rewards!",
+		"rewardsDescription": "With every paid bill, the +Bonus amount becomes credit to enjoy benefits, rewards and experiences your way.",
+		"learnMore": "Learn more",
+		"confirm": "Confirm",
+		"perMonth": "/month",
+		"options": {
+			"bonus": "+ Bonus",
+			"differentiated": "Differentiated"
+		}
 	}
 }
