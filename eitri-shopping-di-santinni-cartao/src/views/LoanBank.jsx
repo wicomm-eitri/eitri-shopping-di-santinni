@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import Eitri from 'eitri-bifrost'
 import { Page, View, Text, Image } from 'eitri-luminus'
-import { BottomInset, CustomButton, CustomInput, Loading } from 'eitri-shopping-di-santinni-shared'
+import { BottomInset, CustomInput, Loading } from 'eitri-shopping-di-santinni-shared'
 import CardHeader from '../components/CardHeader/CardHeader'
 import LoanProgress from '../components/LoanProgress/LoanProgress'
 import { getBanks } from '../services/CardService'
+import { navigate, PAGES } from '../services/NavigationService'
 import ChevronIcon from '../assets/icons/chevron-left.svg'
 import SearchIcon from '../assets/icons/search.svg'
 
@@ -14,7 +15,6 @@ export default function LoanBank(props) {
 
 	const [banks, setBanks] = useState(null)
 	const [search, setSearch] = useState('')
-	const [selectedBank, setSelectedBank] = useState(null)
 
 	useEffect(() => {
 		loadBanks()
@@ -38,10 +38,9 @@ export default function LoanBank(props) {
 
 	const onBack = () => Eitri.navigation.back()
 
-	const onChangeSearch = e => setSearch(e.target ? e.target.value : e)
+	const onChangeSearch = e => setSearch(e?.target ? e.target.value : e)
 
-	// TODO: definir próxima fase do empréstimo, enviando conta e parcelamento escolhidos
-	const onPressContinue = () => {}
+	const onPressBank = bank => navigate(PAGES.LOAN_BANK_ACCOUNT, { amount, installments, bank })
 
 	return (
 		<Page
@@ -82,32 +81,28 @@ export default function LoanBank(props) {
 
 				{banks && (
 					<View className='flex flex-col gap-[10px]'>
-						{filteredBanks.map(bank => {
-							const isSelected = selectedBank?.code === bank.code
+						{filteredBanks.map(bank => (
+							<View
+								key={bank.code}
+								className='flex items-center justify-between h-[50px] px-[10px] rounded-lg bg-[#FAFAF8] drop-shadow-[0px_4px_3px_rgba(0,0,0,0.1)]'
+								onClick={() => onPressBank(bank)}>
+								<View className='flex items-center gap-5'>
+									<Text className='text-xs font-semibold leading-5 tracking-[0.24px] text-[#0C0C0C]'>
+										{bank.code}
+									</Text>
 
-							return (
-								<View
-									key={bank.code}
-									className={`flex items-center justify-between h-[50px] px-[10px] rounded-lg border bg-[#FAFAF8] drop-shadow-[0px_4px_3px_rgba(0,0,0,0.1)] ${isSelected ? 'border-red-700' : 'border-transparent'}`}
-									onClick={() => setSelectedBank(bank)}>
-									<View className='flex items-center gap-5'>
-										<Text className='text-xs font-semibold leading-5 tracking-[0.24px] text-[#0C0C0C]'>
-											{bank.code}
-										</Text>
-
-										<Text className='text-xs leading-5 tracking-[0.24px] text-[#888888]'>
-											{bank.name}
-										</Text>
-									</View>
-
-									<Image
-										src={ChevronIcon}
-										alt=''
-										className='w-5 h-5 rotate-180'
-									/>
+									<Text className='text-xs leading-5 tracking-[0.24px] text-[#888888]'>
+										{bank.name}
+									</Text>
 								</View>
-							)
-						})}
+
+								<Image
+									src={ChevronIcon}
+									alt=''
+									className='w-5 h-5 rotate-180'
+								/>
+							</View>
+						))}
 
 						{filteredBanks.length === 0 && (
 							<Text className='text-xs leading-5 tracking-[0.24px] text-[#888888]'>
@@ -116,13 +111,6 @@ export default function LoanBank(props) {
 						)}
 					</View>
 				)}
-
-				<CustomButton
-					label='Continuar'
-					disabled={!selectedBank}
-					className='!h-[34px] text-xs uppercase tracking-[0.24px]'
-					onPress={onPressContinue}
-				/>
 
 				<BottomInset />
 			</View>

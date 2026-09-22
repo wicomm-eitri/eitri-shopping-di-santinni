@@ -55,7 +55,7 @@ export default function LoanInstallments(props) {
 						{installmentOptions.map(option => (
 							<View
 								key={option.installments}
-								className='flex items-center justify-between h-16 px-[10px] rounded-lg bg-[#FAFAF8] drop-shadow-[0px_4px_3px_rgba(0,0,0,0.1)] active:opacity-80'
+								className='flex items-center justify-between h-16 px-[10px] rounded-lg bg-[#FAFAF8] drop-shadow-[0px_4px_3px_rgba(0,0,0,0.1)]'
 								onClick={() => onPressOption(option)}>
 								<View className='flex flex-col gap-1'>
 									<Text className='text-xs font-semibold leading-5 tracking-[0.24px] text-black'>
