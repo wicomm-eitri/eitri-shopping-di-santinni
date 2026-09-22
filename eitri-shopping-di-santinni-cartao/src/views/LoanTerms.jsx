@@ -7,7 +7,9 @@ import CardHeader from '../components/CardHeader/CardHeader'
 import LoanProgress from '../components/LoanProgress/LoanProgress'
 import { navigate, PAGES } from '../services/NavigationService'
 
-export default function LoanTerms() {
+export default function LoanTerms(props) {
+	const loan = props?.location?.state?.loan || {}
+
 	const [acceptedTerms, setAcceptedTerms] = useState(false)
 
 	const onBack = () => Eitri.navigation.back()
@@ -16,7 +18,7 @@ export default function LoanTerms() {
 	const onPressReadTerms = () => {}
 
 	// TODO: enviar a contratação do empréstimo para a API antes de seguir
-	const onPressConfirm = () => navigate(PAGES.LOAN_BIOMETRICS)
+	const onPressConfirm = () => navigate(PAGES.LOAN_BIOMETRICS, { loan })
 
 	return (
 		<Page
