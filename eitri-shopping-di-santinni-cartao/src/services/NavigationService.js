@@ -14,6 +14,8 @@ export const PAGES = {
 	LOAN_SUMMARY: '/LoanSummary',
 	LOAN_TERMS: '/LoanTerms',
 	LOAN_BIOMETRICS: '/LoanBiometrics',
+	LOAN_IDENTITY: '/LoanIdentity',
+	LOAN_COMPLETED: '/LoanCompleted',
 	HELP: '/Help',
 	MY_INVOICES: '/MyInvoices',
 	ANNUITY: '/Annuity',

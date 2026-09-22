@@ -58,7 +58,20 @@ export default function LoanSummary(props) {
 
 	const onBack = () => Eitri.navigation.back()
 
-	const onPressContinue = () => navigate(PAGES.LOAN_TERMS)
+	const onPressContinue = () =>
+		navigate(PAGES.LOAN_TERMS, {
+			loan: {
+				amount,
+				installments,
+				installmentValue: selectedOption ? selectedOption.installmentValue : 0,
+				totalValue: selectedOption ? selectedOption.totalValue : 0,
+				bank,
+				accountTypeLabel,
+				agency,
+				account,
+				digit
+			}
+		})
 
 	return (
 		<Page

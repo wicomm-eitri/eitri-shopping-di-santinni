@@ -3,13 +3,15 @@ import { Page, View, Text, Image } from 'eitri-luminus'
 import { BottomInset, CustomButton } from 'eitri-shopping-di-santinni-shared'
 import CardHeader from '../components/CardHeader/CardHeader'
 import LoanProgress from '../components/LoanProgress/LoanProgress'
+import { navigate, PAGES } from '../services/NavigationService'
 import FaceCameraIcon from '../assets/icons/face-camera.svg'
 
-export default function LoanBiometrics() {
+export default function LoanBiometrics(props) {
+	const loan = props?.location?.state?.loan || {}
+
 	const onBack = () => Eitri.navigation.back()
 
-	// TODO: abrir a captura da selfie e enviar a biometria para a API
-	const onPressAgree = () => {}
+	const onPressAgree = () => navigate(PAGES.LOAN_IDENTITY, { loan })
 
 	return (
 		<Page

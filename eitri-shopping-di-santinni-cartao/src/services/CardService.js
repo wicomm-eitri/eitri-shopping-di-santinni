@@ -161,6 +161,15 @@ export const getFirstInstallmentDate = () => {
 	return date
 }
 
+// TODO: substituir pelo contrato real retornado pela API
+export const getLoanContract = async () => {
+	await new Promise(resolve => setTimeout(resolve, MOCK_DELAY))
+
+	return {
+		number: '784755884'
+	}
+}
+
 // TODO: substituir pela lista real de instituições retornada pela API
 const BANKS = [
 	{ code: '001', name: 'Banco do Brasil S.A' },
