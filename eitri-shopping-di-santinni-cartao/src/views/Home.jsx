@@ -30,7 +30,10 @@ export default function Home() {
 		<Page
 			title='Cartão Di Santinni'
 			statusBarTextColor='black'>
-			<CardHeader onBack={goHome} />
+			<CardHeader
+				onBack={goHome}
+				showMenu={false}
+			/>
 
 			<View className='flex flex-col items-center gap-10 px-4 pt-6 bg-snow'>
 				<View className='flex flex-col items-center gap-10 w-full'>
