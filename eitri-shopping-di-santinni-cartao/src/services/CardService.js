@@ -121,12 +121,34 @@ export const getLoanInstallments = async amount => {
 }
 
 // TODO: substituir pelas taxas reais retornadas pela API
+export const LOAN_RATES = {
+	monthlyInterest: 9.99,
+	yearlyInterest: 213.5,
+	monthlyCet: 10.4,
+	yearlyCet: 227.82,
+	iofFixed: 0.38,
+	iofDaily: 0.0082
+}
+
 export const LOAN_INTEREST_INFO = [
-	'Juros: 9.99% ao mês',
-	'Taxa de Juros: 213.5 ao ano',
-	'IOF: 0.38% + 0.0082% por dia',
-	'Custo Efetivo Total (CET): 10.4% ao mês e 227.82% ao ano'
+	`Juros: ${LOAN_RATES.monthlyInterest}% ao mês`,
+	`Taxa de Juros: ${LOAN_RATES.yearlyInterest} ao ano`,
+	`IOF: ${LOAN_RATES.iofFixed}% + ${LOAN_RATES.iofDaily}% por dia`,
+	`Custo Efetivo Total (CET): ${LOAN_RATES.monthlyCet}% ao mês e ${LOAN_RATES.yearlyCet}% ao ano`
 ]
+
+// TODO: substituir pelo IOF real retornado pela API
+export const getLoanIof = amount => Math.round(amount * (LOAN_RATES.iofFixed / 100) * 100) / 100
+
+// TODO: substituir pelos dados reais do titular retornados pela API
+export const getAccountHolder = async () => {
+	await new Promise(resolve => setTimeout(resolve, MOCK_DELAY))
+
+	return {
+		name: 'Rafael Silva Luciano',
+		document: '12361816800'
+	}
+}
 
 const FIRST_INSTALLMENT_DAYS = 30
 
