@@ -26,6 +26,10 @@ export default function Home() {
 	// TODO: definir destino (link/rota) do botão
 	const onPressBecomeClient = () => {}
 
+	useEffect(() => {
+		navigate(PAGES.LOAN_COMPLETED)
+	}, [])
+
 	return (
 		<Page
 			title='Cartão Di Santinni'

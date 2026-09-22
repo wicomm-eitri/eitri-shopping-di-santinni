@@ -1,9 +1,9 @@
+import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
 import { Page, View, Text } from 'eitri-luminus'
 import { BottomInset, CustomButton } from 'eitri-shopping-di-santinni-shared'
-import Eitri from 'eitri-bifrost'
-import CardHeader from '../components/CardHeader/CardHeader'
 import AnnuityOption from '../components/AnnuityOption/AnnuityOption'
+import CardHeader from '../components/CardHeader/CardHeader'
 
 const BONUS_OPTION = {
 	id: 'bonus',
