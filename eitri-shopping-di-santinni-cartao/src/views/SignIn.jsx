@@ -67,7 +67,10 @@ export default function SignIn() {
 		<Page
 			title='Entrar - Cartão Di Santinni'
 			statusBarTextColor='black'>
-			<CardHeader onBack={onBack} />
+			<CardHeader
+				onBack={onBack}
+				showMenu={false}
+			/>
 
 			<Loading
 				isLoading={loading}

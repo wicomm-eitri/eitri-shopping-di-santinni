@@ -5,6 +5,8 @@ const MOCK_DELAY = 800
 
 const REMEMBERED_CPF_KEY = 'cartao-remembered-cpf'
 
+const SHOW_VALUES_KEY = 'cartao-show-values'
+
 const onlyNumbers = value => (value || '').replace(/\D/g, '')
 
 export const isValidCpf = cpf => onlyNumbers(cpf).length === 11
@@ -48,6 +50,26 @@ export const clearRememberedCpf = async () => {
 		await Eitri.sharedStorage.removeItem(REMEMBERED_CPF_KEY)
 	} catch (e) {
 		console.warn('clearRememberedCpf error', e)
+	}
+}
+
+export const saveShowValues = async showValues => {
+	try {
+		await Eitri.sharedStorage.setItem(SHOW_VALUES_KEY, String(showValues))
+	} catch (e) {
+		console.warn('saveShowValues error', e)
+	}
+}
+
+export const loadShowValues = async () => {
+	try {
+		const showValues = await Eitri.sharedStorage.getItem(SHOW_VALUES_KEY)
+
+		return showValues === 'true'
+	} catch (e) {
+		console.warn('loadShowValues error', e)
+
+		return false
 	}
 }
 

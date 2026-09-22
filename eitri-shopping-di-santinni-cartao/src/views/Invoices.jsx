@@ -9,9 +9,8 @@ import LimitsIcon from '../assets/icons/limits.svg'
 import CardsIcon from '../assets/icons/cards.svg'
 import InvoicesIcon from '../assets/icons/invoices.svg'
 import HelpIcon from '../assets/icons/help.svg'
-import LoanMoneyIcon from '../assets/icons/loan-money.svg'
 import AddShortcutIcon from '../assets/icons/add-shortcut.svg'
-import { getCardSummary } from '../services/CardService'
+import { getCardSummary, loadShowValues, saveShowValues } from '../services/CardService'
 import { navigate, PAGES } from '../services/NavigationService'
 import { formatPrice } from '../utils/utils'
 
@@ -26,8 +25,6 @@ const SHORTCUTS = [
 	{ label: 'Meus\nCartões', icon: CardsIcon, onPress: () => {} },
 	{ label: 'Minhas\nFaturas', icon: InvoicesIcon, onPress: () => navigate(PAGES.MY_INVOICES) },
 	{ label: 'Me Ajuda', icon: HelpIcon, onPress: () => navigate(PAGES.HELP) },
-	// TODO: Tela de anuidade não existe aqui no figma, está apenas para validação do layout e quando menu hamburger estiver pronto, será removida
-	{ label: 'Anuidade', icon: LoanMoneyIcon, onPress: () => navigate(PAGES.ANNUITY) },
 	{ label: 'Adicionar\nAtalho', icon: AddShortcutIcon, onPress: () => {}, highlight: true }
 ]
 
@@ -37,6 +34,7 @@ export default function Invoices() {
 
 	useEffect(() => {
 		loadSummary()
+		loadShowValues().then(setShowValues)
 	}, [])
 
 	const loadSummary = async () => {
@@ -51,7 +49,12 @@ export default function Invoices() {
 
 	const onBack = () => Eitri.navigation.back()
 
-	const toggleShowValues = () => setShowValues(!showValues)
+	const toggleShowValues = () => {
+		const newShowValues = !showValues
+
+		setShowValues(newShowValues)
+		saveShowValues(newShowValues)
+	}
 
 	const displayPrice = value => (showValues ? formatPrice(value) : HIDDEN_VALUE)
 

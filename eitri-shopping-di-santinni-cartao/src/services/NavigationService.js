@@ -10,7 +10,8 @@ export const PAGES = {
 	LOAN_INSTALLMENTS: '/LoanInstallments',
 	HELP: '/Help',
 	MY_INVOICES: '/MyInvoices',
-	ANNUITY: '/Annuity'
+	ANNUITY: '/Annuity',
+	MENU: '/Menu'
 }
 
 export const navigate = (page, state = {}, replace = false) => {
@@ -21,12 +22,13 @@ export const goHome = () => {
 	Eitri.exposedApis.appState.goHome()
 }
 
-const ACCOUNT_TAB_INDEX = 4
+export const openMenu = () => navigate(PAGES.MENU)
 
-export const openAccount = async () => {
+export const logout = async () => {
 	try {
-		await Eitri.bottomBar.changeTab({ index: ACCOUNT_TAB_INDEX })
+		await Eitri.navigation.backToTop()
+		navigate(PAGES.SIGNIN)
 	} catch (e) {
-		console.error('navigate to account: Error trying to open account', e)
+		console.error('logout: Error trying to navigate to sign in', e)
 	}
 }
