@@ -21,7 +21,8 @@ export const PAGES = {
 	ANNUITY: '/Annuity',
 	MENU: '/Menu',
 	PAY_INVOICE: '/PayInvoice',
-	MY_LOANS: '/MyLoans'
+	MY_LOANS: '/MyLoans',
+	MY_CARD: '/MyCard'
 }
 
 export const navigate = (page, state = {}, replace = false) => {

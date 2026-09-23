@@ -192,6 +192,28 @@ export const getLoans = async () => {
 	]
 }
 
+// TODO: substituir pelo cartão virtual real retornado pela API
+export const getVirtualCard = async () => {
+	await new Promise(resolve => setTimeout(resolve, MOCK_DELAY))
+
+	return {
+		name: 'RENATA S R RIBEIRO',
+		number: '9603.9599.7683.8333',
+		expiry: '05/26',
+		cvv: '930'
+	}
+}
+
+// TODO: substituir pela fatura atual real retornada pela API
+export const getCurrentInvoice = async () => {
+	await new Promise(resolve => setTimeout(resolve, MOCK_DELAY))
+
+	return {
+		amount: 108.57,
+		dueDay: 10
+	}
+}
+
 // TODO: substituir pela lista real de instituições retornada pela API
 const BANKS = [
 	{ code: '001', name: 'Banco do Brasil S.A' },
