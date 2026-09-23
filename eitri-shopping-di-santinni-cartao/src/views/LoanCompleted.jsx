@@ -5,6 +5,7 @@ import { BottomInset, CustomButton, Loading } from 'eitri-shopping-di-santinni-s
 import CardHeader from '../components/CardHeader/CardHeader'
 import LoanProgress from '../components/LoanProgress/LoanProgress'
 import { getFirstInstallmentDate, getLoanContract } from '../services/CardService'
+import { navigate, PAGES } from '../services/NavigationService'
 import InfoGrayIcon from '../assets/icons/info-gray.svg'
 import SuccessCheckIcon from '../assets/icons/success-check.svg'
 import { formatDate, formatPrice } from '../utils/utils'
@@ -44,8 +45,16 @@ export default function LoanCompleted(props) {
 	// TODO: definir destino (link/rota) dos detalhes do empréstimo
 	const onPressMoreDetails = () => {}
 
-	// TODO: definir destino (link/rota) do botão continuar
-	const onPressContinue = () => {}
+	const onPressContinue = () =>
+		navigate(PAGES.MY_LOANS, {
+			loan: {
+				id: contract?.number || UNAVAILABLE,
+				status: 'onTime',
+				contractedAmount: formatPrice(amount),
+				installmentAmount: formatPrice(installmentValue),
+				contractDate: formatDate(new Date())
+			}
+		})
 
 	return (
 		<Page
