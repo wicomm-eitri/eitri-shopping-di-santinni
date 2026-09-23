@@ -170,6 +170,28 @@ export const getLoanContract = async () => {
 	}
 }
 
+// TODO: substituir pela lista real de empréstimos retornada pela API
+export const getLoans = async () => {
+	await new Promise(resolve => setTimeout(resolve, MOCK_DELAY))
+
+	return [
+		{
+			id: '784755884',
+			status: 'onTime',
+			contractedAmount: 'R$ 275,00',
+			installmentAmount: 'R$ 41,15',
+			contractDate: '10/07/2025'
+		},
+		{
+			id: '766966571',
+			status: 'canceled',
+			contractedAmount: 'R$ 275,00',
+			installmentAmount: 'R$ 41,15',
+			contractDate: '16/05/2025'
+		}
+	]
+}
+
 // TODO: substituir pela lista real de instituições retornada pela API
 const BANKS = [
 	{ code: '001', name: 'Banco do Brasil S.A' },
