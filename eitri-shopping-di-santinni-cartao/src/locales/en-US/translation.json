@@ -70,5 +70,80 @@
 	},
 	"registerBiometrics": {
 		"pageTitle": "Facial recognition - Di Santinni Card"
+	},
+	"myCard": {
+		"pageTitle": "My Card",
+		"virtualCardTitle": "Virtual Card",
+		"invoiceTitle": "Bill",
+		"copyCode": "Copy code",
+		"share": "Share",
+		"codeCopied": "Code copied!",
+		"shortcuts": {
+			"invoices": "Bills",
+			"limit": "Limit",
+			"virtualCard": "Virtual Card",
+			"security": "Security"
+		},
+		"benefit": {
+			"title": "10% OFF in your birthday month",
+			"action": "See benefit"
+		},
+		"offers": {
+			"title": "Offers for you",
+			"seeMore": "See more",
+			"installmentOf": "of"
+		}
+	},
+	"virtualCard": {
+		"name": "Name",
+		"number": "Number",
+		"expiry": "Expiry",
+		"cvv": "CVV",
+		"disclaimer": "*Card valid for a single\npurchase or until 11:59 PM today",
+		"barcode": "Barcode"
+	},
+	"invoiceSummary": {
+		"currentInvoice": "Current bill",
+		"dueOn": "Due on:",
+		"pending": "Pending Bill",
+		"seeInvoice": "See bill"
+	},
+	"availableLimit": {
+		"label": "Available limit"
+	},
+	"payInvoice": {
+		"pageTitle": "Pay Bill",
+		"title": "Pay Bill",
+		"chooseMethod": "Choose how you want to pay",
+		"methods": {
+			"pix": {
+				"title": "PIX (best option)",
+				"subtitle": "In full or in installments"
+			},
+			"shop": {
+				"title": "Store",
+				"subtitle": "In full or in installments"
+			},
+			"ticket": {
+				"title": "Bank slip",
+				"subtitle": "In full or in installments"
+			}
+		}
+	},
+	"myLoans": {
+		"pageTitle": "Loan - Di Santinni Card",
+		"title": "Loan"
+	},
+	"loanCard": {
+		"contractNumber": "Contract number",
+		"contractedAmount": "Contracted amount",
+		"installmentAmount": "Installment amount",
+		"contractDate": "Contract date",
+		"ccbDetails": "CCB details",
+		"loanDetails": "Loan details",
+		"status": {
+			"onTime": "Up to date",
+			"canceled": "Canceled"
+		}
 	}
 }

@@ -70,5 +70,80 @@
 	},
 	"registerBiometrics": {
 		"pageTitle": "Reconhecimento facial - Cartão Di Santinni"
+	},
+	"myCard": {
+		"pageTitle": "Meu Cartão",
+		"virtualCardTitle": "Cartão Virtual",
+		"invoiceTitle": "Fatura",
+		"copyCode": "Copiar código",
+		"share": "Compartilhar",
+		"codeCopied": "Código copiado!",
+		"shortcuts": {
+			"invoices": "Faturas",
+			"limit": "Limite",
+			"virtualCard": "Cartão Virtual",
+			"security": "Segurança"
+		},
+		"benefit": {
+			"title": "10% OFF no mês do seu aniversário",
+			"action": "Ver benefício"
+		},
+		"offers": {
+			"title": "Ofertas para você",
+			"seeMore": "Ver mais",
+			"installmentOf": "de"
+		}
+	},
+	"virtualCard": {
+		"name": "Nome",
+		"number": "Número",
+		"expiry": "Validade",
+		"cvv": "CVV",
+		"disclaimer": "*Cartão válido para uma única\ncompra ou até as 23:59 de hoje",
+		"barcode": "Código de Barras"
+	},
+	"invoiceSummary": {
+		"currentInvoice": "Fatura atual",
+		"dueOn": "Vence dia:",
+		"pending": "Fatura Pendente",
+		"seeInvoice": "Ver fatura"
+	},
+	"availableLimit": {
+		"label": "Limite disponível"
+	},
+	"payInvoice": {
+		"pageTitle": "Pagar Fatura",
+		"title": "Pagar Fatura",
+		"chooseMethod": "Escolha como quer pagar",
+		"methods": {
+			"pix": {
+				"title": "PIX (melhor opção)",
+				"subtitle": "A vista ou parcelado"
+			},
+			"shop": {
+				"title": "Loja",
+				"subtitle": "A vista ou parcelado"
+			},
+			"ticket": {
+				"title": "Boleto",
+				"subtitle": "A vista ou parcelado"
+			}
+		}
+	},
+	"myLoans": {
+		"pageTitle": "Empréstimo - Cartão Di Santinni",
+		"title": "Empréstimo"
+	},
+	"loanCard": {
+		"contractNumber": "Número do contrato",
+		"contractedAmount": "Valor contratado",
+		"installmentAmount": "Valor da parcela",
+		"contractDate": "Data da contratação",
+		"ccbDetails": "Detalhes da CCB",
+		"loanDetails": "Detalhes do empréstimo",
+		"status": {
+			"onTime": "Em dia",
+			"canceled": "Cancelado"
+		}
 	}
 }

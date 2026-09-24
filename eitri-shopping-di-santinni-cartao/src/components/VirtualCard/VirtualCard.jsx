@@ -1,3 +1,4 @@
+import { useTranslation } from 'eitri-i18n'
 import logo from '../../assets/images/logoHeader.png'
 
 const BARCODE_RUNS = [
@@ -5,16 +6,16 @@ const BARCODE_RUNS = [
 	6, 1, 4, 2, 1, 5, 1, 2, 6, 1, 2, 4, 3, 3, 1, 3, 2, 1, 2, 4, 6, 2, 1, 3, 4, 3, 2, 1, 3, 4
 ]
 
-const DISCLAIMER = '*Cartão válido para uma única\ncompra ou até as 23:59 de hoje'
-
 export default function VirtualCard(props) {
 	const { name, number, expiry, cvv } = props
 
+	const { t } = useTranslation()
+
 	const fields = [
-		{ label: 'Nome', value: name },
-		{ label: 'Número', value: number },
-		{ label: 'Validade', value: expiry },
-		{ label: 'CVV', value: cvv }
+		{ id: 'name', label: t('virtualCard.name', 'Nome'), value: name },
+		{ id: 'number', label: t('virtualCard.number', 'Número'), value: number },
+		{ id: 'expiry', label: t('virtualCard.expiry', 'Validade'), value: expiry },
+		{ id: 'cvv', label: t('virtualCard.cvv', 'CVV'), value: cvv }
 	]
 
 	return (
@@ -28,7 +29,7 @@ export default function VirtualCard(props) {
 			<View className='flex flex-col gap-[15px] mt-[17px]'>
 				{fields.map(field => (
 					<View
-						key={field.label}
+						key={field.id}
 						className='flex flex-col gap-[6px]'>
 						<Text className='text-[7px] leading-[10px] text-white/90'>{field.label}</Text>
 						<Text className='text-[8px] font-bold leading-[10px] text-white'>{field.value}</Text>
@@ -37,11 +38,11 @@ export default function VirtualCard(props) {
 			</View>
 
 			<Text className='absolute left-[144px] bottom-[9px] text-[7px] leading-[15px] whitespace-pre-line text-white/90'>
-				{DISCLAIMER}
+				{t('virtualCard.disclaimer', '*Cartão válido para uma única\ncompra ou até as 23:59 de hoje')}
 			</Text>
 
 			<Text className='absolute right-[56px] bottom-[14px] text-[7px] leading-[8px] text-white/80 [writing-mode:vertical-rl] rotate-180'>
-				Código de Barras
+				{t('virtualCard.barcode', 'Código de Barras')}
 			</Text>
 
 			<View className='absolute right-6 top-[14px] flex flex-col w-7 h-[188px] bg-white'>

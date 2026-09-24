@@ -21,10 +21,10 @@ import PresentImage from '../assets/images/present.svg'
 
 // TODO: definir destino (link/rota) dos atalhos
 const SHORTCUTS = [
-	{ label: 'Faturas', icon: InvoicesIcon, onPress: () => navigate(PAGES.MY_INVOICES) },
-	{ label: 'Limite', icon: LimitIcon, onPress: () => navigate(PAGES.CARD_LIMIT) },
-	{ label: 'Cartão Virtual', icon: CardsIcon, onPress: () => {} },
-	{ label: 'Segurança', icon: SecurityIcon, onPress: () => {} }
+	{ id: 'invoices', label: 'Faturas', icon: InvoicesIcon, onPress: () => navigate(PAGES.MY_INVOICES) },
+	{ id: 'limit', label: 'Limite', icon: LimitIcon, onPress: () => navigate(PAGES.CARD_LIMIT) },
+	{ id: 'virtualCard', label: 'Cartão Virtual', icon: CardsIcon, onPress: () => {} },
+	{ id: 'security', label: 'Segurança', icon: SecurityIcon, onPress: () => {} }
 ]
 
 export default function MyCard() {
@@ -97,7 +97,7 @@ export default function MyCard() {
 			slug: 'home',
 			initParams: {
 				route: 'ProductCatalog',
-				title: t('', 'Ofertas para você'),
+				title: t('myCard.offers.title', 'Ofertas para você'),
 				params: { facets: [{ key: 'productClusterIds', value: String(OFFERS_COLLECTION_ID) }] }
 			}
 		})
@@ -137,7 +137,7 @@ export default function MyCard() {
 
 	return (
 		<Page
-			title='Meu Cartão'
+			title={t('myCard.pageTitle', 'Meu Cartão')}
 			statusBarTextColor='black'>
 			<CardHeader onBack={onBack} />
 
@@ -148,7 +148,7 @@ export default function MyCard() {
 
 			<View className='flex flex-col gap-[30px] px-4 pt-5 bg-snow'>
 				<Text className='text-lg font-semibold leading-6 tracking-[0.36px] bg-gradient-to-br from-red-500 to-red-700 bg-clip-text text-transparent'>
-					Cartão Virtual
+					{t('myCard.virtualCardTitle', 'Cartão Virtual')}
 				</Text>
 
 				<View className='flex flex-col gap-[10px]'>
@@ -162,7 +162,7 @@ export default function MyCard() {
 					)}
 
 					<CustomButton
-						label={t('', 'Copiar código')}
+						label={t('myCard.copyCode', 'Copiar código')}
 						backgroundColor='bg-[#C8102E]'
 						className='!h-[34px]'
 						textClassName='text-xs uppercase tracking-[0.24px]'
@@ -174,13 +174,13 @@ export default function MyCard() {
 						className='!h-[34px] !border-[#C8102E]'
 						onPress={onPressShare}>
 						<Text className='text-xs font-bold uppercase tracking-[0.24px] text-[#C8102E]'>
-							{t('', 'Compartilhar')}
+							{t('myCard.share', 'Compartilhar')}
 						</Text>
 					</CustomButton>
 				</View>
 
 				<Text className='text-lg font-semibold leading-6 tracking-[0.36px] bg-gradient-to-br from-red-500 to-red-700 bg-clip-text text-transparent'>
-					Fatura
+					{t('myCard.invoiceTitle', 'Fatura')}
 				</Text>
 
 				{invoice && (
@@ -201,17 +201,17 @@ export default function MyCard() {
 				<View className='flex flex-row justify-between w-full'>
 					{SHORTCUTS.map(shortcut => (
 						<ShortcutCard
-							key={shortcut.label}
+							key={shortcut.id}
 							icon={shortcut.icon}
-							label={shortcut.label}
+							label={t(`myCard.shortcuts.${shortcut.id}`, shortcut.label)}
 							onPress={shortcut.onPress}
 						/>
 					))}
 				</View>
 
 				<BenefitBanner
-					title='10% OFF no mês do seu aniversário'
-					actionLabel='Ver benefício'
+					title={t('myCard.benefit.title', '10% OFF no mês do seu aniversário')}
+					actionLabel={t('myCard.benefit.action', 'Ver benefício')}
 					image={PresentImage}
 					onPressAction={onPressBenefit}
 				/>
@@ -231,7 +231,7 @@ export default function MyCard() {
 
 			<FloatNotification
 				showNotification={showCopiedToast}
-				title={t('', 'Código copiado!')}
+				title={t('myCard.codeCopied', 'Código copiado!')}
 				onCloseNotification={() => setShowCopiedToast(false)}
 				functionExitNotification={() => setShowCopiedToast(false)}
 				toast

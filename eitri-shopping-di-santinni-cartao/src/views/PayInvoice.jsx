@@ -1,4 +1,5 @@
 import Eitri from 'eitri-bifrost'
+import { useTranslation } from 'eitri-i18n'
 import { BottomInset } from 'eitri-shopping-di-santinni-shared'
 import CardHeader from '../components/CardHeader/CardHeader'
 import PaymentMethodOption from '../components/PaymentMethodOption/PaymentMethodOption'
@@ -28,6 +29,8 @@ const PAYMENT_METHODS = [
 ]
 
 export default function PayInvoice() {
+	const { t } = useTranslation()
+
 	const onBack = () => Eitri.navigation.back()
 
 	// TODO: definir destino (link/rota) de cada meio de pagamento
@@ -35,28 +38,30 @@ export default function PayInvoice() {
 
 	return (
 		<Page
-			title='Pagar Fatura'
+			title={t('payInvoice.pageTitle', 'Pagar Fatura')}
 			statusBarTextColor='black'>
 			<CardHeader onBack={onBack} />
 
 			<View className='flex flex-col gap-[30px] px-4 pt-5 bg-snow'>
 				<Text className='text-lg font-semibold leading-6 bg-gradient-to-br from-red-500 to-red-700 bg-clip-text text-transparent'>
-					Pagar Fatura
+					{t('payInvoice.title', 'Pagar Fatura')}
 				</Text>
 
 				<View className='relative w-full h-2 overflow-hidden rounded-[5px] bg-[#F2F2F0]'>
 					<View className='absolute top-0 left-0 h-2 rounded-[5px] bg-[#434343] w-[20%]' />
 				</View>
 
-				<Text className='text-sm font-semibold leading-5 text-[#0C0C0C]'>Escolha como quer pagar</Text>
+				<Text className='text-sm font-semibold leading-5 text-[#0C0C0C]'>
+					{t('payInvoice.chooseMethod', 'Escolha como quer pagar')}
+				</Text>
 
 				<View className='flex flex-col gap-[30px]'>
 					{PAYMENT_METHODS.map(method => (
 						<PaymentMethodOption
 							key={method.id}
 							icon={method.icon}
-							title={method.title}
-							subtitle={method.subtitle}
+							title={t(`payInvoice.methods.${method.id}.title`, method.title)}
+							subtitle={t(`payInvoice.methods.${method.id}.subtitle`, method.subtitle)}
 							onPress={onPressPaymentMethod}
 						/>
 					))}
