@@ -40,7 +40,7 @@ export default function RegisterProcessing() {
 		<Page
 			title={t('registerProcessing.pageTitle', 'Processando dados - Cartão Di Santinni')}
 			statusBarTextColor='black'>
-			<View className='flex flex-col items-center justify-center gap-[15px] min-h-[65vh] px-16 bg-snow'>
+			<View className='flex flex-col items-center gap-[15px] px-16 pt-[34vh] bg-snow'>
 				<Text className='text-lg font-semibold leading-6 tracking-[0.32px] bg-gradient-to-br from-red-500 to-red-700 bg-clip-text text-transparent'>
 					{t('registerProcessing.title', 'Processando Dados')}
 				</Text>
