@@ -7,12 +7,18 @@ import HomeSkeleton from '../components/HomeSkeleton/HomeSkeleton'
 import { useLocalShoppingCart } from '../providers/LocalCart'
 import { startConfigure } from '../services/AppService'
 import { getCmsContent } from '../services/CmsService'
+import { openCartao } from '../services/NavigationService'
 
 export default function Home() {
 	const { t } = useTranslation()
 	const { startCart } = useLocalShoppingCart()
 
 	const [cmsContent, setCmsContent] = useState(null)
+
+	// TODO: remover — redirecionamento temporário para testar o eitri-app de cartão
+	useEffect(() => {
+		openCartao()
+	}, [])
 
 	useEffect(() => {
 		startHome()
