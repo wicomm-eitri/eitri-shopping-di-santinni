@@ -1,8 +1,11 @@
+import { useTranslation } from 'eitri-i18n'
 import { formatPrice } from '../../../utils/utils'
 import WishlistIcon from '../../WishlistIcon/WishlistIcon'
 
 export default function OfferProductCard(props) {
 	const { product, isOnWishlist, onPress, onToggleWishlist } = props
+
+	const { t } = useTranslation()
 
 	return (
 		<View
@@ -35,7 +38,8 @@ export default function OfferProductCard(props) {
 
 				{product.installments && (
 					<Text className='text-[8px] leading-[10px] text-[#C8102E]'>
-						{product.installments.count}x de {formatPrice(product.installments.value)}
+						{product.installments.count}x {t('myCard.offers.installmentOf', 'de')}{' '}
+						{formatPrice(product.installments.value)}
 					</Text>
 				)}
 			</View>

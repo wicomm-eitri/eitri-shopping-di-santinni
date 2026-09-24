@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Eitri from 'eitri-bifrost'
+import { useTranslation } from 'eitri-i18n'
 import { BottomInset, Loading } from 'eitri-shopping-di-santinni-shared'
 import CardHeader from '../components/CardHeader/CardHeader'
 import LoanCard from '../components/LoanCard/LoanCard'
@@ -12,6 +13,8 @@ const mergeNewLoan = (loans, newLoan) => {
 }
 
 export default function MyLoans(props) {
+	const { t } = useTranslation()
+
 	const newLoan = props?.location?.state?.loan || null
 
 	const [loans, setLoans] = useState(null)
@@ -38,7 +41,7 @@ export default function MyLoans(props) {
 
 	return (
 		<Page
-			title='Empréstimo - Cartão Di Santinni'
+			title={t('myLoans.pageTitle', 'Empréstimo - Cartão Di Santinni')}
 			statusBarTextColor='black'>
 			<CardHeader onBack={onBack} />
 
@@ -49,7 +52,7 @@ export default function MyLoans(props) {
 
 			<View className='flex flex-col gap-[30px] px-4 pt-6 bg-snow'>
 				<Text className='text-lg font-semibold leading-6 tracking-[0.36px] bg-gradient-to-br from-red-500 to-red-700 bg-clip-text text-transparent'>
-					Empréstimo
+					{t('myLoans.title', 'Empréstimo')}
 				</Text>
 
 				{loans &&

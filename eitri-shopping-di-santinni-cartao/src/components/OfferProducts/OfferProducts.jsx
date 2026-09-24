@@ -1,15 +1,22 @@
+import { useTranslation } from 'eitri-i18n'
 import OfferProductCard from './components/OfferProductCard'
 
 export default function OfferProducts(props) {
 	const { products, wishlistIds = [], onPressSeeMore, onPressProduct, onToggleWishlist } = props
 
+	const { t } = useTranslation()
+
 	return (
 		<View className='flex flex-col gap-[10px]'>
 			<View className='flex flex-row items-center justify-between'>
-				<Text className='text-base font-semibold leading-6 text-black'>Ofertas para você</Text>
+				<Text className='text-base font-semibold leading-6 text-black'>
+					{t('myCard.offers.title', 'Ofertas para você')}
+				</Text>
 
 				<View onClick={onPressSeeMore}>
-					<Text className='text-xs leading-4 text-[#C8102E] underline'>Ver mais</Text>
+					<Text className='text-xs leading-4 text-[#C8102E] underline'>
+						{t('myCard.offers.seeMore', 'Ver mais')}
+					</Text>
 				</View>
 			</View>
 
