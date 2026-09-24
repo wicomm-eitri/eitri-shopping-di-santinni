@@ -60,5 +60,15 @@
 		"errors": {
 			"birthDateInvalid": "Data de nascimento inválida ou menor de 18 anos"
 		}
+	},
+	"biometricsNotice": {
+		"title": "Reconhecimento Facial",
+		"subtitle": "Vamos confirmar sua identidade com uma foto",
+		"attention": "Atenção",
+		"description": "Utilizaremos a Biometria para proteger os dados do nosso cliente e evitar qualquer tipo de fraude.",
+		"agree": "Li e concordo"
+	},
+	"registerBiometrics": {
+		"pageTitle": "Reconhecimento facial - Cartão Di Santinni"
 	}
 }

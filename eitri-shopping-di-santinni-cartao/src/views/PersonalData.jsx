@@ -6,10 +6,8 @@ import BoxRadioOption from '../components/BoxRadioOption/BoxRadioOption'
 import CardHeader from '../components/CardHeader/CardHeader'
 import LoanProgress from '../components/LoanProgress/LoanProgress'
 import SelectField from '../components/SelectField/SelectField'
-import { isValidBirthDate } from '../utils/utils'
-
-// TODO: confirmar o total de etapas do cadastro com o PO
-const REGISTER_TOTAL_STEPS = 8
+import { navigate, PAGES } from '../services/NavigationService'
+import { isValidBirthDate, REGISTER_TOTAL_STEPS } from '../utils/utils'
 
 const OCCUPATIONS = [
 	{ value: 'self-employed', key: 'selfEmployed', label: 'Autônomo' },
@@ -37,8 +35,7 @@ export default function PersonalData() {
 
 	const onBack = () => Eitri.navigation.back()
 
-	// TODO: definir destino (link/rota) do botão
-	const onPressContinue = () => {}
+	const onPressContinue = () => navigate(PAGES.REGISTER_BIOMETRICS)
 
 	return (
 		<Page

@@ -23,7 +23,8 @@ export const PAGES = {
 	PAY_INVOICE: '/PayInvoice',
 	MY_LOANS: '/MyLoans',
 	MY_CARD: '/MyCard',
-	PERSONAL_DATA: '/PersonalData'
+	PERSONAL_DATA: '/PersonalData',
+	REGISTER_BIOMETRICS: '/RegisterBiometrics'
 }
 
 export const navigate = (page, state = {}, replace = false) => {
