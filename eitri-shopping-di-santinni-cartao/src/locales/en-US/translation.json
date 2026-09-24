@@ -35,5 +35,27 @@
 			"bonus": "+ Bonus",
 			"differentiated": "Differentiated"
 		}
+	},
+	"personalData": {
+		"pageTitle": "Fill in your Details",
+		"birthDate": "Date of Birth",
+		"birthDatePlaceholder": "DD/MM/YYYY",
+		"occupation": "Occupation",
+		"occupationHint": "Tell us your occupation and we will review the information.",
+		"occupationPlaceholder": "Select an Option",
+		"occupations": {
+			"selfEmployed": "Self-employed",
+			"employee": "Employee",
+			"unemployed": "Unemployed",
+			"retired": "Retired or Pensioner",
+			"professional": "Liberal professional",
+			"entrepreneur": "Entrepreneur"
+		},
+		"gender": "Gender",
+		"genders": {
+			"male": "Male",
+			"female": "Female"
+		},
+		"continue": "Continue"
 	}
 }

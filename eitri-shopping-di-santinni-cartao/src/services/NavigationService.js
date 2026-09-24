@@ -22,7 +22,8 @@ export const PAGES = {
 	MENU: '/Menu',
 	PAY_INVOICE: '/PayInvoice',
 	MY_LOANS: '/MyLoans',
-	MY_CARD: '/MyCard'
+	MY_CARD: '/MyCard',
+	PERSONAL_DATA: '/PersonalData'
 }
 
 export const navigate = (page, state = {}, replace = false) => {

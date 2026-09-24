@@ -35,5 +35,27 @@
 			"bonus": "+ Bônus",
 			"differentiated": "Diferenciada"
 		}
+	},
+	"personalData": {
+		"pageTitle": "Preencha seus Dados",
+		"birthDate": "Data de Nascimento",
+		"birthDatePlaceholder": "DD/MM/AAAA",
+		"occupation": "Ocupação",
+		"occupationHint": "Informe sua ocupação e faremos a análise das informações.",
+		"occupationPlaceholder": "Selecionar Opção",
+		"occupations": {
+			"selfEmployed": "Autônomo",
+			"employee": "Assalariado",
+			"unemployed": "Sem trabalho",
+			"retired": "Aposentado ou Pensionista",
+			"professional": "Profissional liberal",
+			"entrepreneur": "Empresário"
+		},
+		"gender": "Sexo",
+		"genders": {
+			"male": "Masculino",
+			"female": "Feminino"
+		},
+		"continue": "Continuar"
 	}
 }
