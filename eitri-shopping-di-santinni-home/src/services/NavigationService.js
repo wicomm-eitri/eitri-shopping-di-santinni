@@ -1,15 +1,5 @@
 import Eitri from 'eitri-bifrost'
 
-export const openCartao = async () => {
-	try {
-		await Eitri.nativeNavigation.open({
-			slug: 'cartao'
-		})
-	} catch (e) {
-		console.error('Erro ao navegar para o cartão', e)
-	}
-}
-
 export const openCart = async () => {
 	try {
 		Eitri.nativeNavigation.open({
