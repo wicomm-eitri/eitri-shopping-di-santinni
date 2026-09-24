@@ -172,5 +172,13 @@
 		"title": "Segurança",
 		"description": "Para sua segurança solicitaremos acesso a sua localização e informações do seu dispositivo.",
 		"agree": "Concordar"
+	},
+	"documentNotice": {
+		"title": "Atenção",
+		"descriptionPrefix": "Tenha em mãos seu documento de",
+		"rg": "RG",
+		"or": "ou",
+		"cnh": "CNH",
+		"continue": "Continuar"
 	}
 }
