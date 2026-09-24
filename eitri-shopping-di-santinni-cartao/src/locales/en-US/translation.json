@@ -145,5 +145,27 @@
 			"onTime": "Up to date",
 			"canceled": "Canceled"
 		}
+	},
+	"identityPhoto": {
+		"title": "Confirm identity",
+		"subtitle": "Take a photo to confirm your identity",
+		"tips": {
+			"accessories": {
+				"title": "Remove accessories",
+				"description": "Cap, earrings or any others"
+			},
+			"noSmile": {
+				"title": "Don't smile",
+				"description": "Keep a straight face"
+			},
+			"example": {
+				"title": "Follow the example",
+				"description": "Fit your face in the frame"
+			}
+		}
+	},
+	"registerIdentity": {
+		"pageTitle": "Confirm identity - Di Santinni Card",
+		"continue": "Continue"
 	}
 }

@@ -145,5 +145,27 @@
 			"onTime": "Em dia",
 			"canceled": "Cancelado"
 		}
+	},
+	"identityPhoto": {
+		"title": "Confirmar identidade",
+		"subtitle": "Tire uma foto para confirmar sua identidade",
+		"tips": {
+			"accessories": {
+				"title": "Remova acessórios",
+				"description": "Boné, brinco ou quaisquer outros"
+			},
+			"noSmile": {
+				"title": "Não sorria",
+				"description": "Mantenha-se sério"
+			},
+			"example": {
+				"title": "Siga o exemplo",
+				"description": "Enquadre o rosto na moldura"
+			}
+		}
+	},
+	"registerIdentity": {
+		"pageTitle": "Confirmar identidade - Cartão Di Santinni",
+		"continue": "Continuar"
 	}
 }
