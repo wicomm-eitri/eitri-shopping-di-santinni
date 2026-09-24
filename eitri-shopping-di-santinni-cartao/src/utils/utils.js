@@ -17,3 +17,6 @@ export const maskDocument = document => {
 
 	return `***.${digits.slice(3, 6)}.${digits.slice(6, 9)}-**`
 }
+
+// TODO: confirmar o total de etapas do cadastro com o PO
+export const REGISTER_TOTAL_STEPS = 8

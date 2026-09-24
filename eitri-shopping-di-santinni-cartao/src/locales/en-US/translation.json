@@ -57,5 +57,15 @@
 			"female": "Female"
 		},
 		"continue": "Continue"
+	},
+	"biometricsNotice": {
+		"title": "Facial Recognition",
+		"subtitle": "We will confirm your identity with a photo",
+		"attention": "Attention",
+		"description": "We will use Biometrics to protect our customers' data and prevent any kind of fraud.",
+		"agree": "I have read and agree"
+	},
+	"registerBiometrics": {
+		"pageTitle": "Facial recognition - Di Santinni Card"
 	}
 }
