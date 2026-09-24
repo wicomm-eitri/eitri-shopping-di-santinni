@@ -167,5 +167,10 @@
 	"registerIdentity": {
 		"pageTitle": "Confirm identity - Di Santinni Card",
 		"continue": "Continue"
+	},
+	"securityNotice": {
+		"title": "Security",
+		"description": "For your security, we will request access to your location and device information.",
+		"agree": "Agree"
 	}
 }
