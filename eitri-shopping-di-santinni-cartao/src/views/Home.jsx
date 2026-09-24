@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Carousel, Image, Page, Text, View } from 'eitri-luminus'
 import { BottomInset, CustomButton } from 'eitri-shopping-di-santinni-shared'
 import CardHeader from '../components/CardHeader/CardHeader'
@@ -24,6 +24,11 @@ export default function Home() {
 	const onPressHaveCard = () => navigate(PAGES.SIGNIN)
 
 	const onPressBecomeClient = () => navigate(PAGES.PERSONAL_DATA)
+
+	// TEMPORÁRIO (não mergear ainda): redireciona para a tela de carregamento, que ainda não tem fluxo anterior
+	useEffect(() => {
+		navigate(PAGES.REGISTER_PROCESSING)
+	}, [])
 
 	return (
 		<Page
