@@ -167,5 +167,9 @@
 	"registerIdentity": {
 		"pageTitle": "Confirmar identidade - Cartão Di Santinni",
 		"continue": "Continuar"
+	},
+	"registerProcessing": {
+		"pageTitle": "Processando dados - Cartão Di Santinni",
+		"title": "Processando Dados"
 	}
 }
