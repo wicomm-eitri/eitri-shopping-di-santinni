@@ -24,7 +24,8 @@ export const PAGES = {
 	MY_LOANS: '/MyLoans',
 	MY_CARD: '/MyCard',
 	PERSONAL_DATA: '/PersonalData',
-	REGISTER_BIOMETRICS: '/RegisterBiometrics'
+	REGISTER_BIOMETRICS: '/RegisterBiometrics',
+	REGISTER_IDENTITY: '/RegisterIdentity'
 }
 
 export const navigate = (page, state = {}, replace = false) => {

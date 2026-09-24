@@ -1,18 +1,11 @@
 import { useState } from 'react'
 import Eitri from 'eitri-bifrost'
-import { Page, View, Text, Image } from 'eitri-luminus'
-import { BottomInset, CustomButton, Loading } from 'eitri-shopping-di-santinni-shared'
+import { Page } from 'eitri-luminus'
+import { Loading } from 'eitri-shopping-di-santinni-shared'
 import Alert from '../components/Alert/Alert'
 import CardHeader from '../components/CardHeader/CardHeader'
-import LoanProgress from '../components/LoanProgress/LoanProgress'
+import IdentityPhoto from '../components/IdentityPhoto/IdentityPhoto'
 import { navigate, PAGES } from '../services/NavigationService'
-import FaceFrameIcon from '../assets/icons/face-frame.svg'
-
-const PHOTO_TIPS = [
-	{ title: 'Remova acessórios', description: 'Boné, brinco ou quaisquer outros' },
-	{ title: 'Não sorria', description: 'Mantenha-se sério' },
-	{ title: 'Siga o exemplo', description: 'Enquadre o rosto na moldura' }
-]
 
 const PERMISSION_MESSAGE = 'Precisamos da câmera para confirmar sua identidade'
 
@@ -116,64 +109,12 @@ export default function LoanIdentity(props) {
 				onDismiss={() => setShowAlert(false)}
 			/>
 
-			<View className='flex flex-col gap-[30px] px-4 pt-6 bg-snow'>
-				<LoanProgress currentStep={9} />
-
-				<Text className='text-lg font-semibold leading-6 tracking-[0.36px] bg-gradient-to-br from-red-500 to-red-700 bg-clip-text text-transparent'>
-					Confirmar identidade
-				</Text>
-
-				<Text className='text-sm leading-5 tracking-[0.28px] text-gray-700'>
-					Tire uma foto para confirmar sua identidade
-				</Text>
-
-				<View className='flex flex-col items-center justify-center'>
-					<Image
-						src={FaceFrameIcon}
-						alt=''
-						className='w-[153px] h-[153px]'
-					/>
-				</View>
-
-				<View className='flex flex-col gap-3'>
-					{PHOTO_TIPS.map((tip, index) => (
-						<PhotoTip
-							key={tip.title}
-							number={index + 1}
-							tip={tip}
-						/>
-					))}
-				</View>
-
-				<CustomButton
-					label='Tirar foto'
-					disabled={loading}
-					className='!h-[34px] text-xs uppercase tracking-[0.24px]'
-					onPress={onPressTakePhoto}
-				/>
-
-				<BottomInset />
-			</View>
+			<IdentityPhoto
+				currentStep={9}
+				buttonLabel='Tirar foto'
+				loading={loading}
+				onPressAction={onPressTakePhoto}
+			/>
 		</Page>
-	)
-}
-
-function PhotoTip(props) {
-	const { number, tip } = props
-
-	return (
-		<View className='flex items-center gap-[15px]'>
-			<View className='flex items-center justify-center shrink-0 w-[42px] h-11 rounded-full bg-[#FAFAF8] drop-shadow-[0px_4px_3px_rgba(0,0,0,0.1)]'>
-				<Text className='text-lg font-semibold leading-6 tracking-[0.36px] text-center bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent'>
-					{number}
-				</Text>
-			</View>
-
-			<View className='flex flex-col gap-1'>
-				<Text className='text-xs font-semibold leading-5 tracking-[0.24px] text-[#0C0C0C]'>{tip.title}</Text>
-
-				<Text className='text-xs leading-5 tracking-[0.24px] text-[#0C0C0C]'>{tip.description}</Text>
-			</View>
-		</View>
 	)
 }
