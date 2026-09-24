@@ -20,3 +20,27 @@ export const maskDocument = document => {
 
 // TODO: confirmar o total de etapas do cadastro com o PO
 export const REGISTER_TOTAL_STEPS = 8
+
+const MIN_BIRTH_YEAR = 1900
+const MIN_ADULT_AGE = 18
+
+// Recebe a data no formato DD/MM/AAAA e valida se ela existe, não é futura e se a pessoa é maior de idade
+export const isValidBirthDate = value => {
+	const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value || '')
+
+	if (!match) return false
+
+	const [day, month, year] = [Number(match[1]), Number(match[2]), Number(match[3])]
+
+	if (year < MIN_BIRTH_YEAR) return false
+
+	const birthDate = new Date(year, month - 1, day)
+
+	const exists = birthDate.getFullYear() === year && birthDate.getMonth() === month - 1 && birthDate.getDate() === day
+
+	if (!exists) return false
+
+	const adultDate = new Date(year + MIN_ADULT_AGE, month - 1, day)
+
+	return adultDate <= new Date()
+}

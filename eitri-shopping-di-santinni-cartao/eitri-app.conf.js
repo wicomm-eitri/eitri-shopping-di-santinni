@@ -5,7 +5,7 @@ module.exports = {
 	'eitri-luminus': '2.22.6',
 	'eitri-bifrost': '5.1.0',
 	'eitri-commons': '2.2.1',
-	'version': '0.1.79',
+	'version': '0.1.80',
 	'versionMessage': 'Criação da tela aviso',
 	'public-key': '91a5828f-264b-4e69-9316-2d070b21bc19',
 	'applicationId': 'f0301a60-5a72-487b-8855-a4fbd21d1f39',

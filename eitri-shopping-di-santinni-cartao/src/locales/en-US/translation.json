@@ -56,7 +56,10 @@
 			"male": "Male",
 			"female": "Female"
 		},
-		"continue": "Continue"
+		"continue": "Continue",
+		"errors": {
+			"birthDateInvalid": "Invalid date of birth or under 18 years old"
+		}
 	},
 	"biometricsNotice": {
 		"title": "Facial Recognition",
