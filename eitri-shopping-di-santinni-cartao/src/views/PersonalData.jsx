@@ -6,6 +6,7 @@ import BoxRadioOption from '../components/BoxRadioOption/BoxRadioOption'
 import CardHeader from '../components/CardHeader/CardHeader'
 import LoanProgress from '../components/LoanProgress/LoanProgress'
 import SelectField from '../components/SelectField/SelectField'
+import { isValidBirthDate } from '../utils/utils'
 
 // TODO: confirmar o total de etapas do cadastro com o PO
 const REGISTER_TOTAL_STEPS = 8
@@ -30,6 +31,9 @@ export default function PersonalData() {
 	const [birthDate, setBirthDate] = useState('')
 	const [occupation, setOccupation] = useState('')
 	const [gender, setGender] = useState('')
+
+	const isBirthDateComplete = birthDate.length === 10
+	const hasBirthDateError = isBirthDateComplete && !isValidBirthDate(birthDate)
 
 	const onBack = () => Eitri.navigation.back()
 
@@ -64,8 +68,17 @@ export default function PersonalData() {
 						variant='mask'
 						mask='99/99/9999'
 						onChange={e => setBirthDate(e.target ? e.target.value : e)}
-						className='bg-white text-sm text-neutral-400 leading-5 tracking-[0.28px] py-[14px] px-4 !border !border-gray-200'
+						className={`bg-white text-sm text-neutral-400 leading-5 tracking-[0.28px] py-[14px] px-4 !border ${hasBirthDateError ? '!border-red-600' : '!border-gray-200'}`}
 					/>
+
+					{hasBirthDateError && (
+						<Text className='text-xs leading-4 text-red-600'>
+							{t(
+								'personalData.errors.birthDateInvalid',
+								'Data de nascimento inválida ou menor de 18 anos'
+							)}
+						</Text>
+					)}
 				</View>
 
 				<View className='flex flex-col gap-2'>
@@ -105,7 +118,7 @@ export default function PersonalData() {
 					label={t('personalData.continue', 'Continuar')}
 					className='!h-[34px]'
 					textClassName='text-xs uppercase tracking-[0.24px]'
-					disabled={birthDate.length < 10 || !occupation || !gender}
+					disabled={!isValidBirthDate(birthDate) || !occupation || !gender}
 					onPress={onPressContinue}
 				/>
 

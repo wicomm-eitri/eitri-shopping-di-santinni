@@ -56,6 +56,9 @@
 			"male": "Masculino",
 			"female": "Feminino"
 		},
-		"continue": "Continuar"
+		"continue": "Continuar",
+		"errors": {
+			"birthDateInvalid": "Data de nascimento inválida ou menor de 18 anos"
+		}
 	}
 }
