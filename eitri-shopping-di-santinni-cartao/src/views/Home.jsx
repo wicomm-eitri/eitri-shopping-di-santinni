@@ -23,8 +23,7 @@ export default function Home() {
 
 	const onPressHaveCard = () => navigate(PAGES.SIGNIN)
 
-	// TODO: definir destino (link/rota) do botão
-	const onPressBecomeClient = () => {}
+	const onPressBecomeClient = () => navigate(PAGES.PERSONAL_DATA)
 
 	return (
 		<Page
