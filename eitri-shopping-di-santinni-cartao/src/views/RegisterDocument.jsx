@@ -9,6 +9,7 @@ import LoanProgress from '../components/LoanProgress/LoanProgress'
 import RegisterHeader from '../components/RegisterHeader/RegisterHeader'
 import SelectField from '../components/SelectField/SelectField'
 import { CAMERA_ERRORS, takePicture } from '../services/CameraService'
+import { navigate, PAGES } from '../services/NavigationService'
 import { DOCUMENT_TYPES, validateDocument } from '../services/RegisterService'
 import { REGISTER_TOTAL_STEPS } from '../utils/utils'
 
@@ -58,7 +59,6 @@ export default function RegisterDocument() {
 		setFront(null)
 	}
 
-	// TODO: definir o destino após validar o documento (a próxima etapa do cadastro ainda não existe)
 	const onValidateDocument = async back => {
 		try {
 			await validateDocument(documentType, front, back)
@@ -66,7 +66,11 @@ export default function RegisterDocument() {
 			console.error('validateDocument error:', e)
 			setFront(null)
 			showAlert(t('registerDocument.errors.invalidDocument', 'Não foi possível validar o documento. Tire as fotos novamente'))
+
+			return
 		}
+
+		navigate(PAGES.REGISTER_PERSONAL_DETAILS)
 	}
 
 	// A primeira foto é a frente do documento e a segunda, o verso

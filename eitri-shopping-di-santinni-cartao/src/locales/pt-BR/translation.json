@@ -232,5 +232,16 @@
 		"title": "Deseja cancelar o cadastro?",
 		"cancel": "Cancelar",
 		"continue": "Continuar"
+	},
+	"registerPersonalDetails": {
+		"pageTitle": "Preencha seus Dados",
+		"description": "Para continuarmos, digite seu Nome, Número de RG e Nome da sua mãe",
+		"fullName": "Nome completo",
+		"fullNamePlaceholder": "Digite seu nome completo",
+		"rg": "RG",
+		"rgPlaceholder": "Digite o número do seu RG",
+		"motherName": "Nome da sua mãe",
+		"motherNamePlaceholder": "Digite o nome completo de sua mãe",
+		"continue": "Continuar"
 	}
 }

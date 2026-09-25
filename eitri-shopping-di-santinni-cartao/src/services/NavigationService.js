@@ -29,7 +29,8 @@ export const PAGES = {
 	REGISTER_IDENTITY: '/RegisterIdentity',
 	REGISTER_PERMISSION: '/RegisterPermission',
 	REGISTER_SELFIE: '/RegisterSelfie',
-	REGISTER_DOCUMENT: '/RegisterDocument'
+	REGISTER_DOCUMENT: '/RegisterDocument',
+	REGISTER_PERSONAL_DETAILS: '/RegisterPersonalDetails'
 }
 
 export const navigate = (page, state = {}, replace = false) => {
