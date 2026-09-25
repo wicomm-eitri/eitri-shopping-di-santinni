@@ -28,7 +28,10 @@ export const PAGES = {
 	REGISTER_ADDRESS: '/RegisterAddress',
 	REGISTER_BIOMETRICS: '/RegisterBiometrics',
 	REGISTER_IDENTITY: '/RegisterIdentity',
-	REGISTER_PERMISSION: '/RegisterPermission'
+	REGISTER_PERMISSION: '/RegisterPermission',
+	REGISTER_SELFIE: '/RegisterSelfie',
+	REGISTER_DOCUMENT: '/RegisterDocument',
+	REGISTER_PERSONAL_DETAILS: '/RegisterPersonalDetails'
 }
 
 export const navigate = (page, state = {}, replace = false) => {

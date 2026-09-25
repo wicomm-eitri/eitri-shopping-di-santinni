@@ -11,9 +11,9 @@ export default function CancelRegisterModal(props) {
 	return (
 		<BottomSheet
 			show={show}
-			className='bg-[#FAFAF8]'
+			className='!bg-[#FAFAF8]'
 			onClose={onContinue}>
-			<View className='flex flex-col items-center gap-[30px] pb-4'>
+			<View className='flex flex-col items-center gap-[30px] px-4 pt-4 pb-4'>
 				<Text className='text-lg font-semibold leading-6 tracking-[0.36px] text-center bg-gradient-to-br from-red-500 to-red-700 bg-clip-text text-transparent'>
 					{t('cancelRegister.title', 'Deseja cancelar o cadastro?')}
 				</Text>
