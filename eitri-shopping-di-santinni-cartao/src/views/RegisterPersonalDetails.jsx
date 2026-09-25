@@ -2,8 +2,8 @@ import { useState } from 'react'
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
 import { BottomInset, CustomButton, CustomInput } from 'eitri-shopping-di-santinni-shared'
-import CardHeader from '../components/CardHeader/CardHeader'
 import LoanProgress from '../components/LoanProgress/LoanProgress'
+import RegisterHeader from '../components/RegisterHeader/RegisterHeader'
 import { REGISTER_TOTAL_STEPS } from '../utils/utils'
 
 const INPUT_CLASS_NAME =
@@ -30,7 +30,7 @@ export default function RegisterPersonalDetails() {
 		<Page
 			title={t('registerPersonalDetails.pageTitle', 'Preencha seus Dados')}
 			statusBarTextColor='black'>
-			<CardHeader onBack={onBack} />
+			<RegisterHeader onBack={onBack} />
 
 			<View className='flex flex-col gap-5 px-4 pt-6 bg-snow'>
 				<LoanProgress

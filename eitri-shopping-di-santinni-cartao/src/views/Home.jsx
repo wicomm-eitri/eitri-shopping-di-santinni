@@ -25,11 +25,6 @@ export default function Home() {
 
 	const onPressBecomeClient = () => navigate(PAGES.REGISTER_PERMISSION)
 
-	// TODO: TEMPORÁRIO (não mergear ainda): redireciona para a tela de cadastro etapa 3, que ainda não tem fluxo anterior
-	useEffect(() => {
-		navigate(PAGES.REGISTER_PERSONAL_DETAILS)
-	}, [])
-
 	return (
 		<Page
 			title='Cartão Di Santinni'
