@@ -23,7 +23,7 @@ export default function Home() {
 
 	const onPressHaveCard = () => navigate(PAGES.SIGNIN)
 
-	const onPressBecomeClient = () => navigate(PAGES.PERSONAL_DATA)
+	const onPressBecomeClient = () => navigate(PAGES.REGISTER_CONTACT)
 
 	// TODO: TEMPORÁRIO (não mergear ainda): redireciona para a tela de cadastro etapa 3, que ainda não tem fluxo anterior
 	useEffect(() => {
