@@ -1,11 +1,12 @@
 import { View, Image } from 'eitri-luminus'
 import { HeaderContentWrapper, HeaderReturn, HeaderLogo } from 'eitri-shopping-di-santinni-shared'
-import logo from '../../assets/images/logoHeader.png'
+import CloseIcon from '../../assets/icons/close.svg'
 import MenuIcon from '../../assets/icons/menu.svg'
+import logo from '../../assets/images/logoHeader.png'
 import { openMenu } from '../../services/NavigationService'
 
 export default function CardHeader(props) {
-	const { onBack, showMenu = true } = props
+	const { onBack, showMenu = true, onClose } = props
 
 	return (
 		<HeaderContentWrapper
@@ -16,7 +17,17 @@ export default function CardHeader(props) {
 				onClick={onBack}
 			/>
 			<HeaderLogo src={logo} />
-			{showMenu ? (
+			{onClose ? (
+				<View
+					className='flex items-center'
+					onClick={onClose}>
+					<Image
+						src={CloseIcon}
+						alt='Fechar'
+						className='w-6 h-6'
+					/>
+				</View>
+			) : showMenu ? (
 				<View
 					className='flex items-center'
 					onClick={openMenu}>

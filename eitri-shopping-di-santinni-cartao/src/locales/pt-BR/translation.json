@@ -172,5 +172,21 @@
 		"title": "Segurança",
 		"description": "Para sua segurança solicitaremos acesso a sua localização e informações do seu dispositivo.",
 		"agree": "Concordar"
+	},
+	"registerContact": {
+		"pageTitle": "Preencha seus Dados",
+		"description": "Para começarmos, digite seu CPF, Número de contato e E-mail",
+		"cpf": "CPF",
+		"cpfPlaceholder": "Digite seu CPF",
+		"phone": "Celular",
+		"phonePlaceholder": "Digite seu celular",
+		"email": "E-mail",
+		"emailPlaceholder": "Digite seu e-mail",
+		"continue": "Continuar"
+	},
+	"cancelRegister": {
+		"title": "Deseja cancelar o cadastro?",
+		"cancel": "Cancelar",
+		"continue": "Continuar"
 	}
 }
