@@ -5,7 +5,7 @@ export default function BoxRadioOption(props) {
 
 	return (
 		<View
-			className='flex flex-row items-center flex-1 gap-[10px] py-[14px] px-4 rounded bg-white border border-gray-200'
+			className='flex flex-row items-center flex-1 gap-[10px] py-[14px] px-4 rounded bg-white border border-neutral-300'
 			onClick={onPress}>
 			{selected ? (
 				<Image
