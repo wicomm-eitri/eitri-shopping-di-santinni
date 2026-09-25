@@ -1,7 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import Eitri from 'eitri-bifrost'
 import { Carousel, Image, Page, Text, View } from 'eitri-luminus'
 import { BottomInset, CustomButton } from 'eitri-shopping-di-santinni-shared'
 import CardHeader from '../components/CardHeader/CardHeader'
+import DocumentNotice from '../components/DocumentNotice/DocumentNotice'
+import SecurityNotice from '../components/SecurityNotice/SecurityNotice'
 import { goHome, navigate, PAGES } from '../services/NavigationService'
 import CheckIcon from '../assets/icons/check.svg'
 
@@ -9,6 +12,20 @@ const CARD_IMAGE =
 	'https://disantinni.vtexassets.com/assets/vtex.file-manager-graphql/images/2463d653-3097-4671-ad37-bb5df4c844b5___af21fc87cdaa1a97f88a2279dbd71b74.png'
 
 const CARD_SLIDES = [CARD_IMAGE, CARD_IMAGE, CARD_IMAGE, CARD_IMAGE, CARD_IMAGE]
+
+const GEOLOCATION_PERMISSION_INPUT = { precision: 'precise' }
+
+const RESUME_AFTER_REQUEST_GRACE_MS = 1500
+
+const OPEN_APP_SETTINGS_API_LEVEL = 9
+
+const PERMISSION_GRANTED = 'GRANTED'
+
+const PERMISSION_BLOCKED = 'BLOCKED'
+
+const permissionStatus = permission => String(permission?.status ?? '').toUpperCase()
+
+const isPermissionGranted = permission => permissionStatus(permission) === PERMISSION_GRANTED
 
 const CARD_BENEFITS = [
 	'Descontos em produtos o ano todo',
@@ -18,12 +35,105 @@ const CARD_BENEFITS = [
 
 export default function Home() {
 	const [currentSlide, setCurrentSlide] = useState(0)
+	const [showSecurityNotice, setShowSecurityNotice] = useState(false)
+	const [showDocumentNotice, setShowDocumentNotice] = useState(false)
+
+	const isMountedRef = useRef(true)
+	const isRequestingPermissionRef = useRef(false)
+	const lastPermissionRequestAtRef = useRef(0)
+	const isDocumentNoticeDismissedRef = useRef(false)
+
+	// O aviso de documento aparece uma vez por acesso à Home, sempre depois do aviso de segurança
+	const openDocumentNotice = () => {
+		if (isMountedRef.current && !isDocumentNoticeDismissedRef.current) {
+			setShowDocumentNotice(true)
+		}
+	}
+
+	const checkGeolocationPermission = async () => {
+		const isResumeFromPermissionDialog =
+			Date.now() - lastPermissionRequestAtRef.current < RESUME_AFTER_REQUEST_GRACE_MS
+
+		if (isRequestingPermissionRef.current || isResumeFromPermissionDialog) return
+
+		try {
+			const permission = await Eitri.geolocation.checkPermission(GEOLOCATION_PERMISSION_INPUT)
+
+			if (!isMountedRef.current) return
+
+			if (isPermissionGranted(permission)) {
+				openDocumentNotice()
+			} else {
+				setShowDocumentNotice(false)
+				setShowSecurityNotice(true)
+			}
+		} catch (error) {
+			console.warn('Não foi possível verificar a permissão de geolocalização', error)
+			openDocumentNotice()
+		}
+	}
+
+	const openAppSettings = async () => {
+		if (!Eitri.canIUse(OPEN_APP_SETTINGS_API_LEVEL)) return
+
+		try {
+			await Eitri.system.openAppSettings()
+		} catch (error) {
+			console.warn('Não foi possível abrir as configurações do app', error)
+		}
+	}
+
+	const requestGeolocationPermission = async () => {
+		if (isRequestingPermissionRef.current) return
+
+		isRequestingPermissionRef.current = true
+
+		let status = ''
+
+		try {
+			status = permissionStatus(await Eitri.geolocation.requestPermission(GEOLOCATION_PERMISSION_INPUT))
+		} catch (error) {
+			console.warn('Não foi possível solicitar a permissão de geolocalização', error)
+		} finally {
+			isRequestingPermissionRef.current = false
+			lastPermissionRequestAtRef.current = Date.now()
+		}
+
+		if (status === PERMISSION_BLOCKED) {
+			await openAppSettings()
+		}
+	}
+
+	useEffect(() => {
+		isMountedRef.current = true
+
+		checkGeolocationPermission()
+
+		// Verifica novamente sempre que o usuário volta ao app (ex.: retornando das configurações do celular)
+		Eitri.navigation.addOnResumeListener(() => checkGeolocationPermission())
+
+		return () => {
+			isMountedRef.current = false
+		}
+	}, [])
+
+	const onDismissSecurityNotice = async () => {
+		setShowSecurityNotice(false)
+		await requestGeolocationPermission()
+		openDocumentNotice()
+	}
+
+	// TODO: definir o próximo passo do "Continuar" (ex.: seguir para o fluxo que exige o documento)
+	const onDismissDocumentNotice = () => {
+		isDocumentNoticeDismissedRef.current = true
+		setShowDocumentNotice(false)
+	}
 
 	const onChangeSlide = index => setCurrentSlide(index)
 
 	const onPressHaveCard = () => navigate(PAGES.SIGNIN)
 
-	const onPressBecomeClient = () => navigate(PAGES.REGISTER_CONTACT)
+	const onPressBecomeClient = () => navigate(PAGES.REGISTER_PERMISSION)
 
 	return (
 		<Page
@@ -112,6 +222,18 @@ export default function Home() {
 
 				<BottomInset />
 			</View>
+
+			<SecurityNotice
+				show={showSecurityNotice}
+				onClose={onDismissSecurityNotice}
+				onPressAgree={onDismissSecurityNotice}
+			/>
+
+			<DocumentNotice
+				show={showDocumentNotice}
+				onClose={onDismissDocumentNotice}
+				onPressContinue={onDismissDocumentNotice}
+			/>
 		</Page>
 	)
 }

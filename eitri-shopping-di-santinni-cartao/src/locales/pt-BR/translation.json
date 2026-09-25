@@ -205,6 +205,18 @@
 			"invalidDocument": "Não foi possível validar o documento. Tire as fotos novamente"
 		}
 	},
+	"securityNotice": {
+		"title": "Segurança",
+		"description": "Para sua segurança solicitaremos acesso a sua localização e informações do seu dispositivo.",
+		"agree": "Concordar"
+	},
+	"documentNotice": {
+		"title": "Atenção",
+		"descriptionPrefix": "Tenha em mãos seu documento de",
+		"rg": "RG",
+		"or": "ou",
+		"cnh": "CNH"
+	},
 	"registerContact": {
 		"pageTitle": "Preencha seus Dados",
 		"description": "Para começarmos, digite seu CPF, Número de contato e E-mail",

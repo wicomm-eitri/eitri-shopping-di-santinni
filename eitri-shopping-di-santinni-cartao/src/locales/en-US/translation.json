@@ -205,6 +205,18 @@
 			"invalidDocument": "We couldn't validate the document. Please take the photos again"
 		}
 	},
+	"securityNotice": {
+		"title": "Security",
+		"description": "For your security, we will request access to your location and device information.",
+		"agree": "Agree"
+	},
+	"documentNotice": {
+		"title": "Attention",
+		"descriptionPrefix": "Have your ID document ready:",
+		"rg": "RG",
+		"or": "or",
+		"cnh": "CNH"
+	},
 	"registerContact": {
 		"pageTitle": "Fill in your Details",
 		"description": "To get started, enter your CPF, Phone Number and E-mail",
