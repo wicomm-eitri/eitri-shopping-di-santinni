@@ -3,8 +3,8 @@ import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
 import { BottomInset, CustomButton, CustomInput } from 'eitri-shopping-di-santinni-shared'
 import BoxRadioOption from '../components/BoxRadioOption/BoxRadioOption'
-import CardHeader from '../components/CardHeader/CardHeader'
 import LoanProgress from '../components/LoanProgress/LoanProgress'
+import RegisterHeader from '../components/RegisterHeader/RegisterHeader'
 import SelectField from '../components/SelectField/SelectField'
 import { navigate, PAGES } from '../services/NavigationService'
 import { isValidBirthDate, REGISTER_TOTAL_STEPS } from '../utils/utils'
@@ -41,7 +41,7 @@ export default function PersonalData() {
 		<Page
 			title={t('personalData.pageTitle', 'Preencha seus Dados')}
 			statusBarTextColor='black'>
-			<CardHeader onBack={onBack} />
+			<RegisterHeader onBack={onBack} />
 
 			<View className='flex flex-col gap-[25px] px-4 pt-6 bg-snow'>
 				<LoanProgress

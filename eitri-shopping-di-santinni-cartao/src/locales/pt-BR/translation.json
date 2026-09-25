@@ -178,5 +178,10 @@
 		"email": "E-mail",
 		"emailPlaceholder": "Digite seu e-mail",
 		"continue": "Continuar"
+	},
+	"cancelRegister": {
+		"title": "Deseja cancelar o cadastro?",
+		"cancel": "Cancelar",
+		"continue": "Continuar"
 	}
 }
