@@ -26,7 +26,9 @@ export const PAGES = {
 	PERSONAL_DATA: '/PersonalData',
 	REGISTER_CONTACT: '/RegisterContact',
 	REGISTER_BIOMETRICS: '/RegisterBiometrics',
-	REGISTER_IDENTITY: '/RegisterIdentity'
+	REGISTER_IDENTITY: '/RegisterIdentity',
+	REGISTER_SELFIE: '/RegisterSelfie',
+	REGISTER_DOCUMENT: '/RegisterDocument'
 }
 
 export const navigate = (page, state = {}, replace = false) => {
