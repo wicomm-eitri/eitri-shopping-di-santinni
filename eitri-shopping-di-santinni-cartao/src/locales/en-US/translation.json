@@ -191,6 +191,25 @@
 		"emailPlaceholder": "Enter your e-mail",
 		"continue": "Continue"
 	},
+	"registerAddress": {
+		"pageTitle": "Home Address",
+		"postalCode": "ZIP code (CEP)",
+		"postalCodePlaceholder": "Enter your ZIP code",
+		"street": "Address",
+		"streetPlaceholder": "Enter your address",
+		"number": "Number",
+		"numberPlaceholder": "Enter the building number",
+		"complement": "Complement (Optional)",
+		"complementPlaceholder": "Apartment, Reference, etc",
+		"city": "City",
+		"cityPlaceholder": "Enter your city",
+		"state": "State",
+		"statePlaceholder": "Enter your state",
+		"continue": "Continue",
+		"errors": {
+			"postalCodeNotFound": "ZIP code not found. Please fill in the address manually."
+		}
+	},
 	"cancelRegister": {
 		"title": "Do you want to cancel the registration?",
 		"cancel": "Cancel",

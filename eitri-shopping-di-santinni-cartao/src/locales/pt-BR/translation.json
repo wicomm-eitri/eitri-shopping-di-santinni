@@ -191,6 +191,25 @@
 		"emailPlaceholder": "Digite seu e-mail",
 		"continue": "Continuar"
 	},
+	"registerAddress": {
+		"pageTitle": "Endereço Residencial",
+		"postalCode": "CEP",
+		"postalCodePlaceholder": "Digite seu CEP",
+		"street": "Endereço",
+		"streetPlaceholder": "Digite seu endereço",
+		"number": "Número",
+		"numberPlaceholder": "Digite o número do edifício",
+		"complement": "Complemento (Opcional)",
+		"complementPlaceholder": "Apartamento, Referência, etc",
+		"city": "Cidade",
+		"cityPlaceholder": "Digite sua cidade",
+		"state": "Estado",
+		"statePlaceholder": "Digite seu estado",
+		"continue": "Continuar",
+		"errors": {
+			"postalCodeNotFound": "CEP não encontrado. Preencha o endereço manualmente."
+		}
+	},
 	"cancelRegister": {
 		"title": "Deseja cancelar o cadastro?",
 		"cancel": "Cancelar",

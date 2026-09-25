@@ -25,6 +25,7 @@ export const PAGES = {
 	MY_CARD: '/MyCard',
 	PERSONAL_DATA: '/PersonalData',
 	REGISTER_CONTACT: '/RegisterContact',
+	REGISTER_ADDRESS: '/RegisterAddress',
 	REGISTER_BIOMETRICS: '/RegisterBiometrics',
 	REGISTER_IDENTITY: '/RegisterIdentity',
 	REGISTER_PERMISSION: '/RegisterPermission'

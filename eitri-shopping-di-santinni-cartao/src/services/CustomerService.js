@@ -37,6 +37,32 @@ export const isLoggedIn = async () => {
 	}
 }
 
+const POSTAL_CODE_DIGITS = 8
+
+// Busca o endereço pelo CEP. Retorna null quando o CEP é inválido, não foi encontrado ou a requisição falhou
+export const getAddressByPostalCode = async postalCode => {
+	const digits = (postalCode || '').replace(/\D/g, '')
+
+	if (digits.length !== POSTAL_CODE_DIGITS) return null
+
+	try {
+		const address = await Vtex.cart.resolvePostalCode(digits)
+
+		if (!address) return null
+
+		return {
+			street: address.street ?? '',
+			neighborhood: address.neighborhood ?? '',
+			city: address.city ?? '',
+			state: address.state ?? ''
+		}
+	} catch (e) {
+		console.error('Erro ao buscar endereço pelo CEP', e)
+
+		return null
+	}
+}
+
 // Helper para enviar a autenticação limpa e evitar o Cache agressivo da VTEX
 const getAuthHeaders = async () => {
 	try {
