@@ -167,5 +167,16 @@
 	"registerIdentity": {
 		"pageTitle": "Confirm identity - Di Santinni Card",
 		"continue": "Continue"
+	},
+	"registerPermission": {
+		"pageTitle": "Use of Personal Data - Di Santinni Card",
+		"title": "Use of Personal Data",
+		"paragraph1": "The Personal Data you provide will be used to fill in the membership proposal for the credit card issued by Credsystem, including for registration and credit analysis.",
+		"paragraph2": "Sharing for future offers of products and services (financial services, insurance, medical and dental assistance) and for reporting to the Central Bank of Brazil (“SCR”).",
+		"paragraph3": "If your card membership proposal is denied, your Personal Data will be stored for future registration and/or credit reanalysis and other purposes set forth in the",
+		"privacyPolicy": "Contract and Privacy Policy",
+		"learnMore": "Learn more",
+		"agree": "I understand and agree to proceed",
+		"continue": "Continue"
 	}
 }
