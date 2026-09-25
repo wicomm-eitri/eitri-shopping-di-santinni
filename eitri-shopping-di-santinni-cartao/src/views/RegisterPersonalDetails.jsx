@@ -7,7 +7,7 @@ import LoanProgress from '../components/LoanProgress/LoanProgress'
 import { REGISTER_TOTAL_STEPS } from '../utils/utils'
 
 const INPUT_CLASS_NAME =
-	'bg-white text-sm text-neutral-400 leading-5 tracking-[0.28px] py-[14px] px-4 !border !border-gray-200'
+	'!bg-white text-sm text-neutral-400 leading-5 tracking-[0.28px] py-[14px] px-4 !border !border-neutral-300'
 
 export default function RegisterPersonalDetails() {
 	const { t } = useTranslation()
