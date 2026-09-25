@@ -24,8 +24,10 @@ export const PAGES = {
 	MY_LOANS: '/MyLoans',
 	MY_CARD: '/MyCard',
 	PERSONAL_DATA: '/PersonalData',
+	REGISTER_CONTACT: '/RegisterContact',
 	REGISTER_BIOMETRICS: '/RegisterBiometrics',
-	REGISTER_IDENTITY: '/RegisterIdentity'
+	REGISTER_IDENTITY: '/RegisterIdentity',
+	REGISTER_PERMISSION: '/RegisterPermission'
 }
 
 export const navigate = (page, state = {}, replace = false) => {
@@ -37,6 +39,14 @@ export const goHome = () => {
 }
 
 export const openMenu = () => navigate(PAGES.MENU)
+
+export const closeRegister = async () => {
+	try {
+		await Eitri.navigation.backToTop()
+	} catch (e) {
+		console.error('closeRegister: Error trying to go back to the card home', e)
+	}
+}
 
 export const logout = async () => {
 	try {

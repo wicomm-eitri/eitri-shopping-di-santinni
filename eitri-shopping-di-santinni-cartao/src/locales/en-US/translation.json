@@ -178,7 +178,22 @@
 		"descriptionPrefix": "Have your ID document ready:",
 		"rg": "RG",
 		"or": "or",
-		"cnh": "CNH",
+		"cnh": "CNH"
+	},
+	"registerContact": {
+		"pageTitle": "Fill in your Details",
+		"description": "To get started, enter your CPF, Phone Number and E-mail",
+		"cpf": "CPF",
+		"cpfPlaceholder": "Enter your CPF",
+		"phone": "Mobile phone",
+		"phonePlaceholder": "Enter your mobile phone",
+		"email": "E-mail",
+		"emailPlaceholder": "Enter your e-mail",
+		"continue": "Continue"
+	},
+	"cancelRegister": {
+		"title": "Do you want to cancel the registration?",
+		"cancel": "Cancel",
 		"continue": "Continue"
 	}
 }
