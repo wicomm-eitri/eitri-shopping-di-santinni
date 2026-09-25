@@ -3,37 +3,99 @@ import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
 import { BottomInset, CustomButton } from 'eitri-shopping-di-santinni-shared'
 import CardCheckbox from '../components/CardCheckbox/CardCheckbox'
-import CardHeader from '../components/CardHeader/CardHeader'
+import DocumentNotice from '../components/DocumentNotice/DocumentNotice'
+import RegisterHeader from '../components/RegisterHeader/RegisterHeader'
+import SecurityNotice from '../components/SecurityNotice/SecurityNotice'
 import { navigate, PAGES } from '../services/NavigationService'
+
+const GEOLOCATION_PERMISSION_INPUT = { precision: 'precise' }
+
+const OPEN_APP_SETTINGS_API_LEVEL = 9
+
+const PERMISSION_GRANTED = 'GRANTED'
+
+const PERMISSION_BLOCKED = 'BLOCKED'
+
+const permissionStatus = permission => String(permission?.status ?? '').toUpperCase()
 
 export default function RegisterPermission() {
 	const { t } = useTranslation()
 
 	const [accepted, setAccepted] = useState(false)
+	const [showDocumentNotice, setShowDocumentNotice] = useState(false)
+	const [showSecurityNotice, setShowSecurityNotice] = useState(false)
 
 	const onBack = () => Eitri.navigation.back()
-
-	const onClose = async () => {
-		try {
-			await Eitri.navigation.backToTop()
-		} catch (e) {
-			console.error('RegisterPermission: Error trying to close the flow', e)
-		}
-	}
 
 	// TODO: definir destino (link/documento) do "Saiba mais"
 	const onPressLearnMore = () => {}
 
-	const onPressContinue = () => navigate(PAGES.PERSONAL_DATA)
+	const goToNextStep = () => navigate(PAGES.REGISTER_CONTACT)
+
+	const isGeolocationGranted = async () => {
+		try {
+			const permission = await Eitri.geolocation.checkPermission(GEOLOCATION_PERMISSION_INPUT)
+
+			return permissionStatus(permission) === PERMISSION_GRANTED
+		} catch (error) {
+			console.warn('Não foi possível verificar a permissão de geolocalização', error)
+
+			return true
+		}
+	}
+
+	const openAppSettings = async () => {
+		if (!Eitri.canIUse(OPEN_APP_SETTINGS_API_LEVEL)) return
+
+		try {
+			await Eitri.system.openAppSettings()
+		} catch (error) {
+			console.warn('Não foi possível abrir as configurações do app', error)
+		}
+	}
+
+	// TODO: definir se a permissão de localização é obrigatória para seguir com o cadastro
+	const requestGeolocationPermission = async () => {
+		let status = ''
+
+		try {
+			status = permissionStatus(await Eitri.geolocation.requestPermission(GEOLOCATION_PERMISSION_INPUT))
+		} catch (error) {
+			console.warn('Não foi possível solicitar a permissão de geolocalização', error)
+		}
+
+		if (status === PERMISSION_BLOCKED) {
+			await openAppSettings()
+		}
+	}
+
+	const onPressContinue = () => setShowDocumentNotice(true)
+
+	const onContinueDocumentNotice = async () => {
+		setShowDocumentNotice(false)
+
+		if (await isGeolocationGranted()) {
+			goToNextStep()
+
+			return
+		}
+
+		setShowSecurityNotice(true)
+	}
+
+	const onAgreeSecurityNotice = async () => {
+		setShowSecurityNotice(false)
+
+		await requestGeolocationPermission()
+
+		goToNextStep()
+	}
 
 	return (
 		<Page
 			title={t('registerPermission.pageTitle', 'Uso dos Dados Pessoais - Cartão Di Santinni')}
 			statusBarTextColor='black'>
-			<CardHeader
-				onBack={onBack}
-				onClose={onClose}
-			/>
+			<RegisterHeader onBack={onBack} />
 
 			<View className='flex flex-col gap-5 px-4 pt-6 bg-snow'>
 				<Text className='text-lg font-semibold leading-6 tracking-[2%] bg-gradient-to-br from-[#E23D58] to-[#C8102E] bg-clip-text text-transparent'>
@@ -98,6 +160,18 @@ export default function RegisterPermission() {
 
 				<BottomInset />
 			</View>
+
+			<DocumentNotice
+				show={showDocumentNotice}
+				onClose={() => setShowDocumentNotice(false)}
+				onPressContinue={onContinueDocumentNotice}
+			/>
+
+			<SecurityNotice
+				show={showSecurityNotice}
+				onClose={() => setShowSecurityNotice(false)}
+				onPressAgree={onAgreeSecurityNotice}
+			/>
 		</Page>
 	)
 }
