@@ -3,6 +3,7 @@ import Eitri from 'eitri-bifrost'
 import { Carousel, Image, Page, Text, View } from 'eitri-luminus'
 import { BottomInset, CustomButton } from 'eitri-shopping-di-santinni-shared'
 import CardHeader from '../components/CardHeader/CardHeader'
+import DocumentNotice from '../components/DocumentNotice/DocumentNotice'
 import SecurityNotice from '../components/SecurityNotice/SecurityNotice'
 import { goHome, navigate, PAGES } from '../services/NavigationService'
 import CheckIcon from '../assets/icons/check.svg'
@@ -35,10 +36,19 @@ const CARD_BENEFITS = [
 export default function Home() {
 	const [currentSlide, setCurrentSlide] = useState(0)
 	const [showSecurityNotice, setShowSecurityNotice] = useState(false)
+	const [showDocumentNotice, setShowDocumentNotice] = useState(false)
 
 	const isMountedRef = useRef(true)
 	const isRequestingPermissionRef = useRef(false)
 	const lastPermissionRequestAtRef = useRef(0)
+	const isDocumentNoticeDismissedRef = useRef(false)
+
+	// O aviso de documento aparece uma vez por acesso à Home, sempre depois do aviso de segurança
+	const openDocumentNotice = () => {
+		if (isMountedRef.current && !isDocumentNoticeDismissedRef.current) {
+			setShowDocumentNotice(true)
+		}
+	}
 
 	const checkGeolocationPermission = async () => {
 		const isResumeFromPermissionDialog =
@@ -49,11 +59,17 @@ export default function Home() {
 		try {
 			const permission = await Eitri.geolocation.checkPermission(GEOLOCATION_PERMISSION_INPUT)
 
-			if (isMountedRef.current && !isPermissionGranted(permission)) {
+			if (!isMountedRef.current) return
+
+			if (isPermissionGranted(permission)) {
+				openDocumentNotice()
+			} else {
+				setShowDocumentNotice(false)
 				setShowSecurityNotice(true)
 			}
 		} catch (error) {
 			console.warn('Não foi possível verificar a permissão de geolocalização', error)
+			openDocumentNotice()
 		}
 	}
 
@@ -101,9 +117,16 @@ export default function Home() {
 		}
 	}, [])
 
-	const onDismissSecurityNotice = () => {
+	const onDismissSecurityNotice = async () => {
 		setShowSecurityNotice(false)
-		requestGeolocationPermission()
+		await requestGeolocationPermission()
+		openDocumentNotice()
+	}
+
+	// TODO: definir o próximo passo do "Continuar" (ex.: seguir para o fluxo que exige o documento)
+	const onDismissDocumentNotice = () => {
+		isDocumentNoticeDismissedRef.current = true
+		setShowDocumentNotice(false)
 	}
 
 	const onChangeSlide = index => setCurrentSlide(index)
@@ -204,6 +227,12 @@ export default function Home() {
 				show={showSecurityNotice}
 				onClose={onDismissSecurityNotice}
 				onPressAgree={onDismissSecurityNotice}
+			/>
+
+			<DocumentNotice
+				show={showDocumentNotice}
+				onClose={onDismissDocumentNotice}
+				onPressContinue={onDismissDocumentNotice}
 			/>
 		</Page>
 	)
