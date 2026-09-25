@@ -16,7 +16,7 @@ export default function SelectField(props) {
 	return (
 		<View className='relative w-full'>
 			<View
-				className='flex flex-row items-center justify-between w-full py-[14px] px-4 rounded bg-white border border-gray-200'
+				className='flex flex-row items-center justify-between w-full py-[14px] px-4 rounded bg-white border border-neutral-300'
 				onClick={() => setIsOpen(!isOpen)}>
 				<Text className={`text-sm tracking-[0.28px] ${selectedOption ? 'text-black' : 'text-neutral-400'}`}>
 					{selectedOption ? selectedOption.label : placeholder}
@@ -30,7 +30,7 @@ export default function SelectField(props) {
 			</View>
 
 			{isOpen && (
-				<View className='absolute top-[46px] left-0 z-10 flex flex-col w-full overflow-hidden rounded bg-white border border-gray-200 shadow-[0px_4px_6px_0px_rgba(0,0,0,0.15)]'>
+				<View className='absolute top-[46px] left-0 z-10 flex flex-col w-full overflow-hidden rounded bg-white border border-neutral-300 shadow-[0px_4px_6px_0px_rgba(0,0,0,0.15)]'>
 					{options.map(option => (
 						<View
 							key={option.value}

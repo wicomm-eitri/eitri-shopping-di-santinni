@@ -1,7 +1,7 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
-import CardHeader from '../components/CardHeader/CardHeader'
 import IdentityPhoto from '../components/IdentityPhoto/IdentityPhoto'
+import RegisterHeader from '../components/RegisterHeader/RegisterHeader'
 import { REGISTER_TOTAL_STEPS } from '../utils/utils'
 
 export default function RegisterIdentity() {
@@ -16,7 +16,7 @@ export default function RegisterIdentity() {
 		<Page
 			title={t('registerIdentity.pageTitle', 'Confirmar identidade - Cartão Di Santinni')}
 			statusBarTextColor='black'>
-			<CardHeader onBack={onBack} />
+			<RegisterHeader onBack={onBack} />
 
 			<IdentityPhoto
 				currentStep={4}

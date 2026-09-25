@@ -178,5 +178,10 @@
 		"email": "E-mail",
 		"emailPlaceholder": "Enter your e-mail",
 		"continue": "Continue"
+	},
+	"cancelRegister": {
+		"title": "Do you want to cancel the registration?",
+		"cancel": "Cancel",
+		"continue": "Continue"
 	}
 }
