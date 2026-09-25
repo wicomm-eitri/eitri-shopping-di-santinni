@@ -23,7 +23,7 @@ export default function Home() {
 
 	const onPressHaveCard = () => navigate(PAGES.SIGNIN)
 
-	const onPressBecomeClient = () => navigate(PAGES.REGISTER_CONTACT)
+	const onPressBecomeClient = () => navigate(PAGES.REGISTER_PERMISSION)
 
 	return (
 		<Page
