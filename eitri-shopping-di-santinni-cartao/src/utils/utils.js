@@ -53,3 +53,45 @@ export const isValidEmail = value => EMAIL_REGEX.test((value || '').trim())
 
 // Celular com DDD (11 dígitos), no formato (99) 99999-9999
 export const isValidPhone = value => (value || '').replace(/\D/g, '').length === PHONE_DIGITS
+
+const POSTAL_CODE_DIGITS = 8
+
+// CEP com 8 dígitos, no formato 99999-999
+export const isValidPostalCode = value => (value || '').replace(/\D/g, '').length === POSTAL_CODE_DIGITS
+
+const BRAZILIAN_STATES = {
+	AC: 'Acre',
+	AL: 'Alagoas',
+	AP: 'Amapá',
+	AM: 'Amazonas',
+	BA: 'Bahia',
+	CE: 'Ceará',
+	DF: 'Distrito Federal',
+	ES: 'Espírito Santo',
+	GO: 'Goiás',
+	MA: 'Maranhão',
+	MT: 'Mato Grosso',
+	MS: 'Mato Grosso do Sul',
+	MG: 'Minas Gerais',
+	PA: 'Pará',
+	PB: 'Paraíba',
+	PR: 'Paraná',
+	PE: 'Pernambuco',
+	PI: 'Piauí',
+	RJ: 'Rio de Janeiro',
+	RN: 'Rio Grande do Norte',
+	RS: 'Rio Grande do Sul',
+	RO: 'Rondônia',
+	RR: 'Roraima',
+	SC: 'Santa Catarina',
+	SP: 'São Paulo',
+	SE: 'Sergipe',
+	TO: 'Tocantins'
+}
+
+// Converte a sigla do estado (ex.: PE) no nome completo (ex.: Pernambuco). Se não reconhecer, devolve o valor recebido
+export const getStateName = uf => {
+	const value = (uf || '').trim()
+
+	return BRAZILIAN_STATES[value.toUpperCase()] ?? value
+}
