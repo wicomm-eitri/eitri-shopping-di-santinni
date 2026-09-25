@@ -65,7 +65,7 @@ export default function PersonalData() {
 						variant='mask'
 						mask='99/99/9999'
 						onChange={e => setBirthDate(e.target ? e.target.value : e)}
-						className={`bg-white text-sm text-neutral-400 leading-5 tracking-[0.28px] py-[14px] px-4 !border ${hasBirthDateError ? '!border-red-600' : '!border-gray-200'}`}
+						className={`!bg-white text-sm text-neutral-400 leading-5 tracking-[0.28px] py-[14px] px-4 !border ${hasBirthDateError ? '!border-red-600' : '!border-neutral-300'}`}
 					/>
 
 					{hasBirthDateError && (
