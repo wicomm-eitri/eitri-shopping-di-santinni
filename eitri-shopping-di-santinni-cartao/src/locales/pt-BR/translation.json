@@ -167,5 +167,16 @@
 	"registerIdentity": {
 		"pageTitle": "Confirmar identidade - Cartão Di Santinni",
 		"continue": "Continuar"
+	},
+	"registerContact": {
+		"pageTitle": "Preencha seus Dados",
+		"description": "Para começarmos, digite seu CPF, Número de contato e E-mail",
+		"cpf": "CPF",
+		"cpfPlaceholder": "Digite seu CPF",
+		"phone": "Celular",
+		"phonePlaceholder": "Digite seu celular",
+		"email": "E-mail",
+		"emailPlaceholder": "Digite seu e-mail",
+		"continue": "Continuar"
 	}
 }

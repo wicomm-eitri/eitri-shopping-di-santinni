@@ -44,3 +44,12 @@ export const isValidBirthDate = value => {
 
 	return adultDate <= new Date()
 }
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+const PHONE_DIGITS = 11
+
+export const isValidEmail = value => EMAIL_REGEX.test((value || '').trim())
+
+// Celular com DDD (11 dígitos), no formato (99) 99999-9999
+export const isValidPhone = value => (value || '').replace(/\D/g, '').length === PHONE_DIGITS
