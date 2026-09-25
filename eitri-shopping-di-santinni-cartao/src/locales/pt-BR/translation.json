@@ -168,15 +168,20 @@
 		"pageTitle": "Confirmar identidade - Cartão Di Santinni",
 		"continue": "Continuar"
 	},
-	"registerPermission": {
-		"pageTitle": "Uso dos Dados Pessoais - Cartão Di Santinni",
-		"title": "Uso dos Dados Pessoais",
-		"paragraph1": "Os Dados Pessoais fornecidos por você serão utilizados para preenchimento da proposta de adesão ao cartão de crédito emitida pela Credsystem, inclusive para análise cadastral, creditícia.",
-		"paragraph2": "Compartilhamento para oferta futura de produtos e serviços (serviços financeiros, Seguros, assistência médica e odontológica) e para comunicação ao Banco Central do Brasil (“SCR”).",
-		"paragraph3": "Caso sua proposta de adesão ao cartão seja negada, seus Dados Pessoais serão armazenados para futura reanálise cadastral e/ou creditícia e demais finalidades previstas no",
-		"privacyPolicy": "Contrato e Política de Privacidade",
-		"learnMore": "Saiba mais",
-		"agree": "Compreendi e concordo em seguir",
+	"registerContact": {
+		"pageTitle": "Preencha seus Dados",
+		"description": "Para começarmos, digite seu CPF, Número de contato e E-mail",
+		"cpf": "CPF",
+		"cpfPlaceholder": "Digite seu CPF",
+		"phone": "Celular",
+		"phonePlaceholder": "Digite seu celular",
+		"email": "E-mail",
+		"emailPlaceholder": "Digite seu e-mail",
+		"continue": "Continuar"
+	},
+	"cancelRegister": {
+		"title": "Deseja cancelar o cadastro?",
+		"cancel": "Cancelar",
 		"continue": "Continuar"
 	}
 }

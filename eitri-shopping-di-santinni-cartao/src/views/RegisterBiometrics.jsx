@@ -1,7 +1,7 @@
 import Eitri from 'eitri-bifrost'
 import { useTranslation } from 'eitri-i18n'
 import BiometricsNotice from '../components/BiometricsNotice/BiometricsNotice'
-import CardHeader from '../components/CardHeader/CardHeader'
+import RegisterHeader from '../components/RegisterHeader/RegisterHeader'
 import { navigate, PAGES } from '../services/NavigationService'
 import { REGISTER_TOTAL_STEPS } from '../utils/utils'
 
@@ -16,7 +16,7 @@ export default function RegisterBiometrics() {
 		<Page
 			title={t('registerBiometrics.pageTitle', 'Reconhecimento facial - Cartão Di Santinni')}
 			statusBarTextColor='black'>
-			<CardHeader onBack={onBack} />
+			<RegisterHeader onBack={onBack} />
 
 			<BiometricsNotice
 				currentStep={3}

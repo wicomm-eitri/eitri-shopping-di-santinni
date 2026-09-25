@@ -1,8 +1,7 @@
 import { View, Image } from 'eitri-luminus'
 import { HeaderContentWrapper, HeaderReturn, HeaderLogo } from 'eitri-shopping-di-santinni-shared'
-import logo from '../../assets/images/logoHeader.png'
-import MenuIcon from '../../assets/icons/menu.svg'
 import CloseIcon from '../../assets/icons/close.svg'
+import MenuIcon from '../../assets/icons/menu.svg'
 import { openMenu } from '../../services/NavigationService'
 
 export default function CardHeader(props) {
