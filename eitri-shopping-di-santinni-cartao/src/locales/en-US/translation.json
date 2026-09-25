@@ -167,5 +167,16 @@
 	"registerIdentity": {
 		"pageTitle": "Confirm identity - Di Santinni Card",
 		"continue": "Continue"
+	},
+	"registerPersonalDetails": {
+		"pageTitle": "Fill in your Details",
+		"description": "To continue, enter your Name, ID Number and your Mother’s Name",
+		"fullName": "Full name",
+		"fullNamePlaceholder": "Enter your full name",
+		"rg": "ID Number",
+		"rgPlaceholder": "Enter your ID number",
+		"motherName": "Your mother’s name",
+		"motherNamePlaceholder": "Enter your mother’s full name",
+		"continue": "Continue"
 	}
 }
