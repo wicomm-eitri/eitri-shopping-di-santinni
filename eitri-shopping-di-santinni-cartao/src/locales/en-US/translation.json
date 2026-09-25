@@ -168,6 +168,11 @@
 		"pageTitle": "Confirm identity - Di Santinni Card",
 		"continue": "Continue"
 	},
+	"securityNotice": {
+		"title": "Security",
+		"description": "For your security, we will request access to your location and device information.",
+		"agree": "Agree"
+	},
 	"registerContact": {
 		"pageTitle": "Fill in your Details",
 		"description": "To get started, enter your CPF, Phone Number and E-mail",
