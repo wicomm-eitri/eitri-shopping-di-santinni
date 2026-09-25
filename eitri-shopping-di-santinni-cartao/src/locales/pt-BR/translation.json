@@ -168,6 +168,43 @@
 		"pageTitle": "Confirmar identidade - Cartão Di Santinni",
 		"continue": "Continuar"
 	},
+	"registerSelfie": {
+		"pageTitle": "Selfie - Cartão Di Santinni",
+		"title": "Se prepare para\ntirar a Selfie",
+		"description": "Enquadre seu rosto e pressione o botão “Tirar Foto”",
+		"takePhoto": "Tirar foto",
+		"errors": {
+			"permissionDenied": "Precisamos da câmera para confirmar sua identidade",
+			"permissionBlocked": "Libere o acesso à câmera nas configurações do aparelho",
+			"captureFailed": "Não foi possível tirar a foto. Tente novamente",
+			"invalidSelfie": "Não foi possível validar sua selfie. Tente novamente"
+		}
+	},
+	"registerDocument": {
+		"pageTitle": "Foto do Documento - Cartão Di Santinni",
+		"title": "Foto do Documento",
+		"subtitle": "Agora precisamos que tire fotos do documento selecionado",
+		"tips": {
+			"twoPhotos": "São apenas duas fotos, frente e verso do seu documento",
+			"removePlastic": "Retire o documento do plástico",
+			"wholeDocument": "Atenção para não cortar nenhuma parte do documento. Precisamos vê-lo por inteiro"
+		},
+		"documentPlaceholder": "Selecionar Opção",
+		"documents": {
+			"rg": "RG",
+			"cnh": "CNH"
+		},
+		"takePhoto": "Tirar foto",
+		"takeFrontPhoto": "Tirar foto da frente",
+		"takeBackPhoto": "Tirar foto do verso",
+		"frontCaptured": "Frente registrada! Agora tire a foto do verso",
+		"errors": {
+			"permissionDenied": "Precisamos da câmera para fotografar seu documento",
+			"permissionBlocked": "Libere o acesso à câmera nas configurações do aparelho",
+			"captureFailed": "Não foi possível tirar a foto. Tente novamente",
+			"invalidDocument": "Não foi possível validar o documento. Tire as fotos novamente"
+		}
+	},
 	"securityNotice": {
 		"title": "Segurança",
 		"description": "Para sua segurança solicitaremos acesso a sua localização e informações do seu dispositivo.",

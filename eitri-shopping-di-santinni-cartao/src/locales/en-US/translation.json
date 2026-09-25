@@ -168,6 +168,43 @@
 		"pageTitle": "Confirm identity - Di Santinni Card",
 		"continue": "Continue"
 	},
+	"registerSelfie": {
+		"pageTitle": "Selfie - Di Santinni Card",
+		"title": "Get ready to\ntake the Selfie",
+		"description": "Frame your face and press the “Take Photo” button",
+		"takePhoto": "Take photo",
+		"errors": {
+			"permissionDenied": "We need the camera to confirm your identity",
+			"permissionBlocked": "Allow camera access in your device settings",
+			"captureFailed": "We couldn't take the photo. Please try again",
+			"invalidSelfie": "We couldn't validate your selfie. Please try again"
+		}
+	},
+	"registerDocument": {
+		"pageTitle": "Document Photo - Di Santinni Card",
+		"title": "Document Photo",
+		"subtitle": "Now we need you to take photos of the selected document",
+		"tips": {
+			"twoPhotos": "It's just two photos, front and back of your document",
+			"removePlastic": "Take the document out of its plastic cover",
+			"wholeDocument": "Be careful not to crop any part of the document. We need to see all of it"
+		},
+		"documentPlaceholder": "Select an option",
+		"documents": {
+			"rg": "ID card (RG)",
+			"cnh": "Driver's license (CNH)"
+		},
+		"takePhoto": "Take photo",
+		"takeFrontPhoto": "Take front photo",
+		"takeBackPhoto": "Take back photo",
+		"frontCaptured": "Front saved! Now take the photo of the back",
+		"errors": {
+			"permissionDenied": "We need the camera to photograph your document",
+			"permissionBlocked": "Allow camera access in your device settings",
+			"captureFailed": "We couldn't take the photo. Please try again",
+			"invalidDocument": "We couldn't validate the document. Please take the photos again"
+		}
+	},
 	"securityNotice": {
 		"title": "Security",
 		"description": "For your security, we will request access to your location and device information.",

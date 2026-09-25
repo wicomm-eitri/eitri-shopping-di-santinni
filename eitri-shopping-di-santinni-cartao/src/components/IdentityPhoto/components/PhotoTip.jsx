@@ -10,7 +10,7 @@ export default function PhotoTip(props) {
 			</View>
 
 			<View className='flex flex-col gap-1'>
-				<Text className='text-xs font-semibold leading-5 tracking-[0.24px] text-[#0C0C0C]'>{title}</Text>
+				{title && <Text className='text-xs font-semibold leading-5 tracking-[0.24px] text-[#0C0C0C]'>{title}</Text>}
 
 				<Text className='text-xs leading-5 tracking-[0.24px] text-[#0C0C0C]'>{description}</Text>
 			</View>
