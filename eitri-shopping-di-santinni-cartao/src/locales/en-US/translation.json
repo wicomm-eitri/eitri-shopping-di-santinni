@@ -167,5 +167,16 @@
 	"registerIdentity": {
 		"pageTitle": "Confirm identity - Di Santinni Card",
 		"continue": "Continue"
+	},
+	"registerContact": {
+		"pageTitle": "Fill in your Details",
+		"description": "To get started, enter your CPF, Phone Number and E-mail",
+		"cpf": "CPF",
+		"cpfPlaceholder": "Enter your CPF",
+		"phone": "Mobile phone",
+		"phonePlaceholder": "Enter your mobile phone",
+		"email": "E-mail",
+		"emailPlaceholder": "Enter your e-mail",
+		"continue": "Continue"
 	}
 }
